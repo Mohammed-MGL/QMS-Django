@@ -1,0 +1,3 @@
+call QMS_Venv/Scripts/avtivate
+
+py manage.py runserver
