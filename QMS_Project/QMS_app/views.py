@@ -1,39 +1,98 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
-from .serializers import *
-from .models import Service_center
-
-class Api_ServiceCenter_View(APIView):
-    def get(self , request , *args ,**kwargs):
-        qs = Service_center.objects.all()
-        serializer = Service_centerSerializer(qs,many=True)
-        return Response(serializer.data)
-
-    # def post(self , request , *args ,**kwargs):
-    #     serializer = Service_centerSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.error)
+from django.shortcuts import render , redirect
+from django.http import HttpResponse
+from .models import Employee 
+from .forms import EmployeeForm
 
 
-class Api_WorkTime_View(APIView):
-    def get(self , request ,id, *args ,**kwargs):
-        qs = Work_time.objects.get(id = id )
-        serializer = Work_timeSerializer(qs)
-        return Response(serializer.data)
+def employees(request):
+    emps = Employee.objects.all()
+    return render(request ,"Employee.html" , {"employees" : emps}) 
+
+
+def createEmployee(request):
+
+    form = EmployeeForm()
+
+    if request.method == 'POST':
+        print(request.POST)
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('employees')
+
+    context ={"form":form}
+    return render(request ,"employee_form.html" , context) 
+
+def updateEmployee(request, eID):
+
     
-class Api_Search_ServiceCenter(APIView):
-    def get(self , request ,name, *args ,**kwargs):
-        qs = Service_center.objects.all()
-        num = qs.__len__()
-        serializer = Service_centerSerializer(qs , many = True)
-        content = {
-            'number of ' : num,
-            'results' : serializer.data
-        }
-        return Response(content)
+    emp = Employee.objects.get(id = eID)
+    form = EmployeeForm(instance = emp)
+
+    if request.method == 'POST':
+        print(request.POST)
+        form = EmployeeForm(request.POST ,instance = emp)
+        if form.is_valid():
+            form.save()
+            return redirect('employees')
+
+    context = {"form":form}
+    return render(request ,"employee_form.html" , context) 
+
+def deleteEmployee(request, eID):
+
+    emp = Employee.objects.get(id = eID)
+    context = {"item":emp}
+    if request.method == 'POST':
+        emp.delete()
+        return redirect('employees')
+
+
+    return render(request ,"delete.html" , context) 
+
+# def employeeDetails(request , eID):
+#     emp = Employee.objects.get(id = eID)
+#     return render(request ,"Employee.html" , {"employee" : emp}) 
+
+
+# def employeeEdit(request, eID):
+#     emp = Employee.objects.get(id = eID)          
+#     return render(request ,"Employee.html" , {"employee" : emp}) 
+
+
+
+###########################################
+# from django.shortcuts import render
+# from django.http import HttpResponse
+# from .models import User , Service_center , Employee , Black_list , White_list
+
+
+
+# def bwlist(request):
+#     ph_list = Black_list.objects.all()
+    
+#     context = {
+#         'ph_list':ph_list }
+#     return render(request ,"bwlist.html" , context)
+
+
+# def dash(request):
+#     return render(request ,"dashboard.html" , {})    
+
+
+
+# def service(request):
+#     return render(request ,"services.html" , {})   
+
+
+# def d(request):
+#     return render(request ,"dash.html" , {})   
+
+
+
+
+
+
+
+# def addservice(request):
+#     return render(request ,"addservice.html" , {})     

@@ -1,0 +1,124 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-10 m-5  ">
+
+    <form class=" form-inline">
+      <input size="40" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+   
+  </div>
+
+</div>
+<div class="countainer">
+  <div class="row ">
+    <div class="col-10 m-5   ">
+      <div class="font1"> Select Employee to change</div>
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title ">Simple Table</h4>
+          <div class="d-flex justify-content-between">
+            <div class="p-2"> <p class="card-category"> Here is a subtitle for this table </p></div>
+            <div class="p-2"> <a href="{% url 'createEmployee' %}"  class="btn btn-sm btn-block ">Add employee  &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
+          
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class=" text-primary">
+                <tr><th>
+                  ID
+                </th>
+                <th>
+                  Name
+                </th>
+                <th>
+                  Country
+                </th>
+                <th>
+                  City
+                </th>
+                <th>
+                  Salary
+                </th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td>
+                    1
+                  </td>
+                  <td>
+                    Dakota Rice
+                  </td>
+                  <td>
+                    Niger
+                  </td>
+                  <td>
+                    Oud-Turnhout
+                  </td>
+                  <td class="text-primary">
+                    $36,738
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    2
+                  </td>
+                  <td>
+                    Minerva Hooper
+                  </td>
+                  <td>
+                    Curaçao
+                  </td>
+                  <td>
+                    Sinaai-Waas
+                  </td>
+                  <td class="text-primary">
+                    $23,789
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    3
+                  </td>
+                  <td>
+                    Sage Rodriguez
+                  </td>
+                  <td>
+                    Netherlands
+                  </td>
+                  <td>
+                    Baileux
+                  </td>
+                  <td class="text-primary">
+                    $56,142
+                  </td>
+                                
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <table class="table">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Service center</th>
+            <th scope="col">phone</th>
+            <th scope="col">location</th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock%}

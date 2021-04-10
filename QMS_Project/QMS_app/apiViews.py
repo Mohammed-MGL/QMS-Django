@@ -29,11 +29,13 @@ class WorkTime_View(APIView):
     
 class Search_ServiceCenter(APIView):
     def get(self , request ,name, *args ,**kwargs):
-        qs = Service_center.objects.all()
+        
+        qs = Service_center.objects.all(name__contains=name)
         num = qs.__len__()
         serializer = Service_centerSerializer(qs , many = True)
         content = {
-            'number of ' : num,
-            'results' : serializer.data
+            'pageTotal' : num,
+            'pagenum' : num,
+            'results' : serializer.data,
         }
         return Response(content)

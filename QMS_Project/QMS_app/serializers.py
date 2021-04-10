@@ -5,7 +5,8 @@ from .models import *
 class Service_centerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service_center
-        fields = '__all__'
+        fields = ['id', 'name', 'location', 'Icon']
+
 
 
 class Work_timeSerializer(serializers.ModelSerializer):
