@@ -11,14 +11,14 @@ urlpatterns = [
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
 
     # web endpoints
+    # employee
     path('employees/',views.employees, name = 'employees'),
     path('createEmployee/',views.createEmployee, name = 'createEmployee'),
+    path('viewEmployee/<str:eID>',views.viewEmployee, name = 'viewEmployee'),
     path('updateEmployee/<str:eID>',views.updateEmployee, name = 'updateEmployee'),
     path('deleteEmployee/<str:eID>',views.deleteEmployee, name = 'deleteEmployee'),
 
-    
-    # path('Employee/<str:eID>',views.Employee, name = 'Employee'),
-
+    path('services/',views.service, name = 'index'),
 
 ]
 

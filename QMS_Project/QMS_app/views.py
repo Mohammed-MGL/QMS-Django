@@ -2,11 +2,18 @@ from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from .models import Employee 
 from .forms import EmployeeForm
+from .filters import EmployeeFilter
 
 
 def employees(request):
     emps = Employee.objects.all()
-    return render(request ,"Employee.html" , {"employees" : emps}) 
+    myFilter = EmployeeFilter(request.GET,queryset = emps )
+    emps = myFilter.qs
+    context = {
+        "employees" : emps ,
+        "myFilter" : myFilter,
+    }
+    return render(request ,"Employee/employees.html" , context) 
 
 
 def createEmployee(request):
@@ -20,8 +27,14 @@ def createEmployee(request):
             form.save()
             return redirect('employees')
 
+    
     context ={"form":form}
-    return render(request ,"employee_form.html" , context) 
+    return render(request ,"Employee/employee_form.html" , context) 
+
+def viewEmployee(request, eID):
+
+    context = {}
+    return render(request ,"Employee/employee.html" , context) 
 
 def updateEmployee(request, eID):
 
@@ -37,7 +50,7 @@ def updateEmployee(request, eID):
             return redirect('employees')
 
     context = {"form":form}
-    return render(request ,"employee_form.html" , context) 
+    return render(request ,"Employee/employee_form.html" , context) 
 
 def deleteEmployee(request, eID):
 
@@ -81,8 +94,8 @@ def deleteEmployee(request, eID):
 
 
 
-# def service(request):
-#     return render(request ,"services.html" , {})   
+def service(request):
+    return render(request ,"services.html" , {})   
 
 
 # def d(request):

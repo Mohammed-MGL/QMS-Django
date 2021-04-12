@@ -68,7 +68,7 @@
           </li>
           {% url 'employees' as url %}
           <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
-            <a class="nav-link" href="dddd">
+            <a class="nav-link" href="{% url 'employees' %}">
               <i class="material-icons">group</i>
               <p>Employees</p>
             </a>
@@ -111,9 +111,9 @@
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
         <div class="container-fluid">
-          <div class="navbar-wrapper">
+          <!-- <div class="navbar-wrapper">
             <a class="navbar-brand" href="javascript:;">Dashboard</a>
-          </div>
+          </div> -->
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -158,7 +158,7 @@
           {% endblock %}
         </div>
       </div>
-      <footer class="footer">
+      <!-- <footer class="footer">
         <div class="container-fluid">
           <nav class="float-left">
             <ul>
@@ -178,7 +178,7 @@
           </div>
           <!-- your footer here -->
         </div>
-      </footer>
+      </footer> -->
     </div>
   </div>
 

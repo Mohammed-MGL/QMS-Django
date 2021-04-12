@@ -1,0 +1,112 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+
+<div class="countainer">
+  <div class="row ml-1">
+
+    <div class="col-9  ">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title ">Employees</h4>
+          <div class="d-flex justify-content-between">
+            <div class="p-2">
+              ======
+            </div>
+            <div class="p-2"> <a href="{% url 'createEmployee' %}" class="btn btn-sm btn-secondary ">Add employee
+                &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class=" text-primary">
+                <tr>
+                  <th>
+
+                  </th>
+                  <th>
+                    Name
+                  </th>
+                  <th>
+                    Desk Number
+                  </th>
+                  <th>
+                    Service
+                  </th>
+                  <th>
+                    Edit
+                  </th>
+                  <th>
+                    Delete
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for emp in employees %}
+
+                <tr>
+                  <td>
+                    <a href="{% url 'viewEmployee' emp.id %}" class="btn btn-sm btn-info"> View </a>
+                  </td>
+                  <td>
+                    {{emp.name}}
+                  </td>
+                  <td>
+                    {{emp.desk_num}}
+                  </td>
+                  <td>
+                    {{emp.Service}}<span class="material-icons-round">
+                      
+                    </span>
+                  </td>
+                  <td class="text-primary">
+                    <a href="{% url 'updateEmployee' emp.id %}" class="btn btn-sm btn-info"> <dev
+                      class="material-icons">edit</dev> </a>
+                  </td>
+                  <td class="text-primary">
+                    <a href="{% url 'deleteEmployee' emp.id %}" class="btn btn-sm btn-danger"> <dev
+                        class="material-icons">delete</dev> </a>
+                  </td>
+                </tr>
+                {% endfor %}
+
+
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+    <div class="col-3 ">
+      <div class="card card-profile">
+        <div class="card-body">
+          <h4 class="card-title">
+             
+            <!-- <dev class="material-icons"> filter_alt </dev> -->
+          </h4>
+          <br>
+
+          <div class="form-group">
+            <form method="GET">
+              <div class="row">
+                {{myFilter.form}}
+              </div>
+              <br>
+              <button class="btn btn-primary my-2 my-sm-0 btn-round" type="submit">Filter</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock%}

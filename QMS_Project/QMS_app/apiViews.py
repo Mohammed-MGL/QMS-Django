@@ -30,7 +30,7 @@ class WorkTime_View(APIView):
 class Search_ServiceCenter(APIView):
     def get(self , request ,name, *args ,**kwargs):
         
-        qs = Service_center.objects.all(name__contains=name)
+        qs = Service_center.objects.filter(name__icontains=name)
         num = qs.__len__()
         serializer = Service_centerSerializer(qs , many = True)
         content = {
