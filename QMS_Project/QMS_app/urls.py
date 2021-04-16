@@ -6,19 +6,29 @@ from .apiViews import ServiceCenter_View , WorkTime_View ,Search_ServiceCenter
 
 urlpatterns = [
     # API endpoints
-    path('API/allServiceCenter',ServiceCenter_View.as_view(), ),
-    path('API/WorkTime/<int:id>',WorkTime_View.as_view(), ),
+    path('API/allServiceCenter',ServiceCenter_View.as_view(),),
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
+    path('API/WorkTime/<int:id>',WorkTime_View.as_view(),),
 
-    # web endpoints
+    # web endpoints:
+    # dashboard
+    path('dashboard/',views.dashboard, name = 'dashboard'),
     # employee
     path('employees/',views.employees, name = 'employees'),
-    path('createEmployee/',views.createEmployee, name = 'createEmployee'),
+    path('addEmployee/',views.addEmployee, name = 'addEmployee'),
     path('viewEmployee/<str:eID>',views.viewEmployee, name = 'viewEmployee'),
     path('updateEmployee/<str:eID>',views.updateEmployee, name = 'updateEmployee'),
     path('deleteEmployee/<str:eID>',views.deleteEmployee, name = 'deleteEmployee'),
 
-    path('services/',views.service, name = 'index'),
+    # service
+    path('services/',views.services, name = 'services'),
+    path('addService/',views.addService, name = 'addService'),
+    path('viewService/<str:sID>',views.viewService, name = 'viewService'),
+    path('editService/<str:sID>',views.editService, name = 'editService'),
+    path('deleteService/<str:sID>',views.deleteService, name = 'deleteService'),
+
+
+
 
 ]
 

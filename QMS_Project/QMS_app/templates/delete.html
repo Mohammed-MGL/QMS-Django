@@ -1,7 +1,6 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-
 <br><br><br>
 <div class="row justify-content-around">
     <div class="col-md-7">
@@ -9,15 +8,14 @@
             <div class="d-flex justify-content-around">
                 <p>Are you sure you want to delete "{{item}}"?</p>
             </div>
-            <form action="{% url 'deleteEmployee' item.id  %}" method="POST">
+            <form action="" method="POST">
                 {% csrf_token %}
                 <div class="d-flex justify-content-around">
-                    <div class="p-2"><a class="btn btn-primary" href="{% url 'employees' %}">Cancel</a></div>
-                    <div class="p-2"><input class="btn btn-danger" type="submit" value="Confirm" /></div>
+                    <div class="p-2"><input class="btn btn-primary" type="submit" value="Cancel" name ="Cancel"/></div>
+                    <div class="p-2"><input class="btn btn-danger" type="submit" value="Confirm" name ="Confirm"/></div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
 {% endblock%}

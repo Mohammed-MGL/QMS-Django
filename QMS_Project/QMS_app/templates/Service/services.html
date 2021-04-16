@@ -1,0 +1,46 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+{% load static %}
+
+<div class="container ">
+  <div class="row ">
+    {% for ser in serv %}
+    <div class="col-lg-2   ">
+      <div class="card border-info ">
+
+        <div class="card-body">
+
+          <h5 class="card-title">{{ser.name}}</h5>
+
+
+          <a href="{% url 'editService' ser.id %}" class="btn btn-sm btn-info">
+            <dev class="material-icons">edit</dev>
+          </a>
+          <a href="{% url 'deleteService' ser.id %}" class="btn btn-sm btn-danger">
+            <dev class="material-icons">delete</dev>
+          </a>
+          <a href="{% url 'viewService' ser.id %}" class="btn btn-sm btn-info"> View </a>
+        </div>
+
+
+      </div>
+    </div>
+
+
+    {% endfor %}
+
+    <div class="col-lg-3   ">
+      <div class="card border-info  ">
+        <a href="{% url 'addService'  %}"> <img class="card-img-center mt-1 col-md-10 "
+            src="{% static 'images/another.svg' %}" alt="Card image cap"></a>
+        <div class="card-body">
+
+
+        </div>
+      </div>
+    </div>
+
+
+    {% endblock %}

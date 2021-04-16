@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import *
 
-class Service_centerSerializer(serializers.ModelSerializer):
+class Service_centerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service_center
         fields = ['id', 'name', 'location', 'Icon']
