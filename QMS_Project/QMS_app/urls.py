@@ -27,6 +27,12 @@ urlpatterns = [
     path('editService/<str:sID>',views.editService, name = 'editService'),
     path('deleteService/<str:sID>',views.deleteService, name = 'deleteService'),
 
+    # Black_list & White_list
+    path('black&whiteList/',views.bwlist, name = 'bwlist'),
+    path('deleteUserFromBL/<str:uID>',views.deleteUserFromBL, name = 'deleteUserFromBL'),
+    path('deleteUserFromWL/<str:uID>',views.deleteUserFromWL, name = 'deleteUserFromWL'),
+    
+
 
 
 

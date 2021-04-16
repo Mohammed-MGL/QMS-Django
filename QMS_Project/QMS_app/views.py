@@ -1,10 +1,11 @@
 from django.shortcuts import render , redirect
 from django.http import HttpResponse
-from .models import Employee  , Service
+from .models import *
 from .forms import EmployeeForm , ServiceForm
 from .filters import EmployeeFilter
 
 
+# dashboard
 def dashboard(request):
     context ={
 
@@ -12,6 +13,7 @@ def dashboard(request):
 
     return render(request ,"dashboard.html" , context) 
 
+# employees
 def employees(request):
     emps = Employee.objects.all()
     myFilter = EmployeeFilter(request.GET,queryset = emps )
@@ -70,7 +72,7 @@ def deleteEmployee(request, eID):
     return render(request ,"delete.html" , context) 
 
 
-
+# services
 def services(request):
     service = Service.objects.all()
     context = {"serv" : service }
@@ -129,14 +131,44 @@ def deleteService(request, sID):
 
     return render(request ,"delete.html" , context) 
 
-# def employeeDetails(request , eID):
-#     emp = Employee.objects.get(id = eID)
-#     return render(request ,"Employee.html" , {"employee" : emp}) 
+
+# Black_list & White_list
+def bwlist(request):
+
+    w_list = White_list.objects.all()
+    b_list = Black_list.objects.all()
+   
+    context = {
+        'w_list':w_list ,
+        'b_list':b_list ,        
+        }
+
+    return render(request ,"bwlist.html" , context)
 
 
-# def employeeEdit(request, eID):
-#     emp = Employee.objects.get(id = eID)          
-#     return render(request ,"Employee.html" , {"employee" : emp}) 
+
+
+def deleteUserFromBL(request, uID):
+
+    u = Black_list.objects.get(id = uID)
+    context = {"item":u}
+    if request.method == 'POST':
+        u.delete()
+        return redirect('bwlist')
+
+    return render(request ,"delete.html" , context) 
+
+
+
+def deleteUserFromWL(request, uID):
+
+    u = White_list.objects.get(id = uID)
+    context = {"item":u}
+    if request.method == 'POST':
+        u.delete()
+        return redirect('bwlist')
+
+    return render(request ,"delete.html" , context) 
 
 
 

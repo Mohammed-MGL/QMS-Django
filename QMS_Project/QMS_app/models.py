@@ -6,9 +6,9 @@ class Service_center(models.Model):
     name = models.CharField(max_length=300)
     location = models.CharField(max_length=500)
     phone =  models.CharField(max_length=100 , blank=True, help_text='Contact phone number')
-    Image = models.ImageField(upload_to='service_center/', verbose_name="Image" , blank=True)
-    Icon = models.ImageField(upload_to='service_center/Icon/', verbose_name="icon" , blank=True)
-    QR = models.ImageField(upload_to='service_center/QR/', verbose_name="QR" , blank=True)
+    Image = models.ImageField(upload_to ='service_center/', verbose_name="Image" , blank=True)
+    Icon = models.ImageField(upload_to ='service_center/Icon/', verbose_name="icon" , blank=True)
+    QR = models.ImageField(upload_to ='service_center/QR/', verbose_name="QR" , blank=True)
 
 
     def __str__(self):
