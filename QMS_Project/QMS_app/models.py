@@ -6,9 +6,9 @@ class Service_center(models.Model):
     name = models.CharField(max_length=300)
     location = models.CharField(max_length=500)
     phone =  models.CharField(max_length=100 , blank=True, help_text='Contact phone number')
-    Image = models.ImageField(upload_to ='service_center/', verbose_name="Image" , blank=True)
-    Icon = models.ImageField(upload_to ='service_center/Icon/', verbose_name="icon" , blank=True)
-    QR = models.ImageField(upload_to ='service_center/QR/', verbose_name="QR" , blank=True)
+    Image = models.ImageField(upload_to='service_center/', verbose_name="Image" , blank=True)
+    Icon = models.ImageField(upload_to='service_center/Icon/', verbose_name="icon" , blank=True)
+    QR = models.ImageField(upload_to='service_center/QR/', verbose_name="QR" , blank=True)
 
 
     def __str__(self):
@@ -36,6 +36,7 @@ class Work_time(models.Model):
 class Service(models.Model):
     Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE)
     name = models.CharField(max_length=350)
+    IS_Active =  models.BooleanField(default=True)
     
     
     def __str__(self):
@@ -73,7 +74,7 @@ class Employee(models.Model):
     username = models.CharField(max_length=300)
     IS_MANAGER =  models.BooleanField(default=False)
     location = models.CharField(max_length=300)
-    phone =  models.CharField(max_length=100 , blank=True, help_text='Contact phone number')
+    phone =  models.CharField(max_length=100 , blank=True)
     Service_center = models.ForeignKey('Service_center', on_delete=models.SET_NULL, null=True)
     Service = models.ForeignKey('Service', on_delete=models.SET_NULL, null=True)
 
@@ -178,4 +179,4 @@ class White_list(models.Model):
 #     Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE)
 #     Employee = models.ForeignKey('Employee', on_delete=models.SET_NULL, null=True)
 #     user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    
+        

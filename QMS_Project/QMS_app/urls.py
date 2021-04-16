@@ -2,7 +2,7 @@ from django.urls import path ,include
 
 from . import views
 # from .views import *
-from .apiViews import ServiceCenter_View , WorkTime_View ,Search_ServiceCenter
+from .apiViews import *
 
 urlpatterns = [
     # API endpoints
@@ -33,8 +33,6 @@ urlpatterns = [
     path('deleteUserFromBL/<str:uID>',views.deleteUserFromBL, name = 'deleteUserFromBL'),
     path('deleteUserFromWL/<str:uID>',views.deleteUserFromWL, name = 'deleteUserFromWL'),
     
-
-
 
 
 ]
