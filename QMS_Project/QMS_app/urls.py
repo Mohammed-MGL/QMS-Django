@@ -9,6 +9,7 @@ urlpatterns = [
     path('API/allServiceCenter',ServiceCenter_View.as_view(),),
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
     path('API/WorkTime/<int:id>',WorkTime_View.as_view(),),
+    path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
 
     # web endpoints:
     # dashboard

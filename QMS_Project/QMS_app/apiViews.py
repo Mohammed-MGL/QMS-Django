@@ -50,3 +50,19 @@ class Search_ServiceCenter(APIView):
         }
         return Response(content)
 
+
+class ServiceCenterDetails(APIView):
+    
+    def get(self , request ,id, *args ,**kwargs):
+        x = Service_center.objects.get(id=id)
+        SC_serializer =Service_center_detailSerializer(x ,many= False) 
+        w = Work_time.objects.get(Service_center= id)
+        w_serializer = Work_timeSerializer(w ,many= False)
+        y = Service.objects.filter(Service_center= id).order_by('name')
+        S_serializer = ServiceSerializer(y ,many= True) 
+        content = {
+            'service_center' : SC_serializer.data,
+            'work_time' :    w_serializer.data ,
+            'services' :  S_serializer.data ,  
+        } 
+        return Response(content)        
