@@ -90,7 +90,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'qms_db',
-        'USER':"django",
+        'USER':"root",
         "PASSWORD":"password",
         'PORT':3306,
         'HOST':'127.0.0.1',

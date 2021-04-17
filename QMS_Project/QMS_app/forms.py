@@ -20,6 +20,8 @@ class EmployeeForm(ModelForm):
             'phone' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
             
             'location' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
+            'Service' : forms.Select(attrs={'class' : 'form-control'}),
+
         }
 
 
