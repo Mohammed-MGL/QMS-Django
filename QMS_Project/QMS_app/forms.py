@@ -11,12 +11,16 @@ class EmployeeForm(ModelForm):
         """Meta definition for Employeeform."""
 
         model = Employee
-        fields = '__all__'
+        fields = ['name','desk_num','username','phone','Service','location']
 
         widgets = {
-            'name' : forms.TextInput(attrs={'class': 'input', 'placeholder' : 'Your Name'}),
+            'name' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+            'desk_num' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
+            'username' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+            'phone' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+            
+            'location' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
         }
-
 
 
 class ServiceForm(ModelForm):
@@ -31,3 +35,9 @@ class ServiceForm(ModelForm):
         widgets = {
             'name' : forms.TextInput(attrs={'class': 'input', 'placeholder' : 'Your Name'}),
         }
+
+
+
+ 
+
+             
