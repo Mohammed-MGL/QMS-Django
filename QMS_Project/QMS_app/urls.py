@@ -4,6 +4,7 @@ from . import views
 # from .views import *
 from .apiViews import *
 
+#koko
 urlpatterns = [
     # API endpoints 
     path('API/allServiceCenter',ServiceCenter_View.as_view(),),
