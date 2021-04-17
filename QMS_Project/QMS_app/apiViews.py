@@ -17,6 +17,17 @@ class ServiceCenter_View(ListAPIView):
     serializer_class = Service_centerListSerializer
 
 
+class Search_ServiceCenter(ListAPIView):
+    # queryset = Service_center.objects.all().
+    pagination_class = CustomPagination
+    serializer_class = Service_centerListSerializer
+
+    model = serializer_class.Meta.model
+    def get_queryset(self):
+        name = self.kwargs['name']
+        queryset = self.model.objects.filter(name__icontains=name).order_by('name')
+        return queryset
+
 # class ServiceCenter_View(APIView):
 #     def get(self , request , *args ,**kwargs):
 #         qs = Service_center.objects.all()
@@ -31,24 +42,24 @@ class ServiceCenter_View(ListAPIView):
     #     return Response(serializer.error)
 
 
-class WorkTime_View(APIView):
-    def get(self , request ,id, *args ,**kwargs):
-        qs = Work_time.objects.get(id = id )
-        serializer = Work_timeSerializer(qs)
-        return Response(serializer.data)
+# class WorkTime_View(APIView):
+#     def get(self , request ,id, *args ,**kwargs):
+#         qs = Work_time.objects.get(id = id )
+#         serializer = Work_timeSerializer(qs)
+#         return Response(serializer.data)
     
-class Search_ServiceCenter(APIView):
-    def get(self , request ,name, *args ,**kwargs):
+# class Search_ServiceCenter(APIView):
+#     def get(self , request ,name, *args ,**kwargs):
         
-        qs = Service_center.objects.filter(name__icontains=name)
-        num = qs.__len__()
-        serializer = Service_centerListSerializer(qs , many = True)
-        content = {
-            'pageTotal' : num,
-            'pagenum' : num,
-            'results' : serializer.data,
-        }
-        return Response(content)
+#         qs = Service_center.objects.filter(name__icontains=name)
+#         num = qs.__len__()
+#         serializer = Service_centerListSerializer(qs , many = True)
+#         content = {
+#             'pageTotal' : num,
+#             'pagenum' : num,
+#             'results' : serializer.data,
+#         }
+#         return Response(content)
 
 
 class ServiceCenterDetails(APIView):
