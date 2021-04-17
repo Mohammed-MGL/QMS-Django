@@ -5,7 +5,7 @@ from . import views
 from .apiViews import *
 
 urlpatterns = [
-    # API endpoints
+    # API endpoints 
     path('API/allServiceCenter',ServiceCenter_View.as_view(),),
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
     # path('API/WorkTime/<int:id>',WorkTime_View.as_view(),),
