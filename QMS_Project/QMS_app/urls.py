@@ -5,6 +5,7 @@ from . import views
 from .apiViews import *
 
 #koko
+#Mohammed
 urlpatterns = [
     # API endpoints 
     path('API/allServiceCenter',ServiceCenter_View.as_view(),),
