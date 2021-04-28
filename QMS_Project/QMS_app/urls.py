@@ -8,10 +8,12 @@ from .apiViews import *
 #Mohammed
 urlpatterns = [
     # API endpoints 
-    path('API/allServiceCenter',ServiceCenter_View.as_view(),),
+    path('API/allServiceCenter/',ServiceCenter.as_view(),),
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
-    # path('API/WorkTime/<int:id>',WorkTime_View.as_view(),),
     path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
+
+    path('login/',views.loginPage, name = 'login'),
+    path('logout/',views.logoutUser, name = 'logout'),
 
     # web endpoints:
     # dashboard
@@ -21,6 +23,7 @@ urlpatterns = [
     path('addEmployee/',views.addEmployee, name = 'addEmployee'),
     path('viewEmployee/<str:eID>',views.viewEmployee, name = 'viewEmployee'),
     path('updateEmployee/<str:eID>',views.updateEmployee, name = 'updateEmployee'),
+    path('updateEmployeePassWord/<str:eID>',views.updateEmployeePassWord, name = 'updateEmployeePassWord'),
     path('deleteEmployee/<str:eID>',views.deleteEmployee, name = 'deleteEmployee'),
 
     # service
@@ -35,8 +38,6 @@ urlpatterns = [
     path('deleteUserFromBL/<str:uID>',views.deleteUserFromBL, name = 'deleteUserFromBL'),
     path('deleteUserFromWL/<str:uID>',views.deleteUserFromWL, name = 'deleteUserFromWL'),
     
-
-
 ]
 
 # from django.urls import path

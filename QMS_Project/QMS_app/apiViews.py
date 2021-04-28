@@ -10,7 +10,7 @@ from QMS_Project.pagination import CustomPagination
 from .serializers import *
 from .models import Service_center
 
-class ServiceCenter_View(ListAPIView):
+class ServiceCenter(ListAPIView):
     # queryset = Service_center.objects.all().
     queryset = Service_center.objects.order_by('name')
     pagination_class = CustomPagination

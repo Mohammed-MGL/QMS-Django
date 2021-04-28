@@ -50,10 +50,10 @@
 
                 <tr>
                   <td>
-                    <a href="{% url 'viewEmployee' emp.id %}" class="btn btn-sm btn-info"> View </a>
+                    <a href="{% url 'viewEmployee' emp.user.id %}" class="btn btn-sm btn-info"> View </a>
                   </td>
                   <td>
-                    {{emp.name}}
+                    {{emp.user}}
                   </td>
                   <td>
                     {{emp.desk_num}}
@@ -64,11 +64,11 @@
                     </span>
                   </td>
                   <td class="text-primary">
-                    <a href="{% url 'updateEmployee' emp.id %}" class="btn btn-sm btn-info"> <dev
+                    <a href="{% url 'updateEmployee' emp.user.id %}" class="btn btn-sm btn-info"> <dev
                       class="material-icons">edit</dev> </a>
                   </td>
                   <td class="text-primary">
-                    <a href="{% url 'deleteEmployee' emp.id %}" class="btn btn-sm btn-danger"> <dev
+                    <a href="{% url 'deleteEmployee' emp.user.id %}" class="btn btn-sm btn-danger"> <dev
                         class="material-icons">delete</dev> </a>
                   </td>
                 </tr>
@@ -98,7 +98,13 @@
           <div class="form-group">
             <form method="GET">
               <div class="row">
-                {{myFilter.form}}
+                <!-- {{uNameFilter.form}} -->
+                {{empFilter.form.user__username}}
+                {{empFilter.form.desk_num}}
+
+                
+                <label >Service:</label>
+                {{empFilter.form.Service}}
               </div>
               <br>
               <button class="btn btn-primary my-2 my-sm-0 btn-round" type="submit">Filter</button>

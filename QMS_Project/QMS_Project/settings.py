@@ -148,4 +148,4 @@ MEDIA_URL = '/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-
+AUTH_USER_MODEL = 'QMS_app.User'

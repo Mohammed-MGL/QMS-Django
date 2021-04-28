@@ -33,9 +33,15 @@
 
     <div class="col-lg-3   ">
       <div class="card border-info  ">
-        <a href="{% url 'addService'  %}"> <img class="card-img-center mt-1 col-md-10 "
+        
+<form action="" method="POST" >
+  {% csrf_token %}
+  {{form}}
+  <input type="submit" name="submit" >
+</form>
+        <!-- <a href="{% url 'addService'  %}"> <img class="card-img-center mt-1 col-md-10 "
             src="{% static 'images/another.svg' %}" alt="Card image cap"></a>
-        <div class="card-body">
+        <div class="card-body"> -->
 
 
         </div>

@@ -1,91 +1,224 @@
 from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from .models import *
-from .forms import EmployeeForm , ServiceForm
-from .filters import EmployeeFilter
+from .forms import *
+from .filters import EmployeeFilter , UserFilter
+from django.contrib import messages
+from django.contrib.auth import authenticate ,login , logout
+from django.contrib.auth.decorators import login_required
+from .decorators import unauthenticated_user , manager_only
+
+from django.contrib.auth.forms import PasswordChangeForm
+
+@unauthenticated_user
+def loginPage(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')  
+        user = authenticate(request , username = username ,password = password )
+
+        if user is not None:
+            login(request , user)
+            return redirect('employees')
+        else:
+            messages.warning(request, 'username and password do not match!')
+
+    context ={}
+    return render(request ,"login.html" , context) 
+
+
+@login_required(login_url='login')
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
 
 
 # dashboard
+@login_required(login_url='login')
+@manager_only
 def dashboard(request):
+    sc = Manager.objects.get(user = request.user ).Service_center
+    
     context ={
-
+        'scName':sc,
     }
-
     return render(request ,"dashboard.html" , context) 
 
 # employees
+@login_required(login_url='login')
+@manager_only
 def employees(request):
-    emps = Employee.objects.all()
-    myFilter = EmployeeFilter(request.GET,queryset = emps )
-    emps = myFilter.qs
+    sc = Manager.objects.get(user = request.user).Service_center
+    emps = Employee.objects.filter(Service_center = sc)
+    empFilter = EmployeeFilter(request.GET, request=request,queryset = emps )
+    emps = empFilter.qs
+    # uNameFilter = UserFilter(request.GET,queryset = emps)
+    # emps = uNameFilter.qs
+
     context = {
+        'scName':sc,
         "employees" : emps ,
-        "myFilter" : myFilter,
+        "empFilter" : empFilter,
+        # "uNameFilter" : uNameFilter
     }
     return render(request ,"Employee/employees.html" , context) 
 
 
+@login_required(login_url='login')
+@manager_only
 def addEmployee(request):
-
-    form = EmployeeForm()
-
+    sc = Manager.objects.get(user = request.user ).Service_center
+    form = EmployeeCreationForm(sc)
     if request.method == 'POST':
-        form = EmployeeForm(request.POST)
+        form = EmployeeCreationForm(sc,data=request.POST)
         if form.is_valid():
             form.save()
             return redirect('employees')
-
     
-    context ={"form":form}
-    return render(request ,"Employee/employee_form.html" , context) 
+    context ={"form":form,'scName':sc}
+    return render(request ,"Employee/employeeCreationForm.html" , context) 
 
+   
+@login_required(login_url='login')
+@manager_only
 def viewEmployee(request, eID):
+    sc = Manager.objects.get(user = request.user ).Service_center
+    emp = Employee.objects.get(user = eID)
+    emps = Employee.objects.filter(Service_center = sc.id)
 
-    context = {}
-    return render(request ,"Employee/employee.html" , context) 
+    if not emp in emps:
+        return redirect('employees')
 
+
+    context = {
+        'scName':sc,
+        }
+    return render(request ,"Employee/employee.html" , context)
+
+
+@login_required(login_url='login')
+@manager_only
 def updateEmployee(request, eID):
+    sc = Manager.objects.get(user = request.user ).Service_center
+    emp = Employee.objects.get(user = eID)
+    emps = Employee.objects.filter(Service_center = sc.id)
+
+    if not emp in emps:
+        return redirect('employees')
 
     
-    emp = Employee.objects.get(id = eID)
-    form = EmployeeForm(instance = emp)
+    form = EmployeeForm(sc,instance = emp)
 
     if request.method == 'POST':
-        form = EmployeeForm(request.POST ,instance = emp)
+        form = EmployeeForm(sc,request.POST ,instance = emp)
         if form.is_valid():
             form.save()
             return redirect('employees')
 
-    context = {"form":form}
-    return render(request ,"Employee/employee_form.html" , context) 
+    context = {
+        "form":form,
+        'scName':sc,
+         'eID':eID
+        }
+    return render(request ,"Employee/employeeUpdate.html" , context) 
 
+
+@login_required(login_url='login')
+@manager_only
+def updateEmployeePassWord(request, eID):
+    sc = Manager.objects.get(user = request.user ).Service_center
+    emp = Employee.objects.get(user = eID)
+    emps = Employee.objects.filter(Service_center = sc.id)
+
+    if not emp in emps:
+        return redirect('employees')
+
+    form = PasswordChangeForm(request.user)
+
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('employees')
+        else:
+            messages.error(request, 'Please correct the error below.')
+
+    # form = EmployeeForm(instance = emp)
+
+    # if request.method == 'POST':
+    #     form = EmployeeForm(request.POST ,instance = emp)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('employees')
+
+    context = {
+        "form":form,
+        'scName':sc,
+        }
+    return render(request ,"Employee/employeePassWordUpdate.html" , context) 
+
+
+@login_required(login_url='login')
+@manager_only
 def deleteEmployee(request, eID):
 
-    emp = Employee.objects.get(id = eID)
-    context = {"item":emp}
+    sc = Manager.objects.get(user = request.user ).Service_center
+    emp = Employee.objects.get(user = eID)
+    emps = Employee.objects.filter(Service_center = sc.id)
+
+    if not emp in emps:
+        return redirect('employees')
+
     if request.method == 'POST':
         if 'Confirm' in request.POST:    
             emp.delete()
         return redirect('employees')
 
-
+    context = {
+        'item':emp,
+        'scName':sc,
+    }
     return render(request ,"delete.html" , context) 
 
 
 # services
+@login_required(login_url='login')
+@manager_only
 def services(request):
-    service = Service.objects.all()
-    context = {"serv" : service }
+    
+    sc = Manager.objects.get(user = request.user ).Service_center
+    service = Service.objects.filter(Service_center=sc)
+
+    form = ServiceForm(sc)
+
+    if request.method == 'POST':
+        form = ServiceForm(sc,request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('services')
+
+    context = {
+        "serv" : service,
+        "form":form,
+        'scName':sc,
+
+    }
     return render(request ,"Service/services.html" , context) 
 
 
-
+@login_required(login_url='login')
+@manager_only
 def addService(request):
+    
+    sc = Manager.objects.get(user = request.user ).Service_center
 
-    form = ServiceForm()
+    form = ServiceForm(sc)
 
     if request.method == 'POST':
-        form = ServiceForm(request.POST)
+        form = ServiceForm(sc,request.POST)
         if form.is_valid():
             form.save()
             return redirect('services')
@@ -95,13 +228,25 @@ def addService(request):
     return render(request ,"Service/service_form.html" , context) 
    
 
-
+@login_required(login_url='login')
+@manager_only
 def viewService(request, sID):
+    service = Service.objects.get(id=sID)
 
-    context = {}
+    sc = Manager.objects.get(user = request.user ).Service_center
+
+    services= Service.objects.filter(Service_center = sc )
+
+    if not service in services:
+        return redirect('services')
+
+    context = {
+        'service' : service
+    }
     return render(request ,"Service/service.html" , context) 
 
-
+@login_required(login_url='login')
+@manager_only
 def editService(request, sID):
 
     
@@ -118,7 +263,8 @@ def editService(request, sID):
     return render(request ,"Service/service_form.html" , context)     
 
 
-
+@login_required(login_url='login')
+@manager_only
 def deleteService(request, sID):
 
     ser = Service.objects.get(id = sID)
@@ -133,10 +279,13 @@ def deleteService(request, sID):
 
 
 # Black_list & White_list
+@login_required(login_url='login')
+@manager_only
 def bwlist(request):
+    sc = Manager.objects.get(user = request.user ).Service_center
 
-    w_list = White_list.objects.all()
-    b_list = Black_list.objects.all()
+    w_list = White_list.objects.filter(Service_center = sc)
+    b_list = Black_list.objects.filter(Service_center = sc)
    
     context = {
         'w_list':w_list ,

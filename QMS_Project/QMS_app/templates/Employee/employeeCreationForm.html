@@ -1,0 +1,98 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title"> Add Employee 
+                    </h4>
+                    <p class="card-category">Fill following form </p>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="row">
+                          
+                            <div class="col-md-4">
+                                <div class="form-group bmd-form-group">
+                                  <label >{{form.username.label}}:</label>
+                                  {{form.username}}
+                                </div>
+                              </div>
+                                                    
+                              <div class="col-md-4">
+                                <div class="form-group bmd-form-group">
+                                  <label >{{form.password1.label}}:</label>
+                                  {{form.password1}}
+                                </div>
+                              </div>
+                                                    
+                              <div class="col-md-4">
+                                <div class="form-group bmd-form-group">
+                                  <label >{{form.password2.label}}:</label>
+                                  {{form.password2}}
+                                </div>
+                              </div>
+                                      
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group bmd-form-group">
+                              <label >{{form.Fist_Name.label}}:</label>
+                              {{form.Fist_Name}}
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group bmd-form-group">
+                              <label >{{form.Last_Name.label}}:</label>
+                              {{form.Last_Name}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group bmd-form-group">
+                                  <label >{{form.Service.label}}:</label>
+                                  {{form.Service}}
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group bmd-form-group">
+                                  <label >{{form.desk_num.label}}:</label>
+                                  {{form.desk_num}}
+                                </div>
+                              </div>
+                        </div>
+                        
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label>{{form.notes.label}}:</label>
+                                {{form.notes}}
+                              
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8">
+                                {{form.errors}}
+                            </div>
+
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-primary pull-right">Create</button>
+                          </div>
+                        </div>
+                      </form>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+{% endblock%}

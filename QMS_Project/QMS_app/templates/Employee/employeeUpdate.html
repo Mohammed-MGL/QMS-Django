@@ -1,0 +1,13 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" name="submit" >
+</form>
+<!-- {{eID}} -->
+<a href="{% url 'updateEmployeePassWord' eID  %}" >change password</a>
+
+{% endblock%}

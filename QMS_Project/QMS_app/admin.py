@@ -3,6 +3,8 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
+admin.site.register(User)
+admin.site.register(Manager)
 admin.site.register(Service_center)
 admin.site.register(Work_time)
 admin.site.register(Employee)

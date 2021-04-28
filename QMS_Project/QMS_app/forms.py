@@ -1,42 +1,140 @@
 from django.forms import ModelForm
-from .models import Employee , Service
-
+from .models import *
+from django.db import transaction
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
+
+class EmployeeCreationForm(UserCreationForm):
+    Fist_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}))
+    Last_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
+    Service = forms.ModelChoiceField(queryset=Service.objects.all(), widget=forms.Select(attrs={'class': 'form-control mb-4 ml-2  '}))
+    desk_num = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 mt-1'}  ) )
+    notes = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '} ) )
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '}))
+    osc = None
+
+    def __init__(self, sc, *args, **kwargs):
+        super(EmployeeCreationForm, self).__init__(*args, **kwargs)
+        self.fields['Service'].queryset = Service.objects.filter(Service_center = sc.id)
+        self.fields['password1'].label = "Password"
+        self.fields['password2'].label = "Confirm Password"  
+        self.osc = sc
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+        }
+
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        user.is_employee = True
+        user.save()
+        employee = Employee.objects.create(user=user,Service_center = self.osc,Service= self.cleaned_data['Service'] ,desk_num = self.cleaned_data['desk_num'],notes = self.cleaned_data['notes'] )
+        return user
+
 
 
 class EmployeeForm(ModelForm):
     """Form definition for Employee."""
 
+    def __init__(self, sc, *args, **kwargs):
+        super(EmployeeForm, self).__init__(*args, **kwargs)
+        self.fields['Service'].queryset = Service.objects.filter(Service_center = sc.id)
+
     class Meta:
         """Meta definition for Employeeform."""
 
         model = Employee
-        fields = ['name','desk_num','username','phone','Service','location']
+        fields = ['Service','desk_num','notes']
 
-        widgets = {
-            'name' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
-            'desk_num' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
-            'username' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
-            'phone' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+        # widgets = {
+        #     'name' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+        #     'desk_num' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
+        #     'username' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+        #     'phone' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
             
-            'location' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
-            'Service' : forms.Select(attrs={'class' : 'form-control'}),
-
-        }
+        #     'location' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
+        # }
 
 
 class ServiceForm(ModelForm):
     """Form definition for Employee."""
 
+    osc = None
+
+    def __init__(self, sc, *args, **kwargs):
+        super(ServiceForm, self).__init__(*args, **kwargs)
+        self.osc = sc 
+
+
     class Meta:
         """Meta definition for Employeeform."""
 
         model = Service
-        fields = '__all__'
+        fields = ['name' , 'IS_Active' ]
 
         widgets = {
-            'name' : forms.TextInput(attrs={'class': 'input', 'placeholder' : 'Your Name'}),
+            'name' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : 'Your Name'}),
+            # 'IS_Active' : forms.CheckboxInput(attrs={'class': 'form-check-input', 'placeholder' : 'Your Name'}),
         }
+
+    @transaction.atomic
+    def save(self):
+        Service = super().save(commit=False)
+        Service.Service_center = self.osc
+        Service.save()
+        return Service
+
+# class EmployeeEditForm(ModelForm):
+
+#     Fist_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}))
+#     Last_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
+#     Service = forms.ModelChoiceField(queryset=Service.objects.all, widget=forms.Select(attrs={'class': 'form-control mb-4  '}))
+#     desk_num = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 mt-1'}  ) )
+#     notes = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '} ) )
+
+#     def __init__(self, sc, *args, **kwargs):
+#         super(EmployeeCreationForm, self).__init__(*args, **kwargs)
+#         self.fields['Service'].queryset = Service.objects.filter(Service_center = sc.id)
+
+#     class Meta:
+#         """Meta definition for Employeeform."""
+
+#         model = User
+#         # fields = '__all__'
+
+#         def save(self):
+#         user = super().save(commit=False)
+#         user.save()
+#         employee = Employee.objects.create(user=user,Service_center = self.osc,Service= self.cleaned_data['Service'] ,desk_num = self.cleaned_data['desk_num'],notes = self.cleaned_data['notes'] )
+#         return user
+
+        
+# ######
+# def editprofile(request):
+#     profile = Profile.objects.get(user=request.user)
+#     if request.method=='POST':
+#         x = UserForm(request.POST,request.FILES , instance=request.user)
+#         y = ProfileForm(request.POST,instance= profile)
+#         if x.is_valid and y.is_valid:
+#             x.save()
+#             myprofile = y.save(commit=False)
+#             myprofile.user= request.user
+#             myprofile.save()
+#             return redirect(reverse('accounts:profile'))
+#     else:
+#         x = UserForm(instance=request.user)
+#         y = ProfileForm(instance= profile)
+
+#     return render(request ,'registration/accounts/profile_edit.html' ,{'x':x , 'y':y  }) 
+
+
+######
 
 
 
