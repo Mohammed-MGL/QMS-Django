@@ -6,11 +6,13 @@ from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView
 from QMS_Project.pagination import CustomPagination
+from rest_framework.permissions import IsAuthenticated 
 
 from .serializers import *
 from .models import Service_center
 
 class ServiceCenter(ListAPIView):
+    permission_classes = (IsAuthenticated,)
     # queryset = Service_center.objects.all().
     queryset = Service_center.objects.order_by('name')
     pagination_class = CustomPagination
@@ -18,6 +20,7 @@ class ServiceCenter(ListAPIView):
 
 
 class Search_ServiceCenter(ListAPIView):
+    permission_classes = (IsAuthenticated,)
     # queryset = Service_center.objects.all().
     pagination_class = CustomPagination
     serializer_class = Service_centerListSerializer
@@ -63,6 +66,8 @@ class Search_ServiceCenter(ListAPIView):
 
 
 class ServiceCenterDetails(APIView):
+    permission_classes = (IsAuthenticated,)
+    
     
     def get(self , request ,id, *args ,**kwargs):
         x = Service_center.objects.get(id=id)
