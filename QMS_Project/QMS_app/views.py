@@ -326,6 +326,47 @@ def bwlist(request):
     return render(request ,"bwlist.html" , context)
 
 
+    # addToBlackLIst
+
+@login_required(login_url='login')
+@manager_only
+def addToBlackLIst(request, uID):
+    sc = Manager.objects.get(user = request.user ).Service_center
+
+    u = User.objects.get(id= uID)
+    Black_list.objects.create(user=u ,Service_center=sc)
+    return redirect('bwlist')
+
+
+
+@login_required(login_url='login')
+@manager_only
+def addToWhiteLIst(request, uID):
+    sc = Manager.objects.get(user = request.user ).Service_center
+
+    u = User.objects.get(id= uID)
+    White_list.objects.create(user=u ,Service_center=sc)
+    return redirect('bwlist')    
+
+    
+
+    
+
+
+@login_required(login_url='login')
+@manager_only
+def serachForUser(request):
+    sc = Manager.objects.get(user = request.user ).Service_center
+    users = User.objects.filter(is_employee = False ).filter(is_manager= False ).filter(is_guest= False ).filter(is_superuser= False )
+    usersFilter = UserFilter(request.GET, request=request,queryset = users )
+    users = usersFilter.qs
+    context = {
+              'users':users ,
+              "UserFilter" : usersFilter,
+        }
+# UserFilter
+    return render(request ,"serachForUser.html" , context)
+
 
 
 def deleteUserFromBL(request, uID):
@@ -372,7 +413,7 @@ def BookAsGuest(request, scID):
 def book_in_service(request, sID):
     now = datetime.now()
     service =Service.objects.get(id = sID)
-    guest = User.objects.create(username='Guest'+" "+now.strftime("%d/%m/%Y %H:%M:%S"))
+    guest = User.objects.create(username='Guest'+" "+now.strftime("%d/%m/%Y %H:%M:%S") , is_guest= True)
 
     def random_string(letter_count, digit_count):  
         str1 = ''.join((random.choice(string.ascii_letters) for x in range(letter_count)))  

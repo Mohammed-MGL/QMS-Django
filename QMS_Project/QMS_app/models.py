@@ -5,6 +5,7 @@ from django.contrib.auth.models import User , AbstractUser
 class User(AbstractUser):
     is_employee = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
+    is_guest = models.BooleanField(default=False)
 
 
 class Manager(models.Model):
@@ -62,6 +63,7 @@ class Service(models.Model):
     name = models.CharField(max_length=350)
     IS_Active = models.BooleanField(default=True)
     
+    
     def __str__(self):
         """String for representing the Model object."""
         return self.name 
@@ -99,7 +101,7 @@ class Service_Record(models.Model):
 class Black_list(models.Model):
     Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    reason = models.CharField(max_length=600 , blank=True)
+    
 
     def __str__(self):
         """String for representing the Model object."""

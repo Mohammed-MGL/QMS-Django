@@ -39,6 +39,9 @@ urlpatterns = [
     path('black&whiteList/',views.bwlist, name = 'bwlist'),
     path('deleteUserFromBL/<str:uID>',views.deleteUserFromBL, name = 'deleteUserFromBL'),
     path('deleteUserFromWL/<str:uID>',views.deleteUserFromWL, name = 'deleteUserFromWL'),
+    path('serachForUser',views.serachForUser, name = 'serachForUser'),
+    path('addToBlackLIst/<str:uID>',views.addToBlackLIst, name = 'addToBlackLIst'),
+    path('addToWhiteLIst/<str:uID>',views.addToWhiteLIst, name = 'addToWhiteLIst'),
     
 
     path('BookAsGuest/<str:scID>',views.BookAsGuest, name = 'BookAsGuest'), 

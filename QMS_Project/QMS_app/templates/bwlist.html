@@ -15,8 +15,8 @@
           <div class="d-flex justify-content-between">
             <div class="p-2">
               ======
-            </div>
-            <div class="p-2"> <a href="" class="btn btn-sm btn-secondary ">Add user
+            </div> 
+            <div class="p-2"> <a href="{% url 'serachForUser' %}" class="btn btn-sm btn-secondary ">Add user
                 &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
           </div>
         </div>
@@ -29,16 +29,16 @@
                 <tr>
                   <th scope="col"> ID </th>
                   <th scope="col">Name</th>
-                  <th scope="col">Reason</th>
+                  
                   <th scope="col">Delete</th>
                 </tr>
               </thead>
               <tbody>
                 {% for i in w_list %}
                 <tr>
-                  <th scope="row">{{i.id}}</th>
+                  <th scope="row">{{i.user.id}}</th>
                   <td>{{i.user}}</td>
-                  <td>{{i.reason}}</td>
+                  
                   <td><a href="{% url 'deleteUserFromWL' i.id %}" class="btn  btn-danger btn-sm ">Delete</a></td>
 
                 </tr>
@@ -67,7 +67,7 @@
             <div class="p-2">
               ======
             </div>
-            <div class="p-2"> <a href="" class="btn btn-sm btn-secondary ">Add user
+            <div class="p-2"> <a href="{% url 'serachForUser' %}" class="btn btn-sm btn-secondary ">Add user
                 &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
           </div>
         </div>
@@ -79,16 +79,16 @@
                 <tr>
                   <th scope="col"> ID </th>
                   <th scope="col">Name</th>
-                  <th scope="col">Reason</th>
+                  
                   <th scope="col">Delete</th>
                 </tr>
               </thead>
               <tbody>
                 {% for i in b_list %}
                 <tr>
-                  <th scope="row">{{i.id}}</th>
+                  <th scope="row">{{i.user.id}}</th>
                   <td>{{i.user}}</td>
-                  <td>{{i.reason}}</td>
+                 
                   <td><a href="{% url 'deleteUserFromBL' i.id %}" class="btn  btn-danger btn-sm ">Delete</a></td>
                 </tr>
                 {% endfor %}

@@ -1,0 +1,113 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+
+<div class="countainer">
+    <div class="row ml-1">
+
+        <div class="col-9  ">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title ">users</h4>
+                    <div class="d-flex justify-content-between">
+                        <div class="p-2">
+                            ======
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <tr>
+                                    <th>
+
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Desk Number
+                                    </th>
+                                    <th>
+                                        Service
+                                    </th>
+                                    <th>
+                                        Edit
+                                    </th>
+                                    <th>
+                                        Delete
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for user in users %}
+
+                                <tr>
+
+                                    <td>
+                                        {{user.username}}
+                                    </td>
+                                    <td>
+                                        {{user.first_name}}
+                                    </td>
+                                    <td>
+                                        {{user.last_name}}<span class="material-icons-round">
+
+                                        </span>
+                                    </td>
+                                    <td class="text-primary">
+                                        <a href="{% url 'addToBlackLIst' user.id %}" class="btn btn-sm btn-danger"> add to black list </a>
+                                    </td>
+                                    <td class="text-primary">
+                                        <a href="{% url 'addToWhiteLIst' user.id %}" class="btn btn-sm btn-danger"> add to white list </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="col-3 ">
+            <div class="card card-profile">
+              <div class="card-body">
+                <h4 class="card-title">
+                   
+                  <!-- <dev class="material-icons"> filter_alt </dev> -->
+                </h4>
+                <br>
+      
+                <div class="form-group">
+                  <form method="GET">
+                    <div class="row">
+                      <!-- {{uNameFilter.form}} -->
+                      {{UserFilter.form.username}}
+                      {{UserFilter.form.first_name}}
+                      {{UserFilter.form.last_name}}
+      
+                      
+                    
+                    </div>
+                    <br>
+                    <button class="btn btn-primary my-2 my-sm-0 btn-round" type="submit">Filter</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+{% endblock%}
