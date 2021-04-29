@@ -13,6 +13,7 @@
         <div class="card-body">
 
           <h5 class="card-title">{{ser.name}}</h5>
+          <h5 class="card-title">{{ser.IS_Active}}</h5>
 
 
           <a href="{% url 'editService' ser.id %}" class="btn btn-sm btn-info">
@@ -20,6 +21,14 @@
           </a>
           <a href="{% url 'deleteService' ser.id %}" class="btn btn-sm btn-danger">
             <dev class="material-icons">delete</dev>
+          </a>
+
+          
+
+            <a href="{% url 'serviceChangeState' ser.id %}" class="btn btn-sm btn-info">
+              togoll
+            </a>
+
           </a>
           <a href="{% url 'viewService' ser.id %}" class="btn btn-sm btn-info"> View </a>
         </div>

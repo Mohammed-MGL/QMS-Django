@@ -33,6 +33,7 @@ urlpatterns = [
     path('viewService/<str:sID>',views.viewService, name = 'viewService'),
     path('editService/<str:sID>',views.editService, name = 'editService'),
     path('deleteService/<str:sID>',views.deleteService, name = 'deleteService'),
+    path('serviceChangeState/<str:sID>',views.serviceChangeState, name = 'serviceChangeState'),
 
     # Black_list & White_list
     path('black&whiteList/',views.bwlist, name = 'bwlist'),
@@ -40,7 +41,9 @@ urlpatterns = [
     path('deleteUserFromWL/<str:uID>',views.deleteUserFromWL, name = 'deleteUserFromWL'),
     
 
-    path('BookAsGuest/<str:scID>',views.BookAsGuest, name = 'BookAsGuest'),
+    path('BookAsGuest/<str:scID>',views.BookAsGuest, name = 'BookAsGuest'), 
+    
+    path('book_in_service/<str:sID>',views.book_in_service, name = 'book_in_service'),
 ]
 
 # from django.urls import path

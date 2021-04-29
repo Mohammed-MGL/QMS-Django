@@ -250,6 +250,32 @@ def viewService(request, sID):
     }
     return render(request ,"Service/service.html" , context) 
 
+
+
+ 
+@login_required(login_url='login')
+@manager_only
+def serviceChangeState(request, sID):
+    service = Service.objects.get(id=sID)
+
+    sc = Manager.objects.get(user = request.user ).Service_center
+
+    services= Service.objects.filter(Service_center = sc )
+
+    if not service in services:
+        return redirect('bwlist')
+   
+    service.IS_Active =  not service.IS_Active
+    service.save()
+    return redirect('services')
+   
+
+
+    # context = {
+    #     'service' : service
+    # }
+    # return render(request ,"Service/service.html" , context)    
+
 @login_required(login_url='login')
 @manager_only
 def editService(request, sID):
@@ -330,9 +356,23 @@ def BookAsGuest(request, scID):
     Services = Service.objects.filter(Service_center=scID)
 
     # guest = User.objects.create()
-    now = date.today()
+    
+    
 
-    guest = User.objects.create(username='guest'+now.strftime("%d/%m/%Y %H:%M:%S"))
+    context = {
+        "Services" : Services,
+    }
+    
+    return render(request ,"BookAsGuest.html" , context)    
+
+
+
+
+
+def book_in_service(request, sID):
+    now = datetime.now()
+    service =Service.objects.get(id = sID)
+    guest = User.objects.create(username='Guest'+" "+now.strftime("%d/%m/%Y %H:%M:%S"))
 
     def random_string(letter_count, digit_count):  
         str1 = ''.join((random.choice(string.ascii_letters) for x in range(letter_count)))  
@@ -347,20 +387,15 @@ def BookAsGuest(request, scID):
     print(gPassword)
     guest.set_password(gPassword)
     guest.save()
+    book = Service_Record.objects.create(Service=service , user=guest , IS_InCenter = True ,  Queue_type = 'B' )
     
-
-    context = {
-        "Services" : Services,
-    }
-    
-    return render(request ,"BookAsGuest.html" , context)    
-
-
+    return render(request ,"book_in_service.html" , {})
 
 ###########################################
 # from django.shortcuts import render
 # from django.http import HttpResponse
 # from .models import User , Service_center , Employee , Black_list , White_list
+
 
 
 

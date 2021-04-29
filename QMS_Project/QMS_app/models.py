@@ -72,10 +72,10 @@ class Service_Record(models.Model):
     Employee = models.ForeignKey('Employee', on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     IQ_Time = models.DateTimeField(auto_now_add=True)
-    P_Time = models.DateTimeField(auto_now_add=True, blank=True)
-    O_Time = models.DateTimeField(auto_now_add=True, blank=True)
+    P_Time = models.DateTimeField( blank=True ,  null=True)
+    O_Time = models.DateTimeField( blank=True , null=True)
     is_accept = models.BooleanField(default=True)
-    is_served = models.BooleanField(default=True)
+    is_served = models.BooleanField(default=False)
 
     
     
@@ -90,9 +90,9 @@ class Service_Record(models.Model):
     )
     
 
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.time   
+    # def __str__(self):
+    #     """String for representing the Model object."""
+    #     return self.user   
 
 
 
