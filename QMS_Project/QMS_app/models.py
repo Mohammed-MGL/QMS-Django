@@ -9,7 +9,7 @@ class User(AbstractUser):
 
 class Manager(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE)
+    Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE,  null=True)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -17,7 +17,7 @@ class Manager(models.Model):
 
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE)
+    Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE,  null=True)
     Service = models.ForeignKey('Service', on_delete=models.SET_NULL, null=True)
     desk_num = models.CharField(max_length=50 , blank=True)
     notes =  models.CharField(max_length=1000 , blank=True)
@@ -74,8 +74,10 @@ class Service_Record(models.Model):
     IQ_Time = models.DateTimeField(auto_now_add=True)
     P_Time = models.DateTimeField(auto_now_add=True, blank=True)
     O_Time = models.DateTimeField(auto_now_add=True, blank=True)
-    ##IS ac
-    ##IS served
+    is_accept = models.BooleanField(default=True)
+    is_served = models.BooleanField(default=True)
+
+    
     
     IS_InCenter =  models.BooleanField(default=False)
     Queue_type = models.CharField(

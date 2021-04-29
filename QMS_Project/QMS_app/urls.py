@@ -11,6 +11,7 @@ urlpatterns = [
     path('API/allServiceCenter/',ServiceCenter.as_view(),),
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
     path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
+    path('account/register/', UserCreate.as_view()),
 
     path('login/',views.loginPage, name = 'login'),
     path('logout/',views.logoutUser, name = 'logout'),
@@ -38,6 +39,8 @@ urlpatterns = [
     path('deleteUserFromBL/<str:uID>',views.deleteUserFromBL, name = 'deleteUserFromBL'),
     path('deleteUserFromWL/<str:uID>',views.deleteUserFromWL, name = 'deleteUserFromWL'),
     
+
+    path('BookAsGuest/<str:scID>',views.BookAsGuest, name = 'BookAsGuest'),
 ]
 
 # from django.urls import path

@@ -4,23 +4,30 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics
+
 from rest_framework.generics import ListAPIView
 from QMS_Project.pagination import CustomPagination
-from rest_framework.permissions import IsAuthenticated 
+from rest_framework.permissions import IsAuthenticated  , AllowAny
 
 from .serializers import *
 from .models import Service_center
 
 class ServiceCenter(ListAPIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     # queryset = Service_center.objects.all().
     queryset = Service_center.objects.order_by('name')
     pagination_class = CustomPagination
     serializer_class = Service_centerListSerializer
 
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny, )
+
 
 class Search_ServiceCenter(ListAPIView):
-    permission_classes = (IsAuthenticated,)
+    
     # queryset = Service_center.objects.all().
     pagination_class = CustomPagination
     serializer_class = Service_centerListSerializer

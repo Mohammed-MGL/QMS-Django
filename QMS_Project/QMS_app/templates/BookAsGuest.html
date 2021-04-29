@@ -1,0 +1,32 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<div class="container ">
+    <div class="row ">
+        {% for s in Services %}
+        <div class="col-lg-2   ">
+            <div class="card border-info ">
+
+                <div class="card-body">
+
+                    <h5 class="card-title">{{s.name}}</h5>
+
+
+                    <a href="" class="btn btn-sm btn-info">
+                        <dev class="material-icons">r</dev>
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+
+    </div>
+</div>
+
+
+
+
+{% endblock%}

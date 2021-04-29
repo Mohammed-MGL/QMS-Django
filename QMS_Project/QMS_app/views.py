@@ -7,8 +7,13 @@ from django.contrib import messages
 from django.contrib.auth import authenticate ,login , logout
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user , manager_only
-
 from django.contrib.auth.forms import PasswordChangeForm
+from datetime import datetime
+from datetime import date
+import random  
+import string  
+
+
 
 @unauthenticated_user
 def loginPage(request):
@@ -318,6 +323,37 @@ def deleteUserFromWL(request, uID):
         return redirect('bwlist')
 
     return render(request ,"delete.html" , context) 
+
+
+def BookAsGuest(request, scID):
+    
+    Services = Service.objects.filter(Service_center=scID)
+
+    # guest = User.objects.create()
+    now = date.today()
+
+    guest = User.objects.create(username='guest'+now.strftime("%d/%m/%Y %H:%M:%S"))
+
+    def random_string(letter_count, digit_count):  
+        str1 = ''.join((random.choice(string.ascii_letters) for x in range(letter_count)))  
+        str1 += ''.join((random.choice(string.digits) for x in range(digit_count)))  
+    
+        sam_list = list(str1) # it converts the string to list.  
+        random.shuffle(sam_list) # It uses a random.shuffle() function to shuffle the string.  
+        final_string = ''.join(sam_list)  
+        return final_string 
+    
+    gPassword = random_string(8,8)
+    print(gPassword)
+    guest.set_password(gPassword)
+    guest.save()
+    
+
+    context = {
+        "Services" : Services,
+    }
+    
+    return render(request ,"BookAsGuest.html" , context)    
 
 
 
