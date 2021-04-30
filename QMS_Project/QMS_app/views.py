@@ -432,6 +432,43 @@ def book_in_service(request, sID):
     
     return render(request ,"book_in_service.html" , {})
 
+
+
+
+
+@login_required(login_url='login')
+@manager_only
+def ServiceCnterProfile(request):
+    sc = Manager.objects.get(user = request.user ).Service_center
+    
+    form = scform(instance = sc)
+
+    if request.method == 'POST':
+        form = scform(data=request.POST,files=request.FILES,instance = sc)
+        if form.is_valid():
+            
+            form.save()
+            return redirect('dashboard')
+
+    context = {
+        "form":form,
+        'scName':sc,
+         
+        }
+    return render(request ,"ServiceCnterProfile.html" , context) 
+
+    # if request.method == 'POST':
+    #     form = ImageForm(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         form.save()
+    #         # Get the current instance object to display in the template
+    #         img_obj = form.instance
+    #         return render(request, 'ServiceCnterProfile.html', {'form': form, 'img_obj': img_obj})
+    # else:
+    #     form = ImageForm()
+    # return render(request, 'ServiceCnterProfile.html', {'form': form})
+
+     
 ###########################################
 # from django.shortcuts import render
 # from django.http import HttpResponse

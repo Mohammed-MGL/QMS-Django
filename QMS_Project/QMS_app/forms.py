@@ -88,6 +88,21 @@ class ServiceForm(ModelForm):
         Service.save()
         return Service
 
+
+class scform(forms.ModelForm): 
+    name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}))
+    location = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
+    
+    phone = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 mt-1'}  ) )
+    # Image = forms.ImageField(required = False , widget=forms.choices(attrs={'class': 'form-control mb-4 ml-2 '}  ))
+    # Icon = forms.ImageField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
+    # QR = forms.ImageField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
+    
+    
+    class Meta: 
+        model = Service_center 
+        fields = '__all__'    
+
 # class EmployeeEditForm(ModelForm):
 
 #     Fist_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}))
