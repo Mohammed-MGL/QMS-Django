@@ -5,7 +5,7 @@
 {% load static %}
 
 <div class="container ">
-  <div class="row ">
+  <div class="row justify-content-center ">
     {% for ser in serv %}
     <div class="col-lg-2   ">
       <div class="card border-info ">
@@ -23,11 +23,11 @@
             <dev class="material-icons">delete</dev>
           </a>
 
-          
 
-            <a href="{% url 'serviceChangeState' ser.id %}" class="btn btn-sm btn-info">
-              togoll
-            </a>
+
+          <a href="{% url 'serviceChangeState' ser.id %}" class="btn btn-sm btn-info">
+            togoll
+          </a>
 
           </a>
           <a href="{% url 'viewService' ser.id %}" class="btn btn-sm btn-info"> View </a>
@@ -41,21 +41,32 @@
     {% endfor %}
 
     <div class="col-lg-3   ">
-      <div class="card border-info  ">
-        
-<form action="" method="POST" >
-  {% csrf_token %}
-  {{form}}
-  <input type="submit" name="submit" >
-</form>
+      <div class="card border-info p-3  ">
+        <h4 class="card-title">
+             
+          create service
+        </h4>
+        <form action="" method="POST">
+          {% csrf_token %}
+          {{form.name}}
+          
+          <div class="d-flex justify-content-between">
+            <div>{{form.IS_Active}}
+              {{form.IS_Active.label}} </div>
+            
+           
+          <button type="submit " name="submit" class="btn btn-primary btn-round"> create </button>
+               
+          </div>
+        </form>
         <!-- <a href="{% url 'addService'  %}"> <img class="card-img-center mt-1 col-md-10 "
             src="{% static 'images/another.svg' %}" alt="Card image cap"></a>
         <div class="card-body"> -->
 
 
-        </div>
       </div>
     </div>
+  </div>
 
 
-    {% endblock %}
+  {% endblock %}

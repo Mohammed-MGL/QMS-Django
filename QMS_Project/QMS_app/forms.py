@@ -52,14 +52,12 @@ class EmployeeForm(ModelForm):
         model = Employee
         fields = ['Service','desk_num','notes']
 
-        # widgets = {
-        #     'name' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
-        #     'desk_num' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
-        #     'username' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
-        #     'phone' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+        widgets = {
+            'Service' : forms.Select(attrs={'class': 'form-control mb-4 '}),
+            'desk_num' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
+            'notes' : forms.TextInput(attrs={'class': 'form-control mb-4 '}),
             
-        #     'location' : forms.TextInput(attrs={'class': 'form-control mb-4'}),
-        # }
+        }
 
 
 class ServiceForm(ModelForm):
@@ -79,7 +77,7 @@ class ServiceForm(ModelForm):
         fields = ['name' , 'IS_Active' ]
 
         widgets = {
-            'name' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : 'Your Name'}),
+            'name' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : 'Add service name '}),
             # 'IS_Active' : forms.CheckboxInput(attrs={'class': 'form-check-input', 'placeholder' : 'Your Name'}),
         }
 
