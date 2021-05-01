@@ -320,7 +320,10 @@ def bwlist(request):
    
     context = {
         'w_list':w_list ,
-        'b_list':b_list ,        
+        'b_list':b_list ,
+        
+        'scName':sc,
+
         }
 
     return render(request ,"bwlist.html" , context)
