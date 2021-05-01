@@ -28,14 +28,16 @@ class UserCreate(generics.CreateAPIView):
 
 class Search_ServiceCenter(ListAPIView):
     
-    # queryset = Service_center.objects.all().
     pagination_class = CustomPagination
     serializer_class = Service_centerListSerializer
 
     model = serializer_class.Meta.model
     def get_queryset(self):
         name = self.kwargs['name']
-        queryset = self.model.objects.filter(name__icontains=name).order_by('name')
+        queryset = self.model.objects.filter(name__istartswith=name)
+        qs2 = self.model.objects.filter(name__icontains=name)
+        qs3 = self.model.objects.filter(name__iendswith=name)
+        queryset = queryset.union(qs2,qs3)
         return queryset
 
 # class ServiceCenter_View(APIView):

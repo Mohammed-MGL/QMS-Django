@@ -46,7 +46,7 @@ def dashboard(request):
     sc = Manager.objects.get(user = request.user ).Service_center
     
     context ={
-        'scName':sc,
+        'sc':sc,
     }
     return render(request ,"dashboard.html" , context) 
 
@@ -62,7 +62,7 @@ def employees(request):
     # emps = uNameFilter.qs
 
     context = {
-        'scName':sc,
+        'sc':sc,
         "employees" : emps ,
         "empFilter" : empFilter,
         # "uNameFilter" : uNameFilter
@@ -81,7 +81,7 @@ def addEmployee(request):
             form.save()
             return redirect('employees')
     
-    context ={"form":form,'scName':sc}
+    context ={"form":form,'sc':sc}
     return render(request ,"Employee/employeeCreationForm.html" , context) 
 
    
@@ -97,7 +97,7 @@ def viewEmployee(request, eID):
 
 
     context = {
-        'scName':sc,
+        'sc':sc,
         }
     return render(request ,"Employee/employee.html" , context)
 
@@ -123,7 +123,7 @@ def updateEmployee(request, eID):
 
     context = {
         "form":form,
-        'scName':sc,
+        'sc':sc,
          'eID':eID
         }
     return render(request ,"Employee/employeeUpdate.html" , context) 
@@ -161,7 +161,7 @@ def updateEmployeePassWord(request, eID):
 
     context = {
         "form":form,
-        'scName':sc,
+        'sc':sc,
         }
     return render(request ,"Employee/employeePassWordUpdate.html" , context) 
 
@@ -184,7 +184,7 @@ def deleteEmployee(request, eID):
 
     context = {
         'item':emp,
-        'scName':sc,
+        'sc':sc,
     }
     return render(request ,"delete.html" , context) 
 
@@ -208,7 +208,7 @@ def services(request):
     context = {
         "serv" : service,
         "form":form,
-        'scName':sc,
+        'sc':sc,
 
     }
     return render(request ,"Service/services.html" , context) 
@@ -322,7 +322,7 @@ def bwlist(request):
         'w_list':w_list ,
         'b_list':b_list ,
         
-        'scName':sc,
+        'sc':sc,
 
         }
 
@@ -455,7 +455,7 @@ def ServiceCnterProfile(request):
 
     context = {
         "form":form,
-        'scName':sc,
+        'sc':sc,
          
         }
     return render(request ,"ServiceCnterProfile.html" , context) 
