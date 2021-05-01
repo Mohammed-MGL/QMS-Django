@@ -90,4 +90,30 @@ class ServiceCenterDetails(APIView):
             'work_time' :    w_serializer.data ,
             'services' :  S_serializer.data ,  
         } 
-        return Response(content)        
+        return Response(content)  
+
+
+class  BookInService(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    
+    def post(self , request ,sID, *args ,**kwargs):
+        service =Service.objects.get(id = sID)
+        user =request.user
+        book = Service_Record.objects.create(Service=service , user=user, IS_InCenter = False ,  Queue_type = 'B' )
+        return Response({'Accepted':True}) 
+
+class  CansleBook(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    
+    def post(self , request ,BID, *args ,**kwargs):
+        
+        user =request.user
+        book = Service_Record.objects.get(id= BID)
+        
+        return Response({'Accepted':True}) 
+        
+
+
+

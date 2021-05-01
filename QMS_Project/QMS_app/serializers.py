@@ -5,7 +5,7 @@ from .models import *
 class Service_centerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service_center
-        fields = ['id', 'name', 'location', 'Icon' ,'is_online']
+        fields = ['id', 'name', 'location', 'Icon' ,'is_online','Image']
 
 
 

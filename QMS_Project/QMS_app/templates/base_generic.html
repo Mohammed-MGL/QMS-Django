@@ -50,7 +50,15 @@
       <div class="logo">
         <a href="" class="simple-text logo-normal ">
           <!-- Service center name -->
-          {{sc}}
+          {{sc}} 
+          {% if sc.is_online  %}
+         <small>🟢</small>  
+{% else %}
+    <small>🔴</small> 
+{% endif %}
+          
+
+
         </a>
       </div>
       <div class="sidebar-wrapper">

@@ -12,6 +12,8 @@ urlpatterns = [
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
     path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
     path('account/register/', UserCreate.as_view()),
+    path('API/BookInService/<str:sID>',BookInService.as_view(), ),
+    path('API/CansleBook/<str:sID>',BookInService.as_view(), ),
 
     path('login/',views.loginPage, name = 'login'),
     path('logout/',views.logoutUser, name = 'logout'),
@@ -48,6 +50,7 @@ urlpatterns = [
     
     path('book_in_service/<str:sID>',views.book_in_service, name = 'book_in_service'),
     path('ServiceCnterProfile',views.ServiceCnterProfile, name = 'ServiceCnterProfile'),
+    
     
 ]
 

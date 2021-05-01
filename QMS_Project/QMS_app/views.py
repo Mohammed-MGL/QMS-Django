@@ -268,6 +268,20 @@ def serviceChangeState(request, sID):
     service.IS_Active =  not service.IS_Active
     service.save()
     return redirect('services')
+
+
+@login_required(login_url='login')
+@manager_only
+def serviceCenterChangeState(request):
+    
+
+    sc = Manager.objects.get(user = request.user ).Service_center
+    context = {
+        'sc' : sc
+    }
+    return render(request ,"base_generic.html" , context) 
+
+     
    
 
 #koko
@@ -366,6 +380,7 @@ def serachForUser(request):
     context = {
               'users':users ,
               "UserFilter" : usersFilter,
+              'sc':sc,
         }
 # UserFilter
     return render(request ,"serachForUser.html" , context)

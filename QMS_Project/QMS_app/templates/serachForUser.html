@@ -61,10 +61,10 @@
                                         </span>
                                     </td>
                                     <td class="text-primary">
-                                        <a href="{% url 'addToBlackLIst' user.id %}" class="btn btn-sm btn-danger"> add to black list </a>
+                                        <a href="{% url 'addToBlackLIst' user.id %}" class="btn btn-sm btn-danger btn-round"> + black list </a>
                                     </td>
                                     <td class="text-primary">
-                                        <a href="{% url 'addToWhiteLIst' user.id %}" class="btn btn-sm btn-danger"> add to white list </a>
+                                        <a href="{% url 'addToWhiteLIst' user.id %}" class="btn btn-sm btn-round btn-primary"> + white list </a>
                                     </td>
                                 </tr>
                                 {% endfor %}
