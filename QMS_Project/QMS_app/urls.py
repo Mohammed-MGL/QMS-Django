@@ -13,7 +13,9 @@ urlpatterns = [
     path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
     path('account/register/', UserCreate.as_view()),
     path('API/BookInService/<str:sID>',BookInService.as_view(), ),
-    path('API/CansleBook/<str:sID>',BookInService.as_view(), ),
+    path('API/cancelBook/<str:BID>',cancelBook.as_view(), ),
+    path('API/QueueCountNumber/<str:SID>',QueueCountNumber.as_view(), ),
+
 
     path('login/',views.loginPage, name = 'login'),
     path('logout/',views.logoutUser, name = 'logout'),

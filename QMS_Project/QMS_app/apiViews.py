@@ -12,6 +12,8 @@ from rest_framework.permissions import IsAuthenticated  , AllowAny
 
 from .serializers import *
 from .models import Service_center
+from datetime import datetime
+from datetime import date
 
 class ServiceCenter(ListAPIView):
     # permission_classes = (IsAuthenticated,)
@@ -101,19 +103,42 @@ class  BookInService(APIView):
         service =Service.objects.get(id = sID)
         user =request.user
         book = Service_Record.objects.create(Service=service , user=user, IS_InCenter = False ,  Queue_type = 'B' )
-        return Response({'Accepted':True}) 
+        return Response({'Accepted':True ,'Bookid':book.id}) 
 
-class  CansleBook(APIView):
+class  cancelBook(APIView):
     permission_classes = (IsAuthenticated,)
     
     
     def post(self , request ,BID, *args ,**kwargs):
         
         user =request.user
-        book = Service_Record.objects.get(id= BID)
+        book = Service_Record.objects.get(id = BID) 
+
+        book.O_Time = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+        book.is_cancelled = True
+        book.save()
+
         
-        return Response({'Accepted':True}) 
+        return Response({  'response':'done :('  }) 
         
 
 
 
+
+
+class  QueueCountNumber(APIView ):
+    permission_classes = (IsAuthenticated,)
+    
+    
+    def get(self , request ,SID, *args ,**kwargs):
+        
+        
+        user =request.user
+        service =Service.objects.get(id = SID) 
+        book = Service_Record.objects.filter(Service=service , user=user, IS_InCenter = False ,  Queue_type = 'B' ).count()
+        
+
+
+        
+        return Response({  'count': book  }) 
+        
