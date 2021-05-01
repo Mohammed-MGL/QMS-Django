@@ -30,7 +30,7 @@ class Employee(models.Model):
 class Service_center(models.Model):
     name = models.CharField(max_length=300)
     location = models.CharField(max_length=500 , blank=True)
-    # mapLocations = models.CharField(max_length=500 , blank=True)
+    # mapLocations = models.CharField(max_length=500 , blank=True , default='')
     phone =  models.CharField(max_length=100 , blank=True)
     Image = models.ImageField(upload_to='service_center/', verbose_name="Image" , blank=True)
     Icon = models.ImageField(upload_to='service_center/Icon/', verbose_name="icon" , blank=True)
@@ -45,13 +45,13 @@ class Service_center(models.Model):
 
 class Work_time(models.Model):
     Service_center = models.OneToOneField(Service_center, on_delete=models.CASCADE)
-    Saturday=models.CharField(max_length=500)
-    Sunday=models.CharField(max_length=500)
-    Monday=models.CharField(max_length=500)
-    Tuesday=models.CharField(max_length=500)
-    Wednesday=models.CharField(max_length=500)
-    Thursday=models.CharField(max_length=500)
-    Friday=models.CharField(max_length=500)
+    Saturday=models.CharField(max_length=200)
+    Sunday=models.CharField(max_length=200)
+    Monday=models.CharField(max_length=200)
+    Tuesday=models.CharField(max_length=200)
+    Wednesday=models.CharField(max_length=200)
+    Thursday=models.CharField(max_length=200)
+    Friday=models.CharField(max_length=200)
     
     
     def __str__(self):
