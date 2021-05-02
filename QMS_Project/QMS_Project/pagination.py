@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 
 DEFAULT_PAGE = 1
-DEFAULT_PAGE_SIZE = 2
+DEFAULT_PAGE_SIZE = 10
 
 class CustomPagination(PageNumberPagination):
     page = DEFAULT_PAGE
@@ -12,7 +12,8 @@ class CustomPagination(PageNumberPagination):
 
     def get_paginated_response(self, data):
         return Response({
-            'next': self.get_next_link(),
+            # 'next': self.get_next_link(),
+            'next':  self.page.has_next(),
             # 'previous': self.get_previous_link()
             'total': self.page.paginator.count,
             'page': int(self.request.GET.get('page', DEFAULT_PAGE)), # can not set default = self.page
