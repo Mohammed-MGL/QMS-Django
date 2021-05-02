@@ -56,6 +56,12 @@ urlpatterns = [
     path('BookAsGuest/<str:scID>',views.BookAsGuest, name = 'BookAsGuest'), 
     path('book_in_service/<str:sID>',views.book_in_service, name = 'book_in_service'),
     path('ServiceCnterProfile',views.ServiceCnterProfile, name = 'ServiceCnterProfile'),
+
+
+
+    # employee template
+    path('base',views.HomeEmployee, name = 'HomeEmployee'),
+    path('home',views.home, name = 'home'),
     
     
 ]

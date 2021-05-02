@@ -25,7 +25,13 @@ def loginPage(request):
 
         if user is not None:
             login(request , user)
-            return redirect('employees')
+            if user.is_manager == True:
+
+                return redirect('dashboard')
+            if user.is_employee == True:
+                return redirect('HomeEmployee')
+
+            
         else:
             messages.warning(request, 'username and password do not match!')
 
@@ -490,6 +496,38 @@ def ServiceCnterProfile(request):
          
         }
     return render(request ,"ServiceCnterProfile.html" , context) 
+
+
+
+ 
+  
+@login_required(login_url='login')
+def HomeEmployee(request):
+    sc = Employee.objects.get(user = request.user ).Service_center
+    emp = Employee.objects.get(user = request.user)
+    
+
+
+    context = {
+        'sc':sc,
+        'emp':emp
+        }
+    return render(request ,"EmployeeTemp/base.html" , context)
+
+
+
+@login_required(login_url='login')
+def home(request):
+    sc = Employee.objects.get(user = request.user ).Service_center
+    emp = Employee.objects.get(user = request.user)
+    
+
+
+    context = {
+        'sc':sc,
+        'emp':emp
+        }
+    return render(request ,"EmployeeTemp/home.html" , context)    
 
     # if request.method == 'POST':
     #     form = ImageForm(request.POST, request.FILES)
