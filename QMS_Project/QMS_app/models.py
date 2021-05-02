@@ -105,11 +105,12 @@ class Service_Record(models.Model):
 class Black_list(models.Model):
     Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
+    reason = models.CharField(max_length=600 , blank=True)
     
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.user   
+        return self.user.username  
 
 
 class System_Black_list(models.Model):
@@ -128,7 +129,7 @@ class White_list(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.user   
+        return self.user.username   
 
 
 # from django.db import models

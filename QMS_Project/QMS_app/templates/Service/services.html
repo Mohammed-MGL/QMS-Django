@@ -5,70 +5,69 @@
 {% load static %}
 
 <div class="container ">
-  <div class="row justify-content-center ">
+  <div class="row justify-content-center  ">
     {% for ser in serv %}
-    <div class="col-lg-2   ">
-      <div class="card border-info ">
+    <div class="col-3 ">
 
-        <div class="card-body">
-
-          <h5 class="card-title">{{ser.name}}</h5>
-          <h5 class="card-title">{{ser.IS_Active}}</h5>
-
-
-          <a href="{% url 'editService' ser.id %}" class="btn btn-sm btn-info">
-            <dev class="material-icons">edit</dev>
-          </a>
-          <a href="{% url 'deleteService' ser.id %}" class="btn btn-sm btn-danger">
-            <dev class="material-icons">delete</dev>
-          </a>
-
-
-
-          <a href="{% url 'serviceChangeState' ser.id %}" class="btn btn-sm btn-info">
-            togoll
-          </a>
-
-          </a>
-          <a href="{% url 'viewService' ser.id %}" class="btn btn-sm btn-info"> View </a>
+      <div class="card card-nav-tabs" style="width: 13rem;">
+        <div class="card-header card-header-primary">
+          <b>{{ser.name}}</b>
         </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <h4><b>{{ser.IS_Active}}</b></h4>
+          </li>
+          <li class="list-group-item"><a href="{% url 'editService' ser.id %}" class="btn btn-sm btn-info">
+              <dev class="material-icons">edit</dev>
+            </a>
+            &nbsp; &nbsp; &nbsp; &nbsp;
+            <a href="{% url 'deleteService' ser.id %}" class="btn btn-sm btn-danger">
+              <dev class="material-icons">delete</dev>
+            </a>
+            <a href="{% url 'serviceChangeState' ser.id %}" class="btn btn-sm btn-info">
+              togoll
+            </a>
 
-
+            <a href="{% url 'viewService' ser.id %}" class="btn btn-sm btn-info"> View </a>
+          </li>
+        </ul>
       </div>
     </div>
+
 
 
     {% endfor %}
 
     <div class="col-lg-3   ">
-      <div class="card border-info p-3  ">
-        
-             
-        
+      <div class="card card-nav-tabs" style="width: 13rem; height: 11rem ;">
+
         <div class="card-header card-header-primary">
           <h5 class="card-title"> create service
-          </h5> </div>
-        <form action="" method="POST">
-          {% csrf_token %}
-          {{form.name}}
-          
-          <div class="d-flex justify-content-between">
-            <div>{{form.IS_Active}}
-              {{form.IS_Active.label}} </div>
-            
-           
-          <button type="submit " name="submit" class="btn btn-primary btn-round"> create </button>
-               
-          </div>
-        </form>
-        <!-- <a href="{% url 'addService'  %}"> <img class="card-img-center mt-1 col-md-10 "
-            src="{% static 'images/another.svg' %}" alt="Card image cap"></a>
-        <div class="card-body"> -->
+          </h5>
+        </div>
+        
+        <div class="card-body p-3">
 
-
+          <form action="" method="POST">
+            {% csrf_token %}
+            {{form.name}}
+  
+            <div class="d-flex justify-content-between">
+              <div>{{form.IS_Active}}
+                {{form.IS_Active.label}} </div>
+  
+  
+              <button type="submit " name="submit" class="btn btn-primary btn-round btn-sm"> create </button>
+  
+            </div>
+          </form>
       </div>
     </div>
+
+
   </div>
+</div>
 
 
-  {% endblock %}
+
+{% endblock %}

@@ -214,24 +214,6 @@ def services(request):
     return render(request ,"Service/services.html" , context) 
 
 
-@login_required(login_url='login')
-@manager_only
-def addService(request):
-    
-    sc = Manager.objects.get(user = request.user ).Service_center
-
-    form = ServiceForm(sc)
-
-    if request.method == 'POST':
-        form = ServiceForm(sc,request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('services')
-
-    
-    context ={"form":form}
-    return render(request ,"Service/service_form.html" , context) 
-   
 
 @login_required(login_url='login')
 @manager_only
@@ -246,7 +228,8 @@ def viewService(request, sID):
         return redirect('services')
 
     context = {
-        'service' : service
+        'service' : service ,
+        'sc':sc
     }
     return render(request ,"Service/service.html" , context) 
 
@@ -295,16 +278,21 @@ def serviceCenterChangeState(request):
 def editService(request, sID):
 
     
+    sc = Manager.objects.get(user = request.user ).Service_center
     ser = Service.objects.get(id = sID)
-    form = ServiceForm(instance = ser)
+    form = ServiceForm(sc,instance = ser)
 
     if request.method == 'POST':
-        form = ServiceForm(request.POST ,instance = ser)
+        form = ServiceForm(sc ,request.POST ,instance = ser)
         if form.is_valid():
             form.save()
             return redirect('services')
 
-    context = {"form":form}
+    context ={
+        "form":form ,
+        'sc':sc
+    }
+
     return render(request ,"Service/service_form.html" , context)     
 
 
@@ -348,11 +336,16 @@ def bwlist(request):
 @login_required(login_url='login')
 @manager_only
 def addToBlackLIst(request, uID):
-    sc = Manager.objects.get(user = request.user ).Service_center
+     sc = Manager.objects.get(user = request.user ).Service_center
 
-    u = User.objects.get(id= uID)
-    Black_list.objects.create(user=u ,Service_center=sc)
-    return redirect('bwlist')
+     u = User.objects.get(id= uID)
+
+     t = Black_list.objects.filter(user=u ,Service_center=sc).count()
+     x = White_list.objects.filter(user=u ,Service_center=sc).count()
+     if t==0 and x==0:
+
+         Black_list.objects.create(user=u ,Service_center=sc)
+     return redirect('bwlist')
 
 
 
@@ -362,7 +355,15 @@ def addToWhiteLIst(request, uID):
     sc = Manager.objects.get(user = request.user ).Service_center
 
     u = User.objects.get(id= uID)
-    White_list.objects.create(user=u ,Service_center=sc)
+
+    t = White_list.objects.filter(user=u ,Service_center=sc).count()
+    x = Black_list.objects.filter(user=u ,Service_center=sc).count()
+    if t==0 and x==0:
+        White_list.objects.create(user=u ,Service_center=sc)
+
+    
+
+   
     return redirect('bwlist')    
 
     

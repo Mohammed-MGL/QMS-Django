@@ -33,7 +33,7 @@ urlpatterns = [
 
     # service
     path('services/',views.services, name = 'services'),
-    path('addService/',views.addService, name = 'addService'),
+    # path('addService/',views.addService, name = 'addService'),
     path('viewService/<str:sID>',views.viewService, name = 'viewService'),
     path('editService/<str:sID>',views.editService, name = 'editService'),
     path('deleteService/<str:sID>',views.deleteService, name = 'deleteService'),
