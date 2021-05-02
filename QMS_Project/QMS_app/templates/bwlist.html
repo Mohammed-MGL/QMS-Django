@@ -15,7 +15,7 @@
           <div class="d-flex justify-content-between">
             <div class="p-2">
               ======
-            </div> 
+            </div>
             <div class="p-2"> <a href="{% url 'serachForUser' %}" class="btn btn-sm btn-secondary ">Add user
                 &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
           </div>
@@ -29,7 +29,7 @@
                 <tr>
                   <th scope="col"> ID </th>
                   <th scope="col">Name</th>
-                  
+
                   <th scope="col">Delete</th>
                 </tr>
               </thead>
@@ -38,8 +38,9 @@
                 <tr>
                   <th scope="row">{{i.user.id}}</th>
                   <td>{{i.user}}</td>
-                  
-                  <td><a href="{% url 'deleteUserFromWL' i.id %}" class="btn  btn-danger btn-sm btn-round ">Delete</a></td>
+
+                  <td><a href="{% url 'deleteUserFromWL' i.id %}" class="btn  btn-danger btn-sm btn-round ">Delete</a>
+                  </td>
 
                 </tr>
                 {% endfor %}
@@ -79,7 +80,7 @@
                 <tr>
                   <th scope="col"> ID </th>
                   <th scope="col">Name</th>
-                  
+
                   <th scope="col">Delete</th>
                 </tr>
               </thead>
@@ -88,8 +89,9 @@
                 <tr>
                   <th scope="row">{{i.user.id}}</th>
                   <td>{{i.user}}</td>
-                 
-                  <td><a href="{% url 'deleteUserFromBL' i.id %}" class="btn  btn-danger btn-sm btn-round ">Delete</a></td>
+
+                  <td><a href="{% url 'deleteUserFromBL' i.id %}" class="btn  btn-danger btn-sm btn-round ">Delete</a>
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -105,7 +107,20 @@
     </div>
   </div>
 
+  {% for mass in messages %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>oooops</strong> {{mass}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endfor %}
+
+
+
+
 </div>
-</div>
+
+
 
 {% endblock %}

@@ -25,7 +25,7 @@ class ServiceSerializer(serializers.ModelSerializer):
 class Service_center_detailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service_center
-        fields = ['id', 'name', 'location', 'phone' , 'Image', 'Icon']        
+        fields = ['id', 'name', 'location', 'phone' , 'Image', 'Icon' , 'is_online', 'mapLocations']        
 
 
 class UserSerializer(serializers.ModelSerializer):

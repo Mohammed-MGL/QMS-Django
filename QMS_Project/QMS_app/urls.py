@@ -3,6 +3,8 @@ from django.urls import path ,include
 from . import views
 # from .views import *
 from .apiViews import *
+from rest_framework_simplejwt import views as jwt_views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 #koko
 #Mohammed
@@ -11,10 +13,13 @@ urlpatterns = [
     path('API/allServiceCenter/',ServiceCenter.as_view(),),
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
     path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
-    path('account/register/', UserCreate.as_view()),
+    path('API/account/register/', UserCreate.as_view()),
     path('API/BookInService/<str:sID>',BookInService.as_view(), ),
     path('API/cancelBook/<str:BID>',cancelBook.as_view(), ),
     path('API/QueueCountNumber/<str:SID>',QueueCountNumber.as_view(), ),
+    path('API/auth/token/', TokenObtainPairView.as_view() ),
+    path('API/auth/token/refresh/', TokenRefreshView.as_view() ),
+
 
 
     path('login/',views.loginPage, name = 'login'),
@@ -49,22 +54,11 @@ urlpatterns = [
     
 
     path('BookAsGuest/<str:scID>',views.BookAsGuest, name = 'BookAsGuest'), 
-    
     path('book_in_service/<str:sID>',views.book_in_service, name = 'book_in_service'),
     path('ServiceCnterProfile',views.ServiceCnterProfile, name = 'ServiceCnterProfile'),
     
     
 ]
 
-# from django.urls import path
-# from . import views
 
-# urlpatterns = [
-#     path('black&white/',views.bwlist, name = 'index'),
-#     path('services/',views.service, name = 'index'),
-#     path('dashboard/',views.dash, name = 'dash'),  
-#     path('dash/',views.d, name = 'd'),
-#     path('Employee/',views.Employee, name = 'Emp'),
-#     path('Editemployee/',views.Editemployee, name = 'Emp'),
-#     path('addservice/',views.addservice, name = 'Emp'),]
     

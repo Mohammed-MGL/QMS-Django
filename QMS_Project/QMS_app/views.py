@@ -336,16 +336,24 @@ def bwlist(request):
 @login_required(login_url='login')
 @manager_only
 def addToBlackLIst(request, uID):
-     sc = Manager.objects.get(user = request.user ).Service_center
+    sc = Manager.objects.get(user = request.user ).Service_center
 
-     u = User.objects.get(id= uID)
+    u = User.objects.get(id= uID)
 
-     t = Black_list.objects.filter(user=u ,Service_center=sc).count()
-     x = White_list.objects.filter(user=u ,Service_center=sc).count()
-     if t==0 and x==0:
+    t = Black_list.objects.filter(user=u ,Service_center=sc).count()
+    x = White_list.objects.filter(user=u ,Service_center=sc).count()
+    if t>0:
 
-         Black_list.objects.create(user=u ,Service_center=sc)
-     return redirect('bwlist')
+        messages.warning(request, u.username +' already in blacklist') 
+
+    if x>0:
+        messages.warning(request,u.username +' already in whitelist') 
+
+    if t==0 and x==0:
+
+        Black_list.objects.create(user=u ,Service_center=sc)
+      
+    return redirect('bwlist')
 
 
 
@@ -358,6 +366,13 @@ def addToWhiteLIst(request, uID):
 
     t = White_list.objects.filter(user=u ,Service_center=sc).count()
     x = Black_list.objects.filter(user=u ,Service_center=sc).count()
+
+    if t>0:
+        messages.warning(request, u.username +' already in whitelist') 
+
+    if x>0:
+        messages.warning(request,u.username +' already in Blacklist') 
+
     if t==0 and x==0:
         White_list.objects.create(user=u ,Service_center=sc)
 

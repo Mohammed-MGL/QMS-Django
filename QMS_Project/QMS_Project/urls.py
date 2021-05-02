@@ -17,8 +17,7 @@ from django.contrib import admin
 from django.urls import path ,include 
 from django.conf.urls import  url
 
-from rest_framework_simplejwt import views as jwt_views
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
@@ -26,9 +25,6 @@ urlpatterns = [
     path('', include('QMS_app.urls')),  
    
     
-    path('api/auth/token/', TokenObtainPairView.as_view() ),
-    path('api/auth/token/refresh/', TokenRefreshView.as_view() ),
-
    
     
 ]

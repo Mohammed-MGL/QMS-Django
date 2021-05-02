@@ -77,7 +77,7 @@ class Search_ServiceCenter(ListAPIView):
 
 
 class ServiceCenterDetails(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     
     
     def get(self , request ,id, *args ,**kwargs):
