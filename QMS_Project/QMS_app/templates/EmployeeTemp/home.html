@@ -7,38 +7,48 @@
 {% load static %}
 
 <div class="countainer">
-    <div class="row justify-content-center ">
-  
-      <div class="col-4 ">
-        <button type="button" class="btn btn-outline-primary"style="width: 10rem; height: 10rem ;"><b>Click to</b> <br><b>receive<br> a new customer</b></button>
-        
-        
+  <div class="row justify-content-center ">
+    <div class="col-4 ">
+      <button type="button" class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click to</b>
+        <br><b>receive<br> a new customer</b></button>
+    </div>
 
-  
- <button type="button" class="btn btn-outline-warning "style="width: 10rem; height: 10rem ;">
-    <b>Click here</b> <br><b>if you are finished <br> serving the client</b>
-    </b></button>
-    
 
-    
-    <div class="card">
+    <div class="col-4 ">
+      <div class="card">
         <div class="card-header card-header-primary">
-            <h4 class="card-title"> Edit services
-            </h4>
-           
+          <h4 class="card-title"> Edit services
+          </h4>
+
         </div>
         <div class="card-body">
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Example select</label>
-                <select class="form-control selectpicker" data-style="btn btn-link" id="exampleFormControlSelect1">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
-              </div>
-       <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change </button>
-                       
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Example select</label>
+            <select class="form-control selectpicker" data-style="btn btn-link" id="exampleFormControlSelect1">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+          <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change </button>
+
+        </div>
+      </div>
     </div>
-{% endblock %}
+
+    <div class="col-4 ">
+      <button type="button" class="btn btn-outline-warning " style="width: 10rem; height: 10rem ;">
+        <b>Click here</b> <br><b>if you are finished <br> serving the client</b>
+        </b></button>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+  {% endblock %}
