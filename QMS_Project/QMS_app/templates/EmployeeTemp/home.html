@@ -7,23 +7,91 @@
 {% load static %}
 
 <div class="countainer">
-  <div class="row justify-content-center ">
+  <div class="row  ">
+    <div class="col-6 ">
+      <div class="card">
+        <div class="card-header">
+          Featured
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 ">
+      <div class="card p-3">
+        <div class="row">
+          <div class="col-6 ">
+            <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
+              
+              <div class="card-body">
+                <h5 class="card-title">Primary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                  card's content.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6 ">
+            <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
+           
+              <div class="card-body">
+                <h5 class="card-title">Primary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                  card's content.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 ">
+            <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
+            
+              <div class="card-body">
+                <h5 class="card-title">Primary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                  card's content.</p>
+              </div>
+            </div>
+            
+          </div>
+
+          <div class="col-6 ">
+            <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
+              
+              <div class="card-body">
+                <h5 class="card-title">Primary card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                  card's content.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-5 ">
     <div class="col-4 ">
       <button type="button" class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click to</b>
         <br><b>receive<br> a new customer</b></button>
     </div>
 
 
+    
+
+    <div class="col-4 ">
+      <button type="button" class="btn btn-outline-warning " style="width: 10rem; height: 10rem ;">
+        <b>Click here</b> <br><b>if you are finished <br> serving the client</b>
+        </b></button>
+    </div>
     <div class="col-4 ">
       <div class="card">
-        <div class="card-header card-header-primary">
-          <h4 class="card-title"> Edit services
-          </h4>
-
-        </div>
+       
         <div class="card-body">
           <div class="form-group">
-            <label for="exampleFormControlSelect1">Example select</label>
+            <label for="exampleFormControlSelect1">sent customer to</label>
             <select class="form-control selectpicker" data-style="btn btn-link" id="exampleFormControlSelect1">
               <option>1</option>
               <option>2</option>
@@ -37,13 +105,6 @@
         </div>
       </div>
     </div>
-
-    <div class="col-4 ">
-      <button type="button" class="btn btn-outline-warning " style="width: 10rem; height: 10rem ;">
-        <b>Click here</b> <br><b>if you are finished <br> serving the client</b>
-        </b></button>
-    </div>
-
   </div>
 
 </div>
@@ -51,4 +112,4 @@
 
 
 
-  {% endblock %}
+{% endblock %}

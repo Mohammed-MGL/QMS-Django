@@ -15,6 +15,9 @@ from .models import Service_center
 from datetime import datetime
 from datetime import date
 
+
+
+
 class ServiceCenter(ListAPIView):
     # permission_classes = (IsAuthenticated,)
     queryset = Service_center.objects.all() 
@@ -22,10 +25,10 @@ class ServiceCenter(ListAPIView):
     pagination_class = CustomPagination
     serializer_class = Service_centerListSerializer
 
-class UserCreate(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (AllowAny, )
+# class UserCreate(generics.CreateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = (AllowAny, )
 
 
 class Search_ServiceCenter(ListAPIView):
@@ -141,4 +144,13 @@ class  QueueCountNumber(APIView ):
 
         
         return Response({  'count': book  }) 
+
+
+
+
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = (AllowAny,)
+    serializer_class = RegisterSerializer
         

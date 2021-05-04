@@ -13,7 +13,7 @@ urlpatterns = [
     path('API/allServiceCenter/',ServiceCenter.as_view(),),
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
     path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
-    path('API/account/register/', UserCreate.as_view()),
+    path('API/account/register/', RegisterView.as_view()),
     path('API/BookInService/<str:sID>',BookInService.as_view(), ),
     path('API/cancelBook/<str:BID>',cancelBook.as_view(), ),
     path('API/QueueCountNumber/<str:SID>',QueueCountNumber.as_view(), ),
