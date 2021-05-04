@@ -83,8 +83,6 @@ class Service_Record(models.Model):
     is_served = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
 
-    
-    
     IS_InCenter =  models.BooleanField(default=False)
     Queue_type = models.CharField(
         max_length=1,

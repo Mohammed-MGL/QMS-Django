@@ -14,7 +14,7 @@ from .serializers import *
 from .models import Service_center
 from datetime import datetime
 from datetime import date
-
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -116,16 +116,38 @@ class  cancelBook(APIView):
         
         user =request.user
         book = Service_Record.objects.get(id = BID) 
+        if book.user !=user:
+            
+            raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
 
         book.O_Time = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
         book.is_cancelled = True
         book.save()
-
+          
         
         return Response({  'response':'done :('  }) 
         
 
 
+class  InCenter(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    
+    def post(self , request ,BID, *args ,**kwargs):
+        
+        user =request.user
+        book = Service_Record.objects.get(id = BID) 
+        if book.user !=user:
+            
+            raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
+
+        book.IS_InCenter = True
+        
+        book.save()
+
+        
+        return Response({  'response':'done :('  }) 
+        
 
 
 
@@ -153,4 +175,18 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = RegisterSerializer
+
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChangePasswordSerializer
         
+
+class UpdateProfileView(generics.UpdateAPIView):
+
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UpdateUserSerializer        

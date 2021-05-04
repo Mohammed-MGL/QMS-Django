@@ -19,6 +19,9 @@ urlpatterns = [
     path('API/QueueCountNumber/<str:SID>',QueueCountNumber.as_view(), ),
     path('API/auth/token/', TokenObtainPairView.as_view() ),
     path('API/auth/token/refresh/', TokenRefreshView.as_view() ),
+    path('change_password/<int:pk>/', ChangePasswordView.as_view(), name='auth_change_password'),
+    path('update_profile/<int:pk>/', UpdateProfileView.as_view(), name='auth_update_profile'),
+    path('API/InCenter/<str:BID>',InCenter.as_view(), ),
 
 
 
