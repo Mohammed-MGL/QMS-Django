@@ -518,14 +518,26 @@ def HomeEmployee(request):
 
 @login_required(login_url='login')
 def home(request):
-    sc = Employee.objects.get(user = request.user ).Service_center
     emp = Employee.objects.get(user = request.user)
+    sc = emp.Service_center
     
+    service =emp.Service
+    CustomerNumber= Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service )
+    CustomerNumber =CustomerNumber.count() 
 
+
+    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ).filter(is_served= True ).filter(is_cancelled= False ).filter(Service=service )
+    ServiedCustomerNumber =ServiedCustomerNumber.count() 
+
+    form = MoveCustomerForm(sc)
+    
 
     context = {
         'sc':sc,
-        'emp':emp
+        'emp':emp ,
+        'CustomerNumber':CustomerNumber ,
+        'ServiedCustomerNumber':ServiedCustomerNumber ,
+        'form': form
         }
     return render(request ,"EmployeeTemp/home.html" , context)    
 

@@ -103,6 +103,40 @@ class scform(forms.ModelForm):
         model = Service_center 
         fields = '__all__'    
 
+
+
+
+class MoveCustomerForm(ModelForm):
+    """Form definition for Employee."""
+    Service = forms.ModelChoiceField(queryset=Service.objects.all(), widget=forms.Select(attrs={'class': 'form-control mb-4 ml-2  '}))
+
+    osc = None
+
+    def __init__(self, sc, *args, **kwargs):
+        super(MoveCustomerForm, self).__init__(*args, **kwargs)
+        self.fields['Service'].queryset = Service.objects.filter(Service_center = sc.id)
+        self.osc = sc 
+
+
+    class Meta:
+        """Meta definition for Employeeform."""
+
+        model = Service_center
+        fields = ['Service'  ]
+
+        widgets = {
+            'Service' : forms.Select(attrs={'class': 'form-control mb-4 '}),
+            # 'IS_Active' : forms.CheckboxInput(attrs={'class': 'form-check-input', 'placeholder' : 'Your Name'}),
+        }
+
+    # @transaction.atomic
+    # def save(self):
+    #     Service = super().save(commit=False)
+    #     Service.Service_center = self.osc
+    #     Service.save()
+    #     return Service
+        
+
 # class EmployeeEditForm(ModelForm):
 
 #     Fist_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}))
