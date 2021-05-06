@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user , manager_only
 from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime
+from django.contrib.auth import update_session_auth_hash
 from datetime import date
 import random  
 import string  
@@ -145,14 +146,15 @@ def updateEmployeePassWord(request, eID):
     if not emp in emps:
         return redirect('employees')
 
-    form = PasswordChangeForm(request.user)
+    form = PasswordChangeForm(emp.user)
 
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        form = PasswordChangeForm(emp.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Your password was successfully updated!')
+            messages.success(request, 'Profile details updated.')
+            # messages.success(request, 'Your password was successfully updated!')
             return redirect('employees')
         else:
             messages.error(request, 'Please correct the error below.')
@@ -170,6 +172,34 @@ def updateEmployeePassWord(request, eID):
         'sc':sc,
         }
     return render(request ,"Employee/employeePassWordUpdate.html" , context) 
+
+
+@login_required(login_url='login')
+@manager_only
+def updatePassWord(request):
+    sc = Manager.objects.get(user = request.user ).Service_center
+
+    user = request.user
+    form = PasswordChangeForm(user)
+
+    if request.method == 'POST':
+        form = PasswordChangeForm(user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Profile details updated.')
+            # messages.success(request, 'Your password was successfully updated!')
+            return redirect('employees')
+        else:
+            messages.error(request, 'Please correct the error below.')
+
+
+    context = {
+        "form":form,
+        'sc':sc,
+        }
+    return render(request ,"Employee/employeePassWordUpdate.html" , context) 
+
 
 
 @login_required(login_url='login')
@@ -352,10 +382,10 @@ def addToBlackLIst(request, uID):
 
         messages.warning(request, u.username +' already in blacklist') 
 
-    if x>0:
+    elif  x>0:
         messages.warning(request,u.username +' already in whitelist') 
 
-    if t==0 and x==0:
+    elif  t==0 and x==0:
 
         Black_list.objects.create(user=u ,Service_center=sc)
       
@@ -376,14 +406,11 @@ def addToWhiteLIst(request, uID):
     if t>0:
         messages.warning(request, u.username +' already in whitelist') 
 
-    if x>0:
+    elif  x>0:
         messages.warning(request,u.username +' already in Blacklist') 
 
-    if t==0 and x==0:
+    elif  t==0 and x==0:
         White_list.objects.create(user=u ,Service_center=sc)
-
-    
-
    
     return redirect('bwlist')    
 

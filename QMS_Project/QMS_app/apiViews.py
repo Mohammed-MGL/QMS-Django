@@ -20,7 +20,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class ServiceCenter(ListAPIView):
     # permission_classes = (IsAuthenticated,)
-    queryset = Service_center.objects.all() 
+    # queryset = Service_center.objects.all() 
     queryset = Service_center.objects.order_by('name')
     pagination_class = CustomPagination
     serializer_class = Service_centerListSerializer

@@ -50,13 +50,13 @@
       <div class="logo">
         <a href="" class="simple-text logo-normal ">
           <!-- Service center name -->
-          {{sc}}  <br>  
-          {% if sc.is_online  %}
-         <small><small>🟢</small> online</small>  
-{% else %}
-    <small><small>🔴</small>offline</small> 
-{% endif %}
-       
+          {{sc}} <br>
+          {% if sc.is_online %}
+          <small><small>🟢</small> online</small>
+          {% else %}
+          <small><small>🔴</small>offline</small>
+          {% endif %}
+
 
 
         </a>
@@ -101,7 +101,7 @@
               <p> Edit profile </p>
             </a>
           </li>
-        
+
 
           <li class="nav-item ">
             <a class="nav-link" href="./user.html">
@@ -170,27 +170,30 @@
           {% endblock %}
         </div>
       </div>
-      <!-- <footer class="footer">
+      <footer class="footer">
         <div class="container-fluid">
+
           <nav class="float-left">
-            <ul>
+            <!-- <ul>
               <li>
                 <a href="https://www.creative-tim.com">
                   Creative Tim
                 </a>
               </li>
-            </ul>
+            </ul> -->
           </nav>
           <div class="copyright float-right">
-            &copy;
+            <!-- &copy;
             <script>
               document.write(new Date().getFullYear())
             </script>, made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
+            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web. -->
+            
+            {% include 'messages.html' %}
+            
           </div>
-           your footer here
         </div>
-      </footer> -->
+      </footer>
     </div>
   </div>
 

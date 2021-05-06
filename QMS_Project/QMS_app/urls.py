@@ -10,27 +10,31 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 #Mohammed
 urlpatterns = [
     # API endpoints 
+    # account
+    path('API/account/register/', RegisterView.as_view()),
+    path('API/account/token/', TokenObtainPairView.as_view() ),
+    path('API/account/token/refresh/', TokenRefreshView.as_view() ),
+    path('API/account/change_password/<int:pk>/', ChangePasswordView.as_view()),
+    path('API/account/update_profile/<int:pk>/', UpdateProfileView.as_view()),
+    # ServiceCenter
     path('API/allServiceCenter/',ServiceCenter.as_view(),),
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
     path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
-    path('API/account/register/', RegisterView.as_view()),
+    # Service
     path('API/BookInService/<str:sID>',BookInService.as_view(), ),
     path('API/cancelBook/<str:BID>',cancelBook.as_view(), ),
     path('API/QueueCountNumber/<str:SID>',QueueCountNumber.as_view(), ),
-    path('API/auth/token/', TokenObtainPairView.as_view() ),
-    path('API/auth/token/refresh/', TokenRefreshView.as_view() ),
-    path('change_password/<int:pk>/', ChangePasswordView.as_view(), name='auth_change_password'),
-    path('update_profile/<int:pk>/', UpdateProfileView.as_view(), name='auth_update_profile'),
     path('API/InCenter/<str:BID>',InCenter.as_view(), ),
 
 
 
+    # web endpoints:
     path('login/',views.loginPage, name = 'login'),
     path('logout/',views.logoutUser, name = 'logout'),
-
-    # web endpoints:
     # dashboard
     path('dashboard/',views.dashboard, name = 'dashboard'),
+    path('updatePassWord/',views.updatePassWord, name = 'updatePassWord'),
+
     # employee
     path('employees/',views.employees, name = 'employees'),
     path('addEmployee/',views.addEmployee, name = 'addEmployee'),

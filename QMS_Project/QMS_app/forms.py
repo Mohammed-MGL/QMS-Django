@@ -13,6 +13,7 @@ class EmployeeCreationForm(UserCreationForm):
     notes = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '} ) )
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '}))
+    
     osc = None
 
     def __init__(self, sc, *args, **kwargs):
