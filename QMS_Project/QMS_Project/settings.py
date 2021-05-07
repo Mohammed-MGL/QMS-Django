@@ -42,12 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    'QMS_app',
     'django_filters',
-    
-    'rest_framework.authtoken',
-    'djoser',
-    
+
+    'QMS_app',
     
 
 ]
@@ -183,4 +180,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'QMS_app.User'
 
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
+# manage.py shell     
+# from QMS_app.models import User
+# user=User.objects.create_user('Ghidaa', password='0000')
+# user.is_superuser=True
+# >>> user.is_staff=True
+# >>> user.save()

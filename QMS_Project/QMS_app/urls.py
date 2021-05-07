@@ -12,8 +12,8 @@ urlpatterns = [
     # API endpoints 
     # account
     path('API/account/register/', RegisterView.as_view()),
-    path('API/account/token/', TokenObtainPairView.as_view() ),
-    path('API/account/token/refresh/', TokenRefreshView.as_view() ),
+    path('API/account/login/', TokenObtainPairView.as_view() ),
+    # path('API/account/token/refresh/', TokenRefreshView.as_view() ),
     path('API/account/change_password/<int:pk>/', ChangePasswordView.as_view()),
     path('API/account/update_profile/<int:pk>/', UpdateProfileView.as_view()),
     # ServiceCenter
