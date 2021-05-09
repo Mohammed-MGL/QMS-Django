@@ -23,7 +23,7 @@ urlpatterns = [
     # Service
     path('API/BookInService/<str:sID>',BookInService.as_view(), ),
     path('API/cancelBook/<str:BID>',cancelBook.as_view(), ),
-    path('API/QueueCountNumber/<str:SID>',QueueCountNumber.as_view(), ),
+    path('API/ServiceDetails/<str:SID>',ServiceDetails.as_view(), ),
     path('API/InCenter/<str:BID>',InCenter.as_view(), ),
 
 
@@ -68,7 +68,10 @@ urlpatterns = [
 
     # employee template
     path('base',views.HomeEmployee, name = 'HomeEmployee'),
-    path('home',views.home, name = 'home'),
+    path('home',views.home, name = 'home'), 
+    path('callNext',views.callNext, name = 'CallNext'),
+    path('userServed',views.userServed, name = 'userServed'),
+
     
     
 ]

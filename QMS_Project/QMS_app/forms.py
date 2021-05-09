@@ -122,8 +122,8 @@ class MoveCustomerForm(ModelForm):
     class Meta:
         """Meta definition for Employeeform."""
 
-        model = Service_center
-        fields = ['Service'  ]
+        model = Service_Record
+        fields = ['Service']
 
         widgets = {
             'Service' : forms.Select(attrs={'class': 'form-control mb-4 '}),

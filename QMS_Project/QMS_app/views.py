@@ -478,9 +478,9 @@ def BookAsGuest(request, scID):
 
 
 def book_in_service(request, sID):
-    now = datetime.now()
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     service =Service.objects.get(id = sID)
-    guest = User.objects.create(username='Guest'+" "+now.strftime("%d/%m/%Y %H:%M:%S") , is_guest= True)
+    guest = User.objects.create(username='Guest'+" "+now , is_guest= True)
 
     def random_string(letter_count, digit_count):  
         str1 = ''.join((random.choice(string.ascii_letters) for x in range(letter_count)))  
@@ -557,6 +557,17 @@ def home(request):
     ServiedCustomerNumber =ServiedCustomerNumber.count() 
 
     form = MoveCustomerForm(sc)
+
+    if request.method == 'POST':
+        form = MoveCustomerForm(sc ,data=request.POST)
+        if form.is_valid():
+
+            CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
+            CustomerCalling.Service= form.cleaned_data['Service']
+            CustomerCalling.save()
+             
+            return redirect('home')
+
     
 
     context = {
@@ -566,7 +577,48 @@ def home(request):
         'ServiedCustomerNumber':ServiedCustomerNumber ,
         'form': form
         }
-    return render(request ,"EmployeeTemp/home.html" , context)    
+    return render(request ,"EmployeeTemp/home.html" , context)   
+
+     
+    
+@login_required(login_url='login')
+def callNext(request):
+    emp = Employee.objects.get(user = request.user)
+    sc = emp.Service_center
+    
+    service =emp.Service
+
+    CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).first()
+
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+    CustomerCalling.P_Time = now
+    CustomerCalling.Employee = emp
+    CustomerCalling.save()
+    
+    return redirect('home')
+
+
+    
+    
+    
+@login_required(login_url='login')
+def userServed(request):
+    emp = Employee.objects.get(user = request.user)
+    sc = emp.Service_center
+    
+    service =emp.Service
+
+    CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
+
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+    CustomerCalling.O_Time = now
+    CustomerCalling.is_served = True 
+    CustomerCalling.save()
+    
+    return redirect('home')
+
 
     # if request.method == 'POST':
     #     form = ImageForm(request.POST, request.FILES)

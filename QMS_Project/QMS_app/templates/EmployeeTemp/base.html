@@ -12,9 +12,798 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script>
+  'use strict';
 
+window.cancelRequestAnimFrame = ( function() {
+    return window.cancelAnimationFrame          ||
+        window.webkitCancelRequestAnimationFrame    ||
+        window.mozCancelRequestAnimationFrame       ||
+        window.oCancelRequestAnimationFrame     ||
+        window.msCancelRequestAnimationFrame        ||
+        clearTimeout
+} )();
+
+window.requestAnimFrame = (function(){
+    return  window.requestAnimationFrame       ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        window.oRequestAnimationFrame      ||
+        window.msRequestAnimationFrame     ||
+        function(/* function */ callback, /* DOMElement */ element){
+            return window.setTimeout(callback, 1000 / 60);
+        };
+})();
+
+window.mobileAndTabletcheck = function() {
+  var check = false;
+  (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))check = true})(navigator.userAgent||navigator.vendor||window.opera);
+  return check;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  let anim = null;
+
+  let isRunning = false;
+
+  let startTime = null;
+  let pausedTime = 0;
+  let elapsedTime = 0;
+
+  const clockEl = document.querySelector('.clock');
+  const pointerEl = clockEl.querySelector('.clock__pointer');
+  const svgEl = clockEl.querySelector('svg');
+  const svgEllipse = svgEl.querySelector('ellipse');
+  const timePlaceholderEl = document.querySelector('.clock-time');
+  const resetBtnEl = document.querySelector('.clock-button[data-role="clock-reset"]');
+  const startBtnEl = document.querySelector('.clock-button[data-role="clock-start-stop"]');
+  const startBtnTextEl = startBtnEl.querySelector('.clock-button__text');
+
+  const maxDashoffset = -90;
+
+  // put the left 0 if < 10
+  const getFullValue = (val) => {
+    return (val < 10) ? '0' + val : val;
+  };
+
+  const getFullMils = (val) => {
+    if (val < 10) return '00' + val;
+    if (val < 100) return '0' + val;
+
+    return val;
+  }
+
+  const startCounter = (timestamp) => {
+    if (!startTime) startTime = timestamp;
+
+    if (isRunning) {
+      elapsedTime = (timestamp - startTime) - pausedTime;
+
+      let dat = new Date(elapsedTime);
+      let mins = dat.getMinutes();
+      let secs = dat.getSeconds();
+      let mils = dat.getMilliseconds();
+
+      let angleBetweenSecs = 360 / 60;
+      let angle = (360 * mins) + (angleBetweenSecs * secs) + ((angleBetweenSecs / 1000) * mils);
+
+      mins = getFullValue(mins);
+      secs = getFullValue(secs);
+      mils = getFullMils(mils);
+
+      pointerEl.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
+      timePlaceholderEl.innerHTML = `${mins}:${secs},${mils}`;
+
+      // only if not mobile (poor performance)
+      if (!window.mobileAndTabletcheck()) {
+        let svgAngle = -90 + angle;
+        let dashoffsetPerAngle = 1.5;
+        svgEl.style.transform = `translate(-50%, -50%) rotate(${svgAngle}deg)`;
+
+        let newOffset = -135 + (angle * 0.75 / 2);
+        if (newOffset <= maxDashoffset) {
+          svgEllipse.style.strokeDashoffset = newOffset + '%';
+        }
+      }
+
+    } else {
+      pausedTime = (timestamp - startTime) - elapsedTime;
+
+    }
+
+    anim = window.requestAnimFrame(startCounter);
+  };
+
+  // reset all flags and values
+  resetBtnEl.addEventListener('click', () => {
+    isRunning = false;
+    startTime = null;
+    pausedTime = 0;
+    elapsedTime = 0;
+
+    startBtnEl.classList.remove('clock-button--pause');
+    startBtnTextEl.innerHTML = 'Start';
+
+    pointerEl.style.transform = `translate(-50%, -100%) rotate(0)`;
+    timePlaceholderEl.innerHTML = `00:00,000`;
+
+    clockEl.classList.remove('clock--started');
+
+    svgEl.style.transform = '';
+    svgEllipse.style.strokeDashoffset = '';
+
+    window.cancelRequestAnimFrame(anim);
+  });
+
+  // start and stop click event
+  startBtnEl.addEventListener('click', () => {
+    // if not running
+    if (!isRunning) {
+      isRunning = true;
+
+      anim = window.requestAnimFrame(startCounter);
+
+      clockEl.classList.add('clock--started');
+
+      startBtnEl.classList.add('clock-button--pause');
+      startBtnTextEl.innerHTML = 'Pause';
+    } else {
+      isRunning = false;
+
+      clockEl.classList.remove('clock--started');
+
+      startBtnEl.classList.remove('clock-button--pause');
+      startBtnTextEl.innerHTML = 'Continue';
+
+    }
+
+  });
+});
+
+</script>
   <style>
-
+/* html, body {
+	 width: 100%;
+	 height: 100%;
+	 margin: 0;
+	 padding: 0;
+	 background-color: #282828;
+	 font-family: "PT Sans", "Helvetica", sans-serif;
+	 font-size: 14px;
+} */
+ .clock-wrapper {
+	 display: block;
+	 margin: 0 auto;
+	 padding-top: 30px;
+	 padding-bottom: 30px;
+	 text-align: center;
+}
+ .clock {
+	 position: relative;
+	 display: block;
+	 margin: 0 auto 30px;
+	 min-width: 250px;
+	 min-height: 250px;
+	 max-width: 90vw;
+	 max-height: 90vw;
+	 width: 15vh;
+	 height: 15vh;
+	 background-color: #9b1441;
+	 border-radius: 50%;
+	 box-shadow: 0 0 5px #126f8b;
+}
+ .clock__inner-bg {
+	 position: absolute;
+	 top: 50%;
+	 left: 50%;
+	 width: 92%;
+	 height: 92%;
+	 background-color: #252525;
+	 border-radius: 50%;
+	 box-shadow: 0 0 3px #181818;
+	 transform: translate(-50%, -50%);
+}
+ .clock__inner-bg:nth-of-type(2) {
+	 width: 85%;
+	 height: 85%;
+	 background-color: #222;
+	 box-shadow: none;
+}
+ .clock__center {
+	 z-index: 2;
+	 position: absolute;
+	 display: block;
+	 top: 50%;
+	 left: 50%;
+	 width: 5px;
+	 height: 5px;
+	 background-color: #4fe3c1;
+	 border-radius: 50%;
+	 transform: translate(-50%, -50%);
+}
+ .clock__center::before {
+	 content: '';
+	 position: absolute;
+	 top: 50%;
+	 left: 50%;
+	 width: 50%;
+	 height: 50%;
+	 background-color: #454f4e;
+	 border-radius: 50%;
+	 transform: translate(-50%, -50%);
+}
+ .clock--started .clock__center {
+	 background-color: #ff415a;
+}
+ .clock__markers, .clock__minutes {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 width: 100%;
+	 height: 100%;
+	 border-radius: 50%;
+}
+ .clock__mark {
+	 position: absolute;
+	 top: 0;
+	 left: 50%;
+	 width: 5px;
+	 height: 50%;
+	 transform-origin: 50% bottom;
+}
+ .clock__mark::before {
+	 content: '';
+	 position: absolute;
+	 top: 25px;
+	 left: 50%;
+	 color: #fff;
+	 font-size: 22px;
+	 transform: translateX(-50%);
+}
+ .clock__mark::after {
+	 content: '';
+	 position: absolute;
+	 top: 4px;
+	 left: 50%;
+	 width: 2.5px;
+	 height: 2.5px;
+	 background-color: #fff;
+	 border-radius: 50%;
+	 transform: translateX(-50%);
+}
+ .clock__mark:nth-child(1)::before {
+	 content: '60';
+}
+ .clock__mark:nth-child(5n + 1)::after {
+	 width: 5px;
+	 height: 5px;
+}
+ .clock__mark:nth-child(1) {
+	 transform: translateX(-50%) rotate(0deg);
+}
+ .clock__mark:nth-child(1)::before {
+	 transform: translate(-50%, -50%) rotate(-0deg);
+}
+ .clock__mark:nth-child(2) {
+	 transform: translateX(-50%) rotate(6deg);
+}
+ .clock__mark:nth-child(2)::before {
+	 transform: translate(-50%, -50%) rotate(-6deg);
+}
+ .clock__mark:nth-child(3) {
+	 transform: translateX(-50%) rotate(12deg);
+}
+ .clock__mark:nth-child(3)::before {
+	 transform: translate(-50%, -50%) rotate(-12deg);
+}
+ .clock__mark:nth-child(4) {
+	 transform: translateX(-50%) rotate(18deg);
+}
+ .clock__mark:nth-child(4)::before {
+	 transform: translate(-50%, -50%) rotate(-18deg);
+}
+ .clock__mark:nth-child(5) {
+	 transform: translateX(-50%) rotate(24deg);
+}
+ .clock__mark:nth-child(5)::before {
+	 transform: translate(-50%, -50%) rotate(-24deg);
+}
+ .clock__mark:nth-child(6) {
+	 transform: translateX(-50%) rotate(30deg);
+}
+ .clock__mark:nth-child(6)::before {
+	 transform: translate(-50%, -50%) rotate(-30deg);
+}
+ .clock__mark:nth-child(7) {
+	 transform: translateX(-50%) rotate(36deg);
+}
+ .clock__mark:nth-child(7)::before {
+	 transform: translate(-50%, -50%) rotate(-36deg);
+}
+ .clock__mark:nth-child(8) {
+	 transform: translateX(-50%) rotate(42deg);
+}
+ .clock__mark:nth-child(8)::before {
+	 transform: translate(-50%, -50%) rotate(-42deg);
+}
+ .clock__mark:nth-child(9) {
+	 transform: translateX(-50%) rotate(48deg);
+}
+ .clock__mark:nth-child(9)::before {
+	 transform: translate(-50%, -50%) rotate(-48deg);
+}
+ .clock__mark:nth-child(10) {
+	 transform: translateX(-50%) rotate(54deg);
+}
+ .clock__mark:nth-child(10)::before {
+	 transform: translate(-50%, -50%) rotate(-54deg);
+}
+ .clock__mark:nth-child(11) {
+	 transform: translateX(-50%) rotate(60deg);
+}
+ .clock__mark:nth-child(11)::before {
+	 transform: translate(-50%, -50%) rotate(-60deg);
+}
+ .clock__mark:nth-child(12) {
+	 transform: translateX(-50%) rotate(66deg);
+}
+ .clock__mark:nth-child(12)::before {
+	 transform: translate(-50%, -50%) rotate(-66deg);
+}
+ .clock__mark:nth-child(13) {
+	 transform: translateX(-50%) rotate(72deg);
+}
+ .clock__mark:nth-child(13)::before {
+	 transform: translate(-50%, -50%) rotate(-72deg);
+}
+ .clock__mark:nth-child(14) {
+	 transform: translateX(-50%) rotate(78deg);
+}
+ .clock__mark:nth-child(14)::before {
+	 transform: translate(-50%, -50%) rotate(-78deg);
+}
+ .clock__mark:nth-child(15) {
+	 transform: translateX(-50%) rotate(84deg);
+}
+ .clock__mark:nth-child(15)::before {
+	 transform: translate(-50%, -50%) rotate(-84deg);
+}
+ .clock__mark:nth-child(16) {
+	 transform: translateX(-50%) rotate(90deg);
+}
+ .clock__mark:nth-child(16)::before {
+	 transform: translate(-50%, -50%) rotate(-90deg);
+}
+ .clock__mark:nth-child(17) {
+	 transform: translateX(-50%) rotate(96deg);
+}
+ .clock__mark:nth-child(17)::before {
+	 transform: translate(-50%, -50%) rotate(-96deg);
+}
+ .clock__mark:nth-child(18) {
+	 transform: translateX(-50%) rotate(102deg);
+}
+ .clock__mark:nth-child(18)::before {
+	 transform: translate(-50%, -50%) rotate(-102deg);
+}
+ .clock__mark:nth-child(19) {
+	 transform: translateX(-50%) rotate(108deg);
+}
+ .clock__mark:nth-child(19)::before {
+	 transform: translate(-50%, -50%) rotate(-108deg);
+}
+ .clock__mark:nth-child(20) {
+	 transform: translateX(-50%) rotate(114deg);
+}
+ .clock__mark:nth-child(20)::before {
+	 transform: translate(-50%, -50%) rotate(-114deg);
+}
+ .clock__mark:nth-child(21) {
+	 transform: translateX(-50%) rotate(120deg);
+}
+ .clock__mark:nth-child(21)::before {
+	 transform: translate(-50%, -50%) rotate(-120deg);
+}
+ .clock__mark:nth-child(22) {
+	 transform: translateX(-50%) rotate(126deg);
+}
+ .clock__mark:nth-child(22)::before {
+	 transform: translate(-50%, -50%) rotate(-126deg);
+}
+ .clock__mark:nth-child(23) {
+	 transform: translateX(-50%) rotate(132deg);
+}
+ .clock__mark:nth-child(23)::before {
+	 transform: translate(-50%, -50%) rotate(-132deg);
+}
+ .clock__mark:nth-child(24) {
+	 transform: translateX(-50%) rotate(138deg);
+}
+ .clock__mark:nth-child(24)::before {
+	 transform: translate(-50%, -50%) rotate(-138deg);
+}
+ .clock__mark:nth-child(25) {
+	 transform: translateX(-50%) rotate(144deg);
+}
+ .clock__mark:nth-child(25)::before {
+	 transform: translate(-50%, -50%) rotate(-144deg);
+}
+ .clock__mark:nth-child(26) {
+	 transform: translateX(-50%) rotate(150deg);
+}
+ .clock__mark:nth-child(26)::before {
+	 transform: translate(-50%, -50%) rotate(-150deg);
+}
+ .clock__mark:nth-child(27) {
+	 transform: translateX(-50%) rotate(156deg);
+}
+ .clock__mark:nth-child(27)::before {
+	 transform: translate(-50%, -50%) rotate(-156deg);
+}
+ .clock__mark:nth-child(28) {
+	 transform: translateX(-50%) rotate(162deg);
+}
+ .clock__mark:nth-child(28)::before {
+	 transform: translate(-50%, -50%) rotate(-162deg);
+}
+ .clock__mark:nth-child(29) {
+	 transform: translateX(-50%) rotate(168deg);
+}
+ .clock__mark:nth-child(29)::before {
+	 transform: translate(-50%, -50%) rotate(-168deg);
+}
+ .clock__mark:nth-child(30) {
+	 transform: translateX(-50%) rotate(174deg);
+}
+ .clock__mark:nth-child(30)::before {
+	 transform: translate(-50%, -50%) rotate(-174deg);
+}
+ .clock__mark:nth-child(31) {
+	 transform: translateX(-50%) rotate(180deg);
+}
+ .clock__mark:nth-child(31)::before {
+	 transform: translate(-50%, -50%) rotate(-180deg);
+}
+ .clock__mark:nth-child(32) {
+	 transform: translateX(-50%) rotate(186deg);
+}
+ .clock__mark:nth-child(32)::before {
+	 transform: translate(-50%, -50%) rotate(-186deg);
+}
+ .clock__mark:nth-child(33) {
+	 transform: translateX(-50%) rotate(192deg);
+}
+ .clock__mark:nth-child(33)::before {
+	 transform: translate(-50%, -50%) rotate(-192deg);
+}
+ .clock__mark:nth-child(34) {
+	 transform: translateX(-50%) rotate(198deg);
+}
+ .clock__mark:nth-child(34)::before {
+	 transform: translate(-50%, -50%) rotate(-198deg);
+}
+ .clock__mark:nth-child(35) {
+	 transform: translateX(-50%) rotate(204deg);
+}
+ .clock__mark:nth-child(35)::before {
+	 transform: translate(-50%, -50%) rotate(-204deg);
+}
+ .clock__mark:nth-child(36) {
+	 transform: translateX(-50%) rotate(210deg);
+}
+ .clock__mark:nth-child(36)::before {
+	 transform: translate(-50%, -50%) rotate(-210deg);
+}
+ .clock__mark:nth-child(37) {
+	 transform: translateX(-50%) rotate(216deg);
+}
+ .clock__mark:nth-child(37)::before {
+	 transform: translate(-50%, -50%) rotate(-216deg);
+}
+ .clock__mark:nth-child(38) {
+	 transform: translateX(-50%) rotate(222deg);
+}
+ .clock__mark:nth-child(38)::before {
+	 transform: translate(-50%, -50%) rotate(-222deg);
+}
+ .clock__mark:nth-child(39) {
+	 transform: translateX(-50%) rotate(228deg);
+}
+ .clock__mark:nth-child(39)::before {
+	 transform: translate(-50%, -50%) rotate(-228deg);
+}
+ .clock__mark:nth-child(40) {
+	 transform: translateX(-50%) rotate(234deg);
+}
+ .clock__mark:nth-child(40)::before {
+	 transform: translate(-50%, -50%) rotate(-234deg);
+}
+ .clock__mark:nth-child(41) {
+	 transform: translateX(-50%) rotate(240deg);
+}
+ .clock__mark:nth-child(41)::before {
+	 transform: translate(-50%, -50%) rotate(-240deg);
+}
+ .clock__mark:nth-child(42) {
+	 transform: translateX(-50%) rotate(246deg);
+}
+ .clock__mark:nth-child(42)::before {
+	 transform: translate(-50%, -50%) rotate(-246deg);
+}
+ .clock__mark:nth-child(43) {
+	 transform: translateX(-50%) rotate(252deg);
+}
+ .clock__mark:nth-child(43)::before {
+	 transform: translate(-50%, -50%) rotate(-252deg);
+}
+ .clock__mark:nth-child(44) {
+	 transform: translateX(-50%) rotate(258deg);
+}
+ .clock__mark:nth-child(44)::before {
+	 transform: translate(-50%, -50%) rotate(-258deg);
+}
+ .clock__mark:nth-child(45) {
+	 transform: translateX(-50%) rotate(264deg);
+}
+ .clock__mark:nth-child(45)::before {
+	 transform: translate(-50%, -50%) rotate(-264deg);
+}
+ .clock__mark:nth-child(46) {
+	 transform: translateX(-50%) rotate(270deg);
+}
+ .clock__mark:nth-child(46)::before {
+	 transform: translate(-50%, -50%) rotate(-270deg);
+}
+ .clock__mark:nth-child(47) {
+	 transform: translateX(-50%) rotate(276deg);
+}
+ .clock__mark:nth-child(47)::before {
+	 transform: translate(-50%, -50%) rotate(-276deg);
+}
+ .clock__mark:nth-child(48) {
+	 transform: translateX(-50%) rotate(282deg);
+}
+ .clock__mark:nth-child(48)::before {
+	 transform: translate(-50%, -50%) rotate(-282deg);
+}
+ .clock__mark:nth-child(49) {
+	 transform: translateX(-50%) rotate(288deg);
+}
+ .clock__mark:nth-child(49)::before {
+	 transform: translate(-50%, -50%) rotate(-288deg);
+}
+ .clock__mark:nth-child(50) {
+	 transform: translateX(-50%) rotate(294deg);
+}
+ .clock__mark:nth-child(50)::before {
+	 transform: translate(-50%, -50%) rotate(-294deg);
+}
+ .clock__mark:nth-child(51) {
+	 transform: translateX(-50%) rotate(300deg);
+}
+ .clock__mark:nth-child(51)::before {
+	 transform: translate(-50%, -50%) rotate(-300deg);
+}
+ .clock__mark:nth-child(52) {
+	 transform: translateX(-50%) rotate(306deg);
+}
+ .clock__mark:nth-child(52)::before {
+	 transform: translate(-50%, -50%) rotate(-306deg);
+}
+ .clock__mark:nth-child(53) {
+	 transform: translateX(-50%) rotate(312deg);
+}
+ .clock__mark:nth-child(53)::before {
+	 transform: translate(-50%, -50%) rotate(-312deg);
+}
+ .clock__mark:nth-child(54) {
+	 transform: translateX(-50%) rotate(318deg);
+}
+ .clock__mark:nth-child(54)::before {
+	 transform: translate(-50%, -50%) rotate(-318deg);
+}
+ .clock__mark:nth-child(55) {
+	 transform: translateX(-50%) rotate(324deg);
+}
+ .clock__mark:nth-child(55)::before {
+	 transform: translate(-50%, -50%) rotate(-324deg);
+}
+ .clock__mark:nth-child(56) {
+	 transform: translateX(-50%) rotate(330deg);
+}
+ .clock__mark:nth-child(56)::before {
+	 transform: translate(-50%, -50%) rotate(-330deg);
+}
+ .clock__mark:nth-child(57) {
+	 transform: translateX(-50%) rotate(336deg);
+}
+ .clock__mark:nth-child(57)::before {
+	 transform: translate(-50%, -50%) rotate(-336deg);
+}
+ .clock__mark:nth-child(58) {
+	 transform: translateX(-50%) rotate(342deg);
+}
+ .clock__mark:nth-child(58)::before {
+	 transform: translate(-50%, -50%) rotate(-342deg);
+}
+ .clock__mark:nth-child(59) {
+	 transform: translateX(-50%) rotate(348deg);
+}
+ .clock__mark:nth-child(59)::before {
+	 transform: translate(-50%, -50%) rotate(-348deg);
+}
+ .clock__mark:nth-child(60) {
+	 transform: translateX(-50%) rotate(354deg);
+}
+ .clock__mark:nth-child(60)::before {
+	 transform: translate(-50%, -50%) rotate(-354deg);
+}
+ .clock__mark:nth-child(6)::before {
+	 content: "5";
+	 font-size: 16px;
+}
+ .clock__mark:nth-child(11)::before {
+	 content: "10";
+	 font-size: 16px;
+}
+ .clock__mark:nth-child(16)::before {
+	 content: "15";
+}
+ .clock__mark:nth-child(21)::before {
+	 content: "20";
+	 font-size: 16px;
+}
+ .clock__mark:nth-child(26)::before {
+	 content: "25";
+	 font-size: 16px;
+}
+ .clock__mark:nth-child(31)::before {
+	 content: "30";
+}
+ .clock__mark:nth-child(36)::before {
+	 content: "35";
+	 font-size: 16px;
+}
+ .clock__mark:nth-child(41)::before {
+	 content: "40";
+	 font-size: 16px;
+}
+ .clock__mark:nth-child(46)::before {
+	 content: "45";
+}
+ .clock__mark:nth-child(51)::before {
+	 content: "50";
+	 font-size: 16px;
+}
+ .clock__mark:nth-child(56)::before {
+	 content: "55";
+	 font-size: 16px;
+}
+ .clock__mark:nth-child(61)::before {
+	 content: "60";
+}
+ .clock__pointer {
+	 z-index: 1;
+	 position: absolute;
+	 top: 50%;
+	 left: 50%;
+	 width: 3px;
+	 height: 27.5%;
+	 background-color: #4fe3c1;
+	 border-top-left-radius: 30%;
+	 border-top-right-radius: 30%;
+	 transform: translate(-50%, -100%) rotate(0);
+	 transform-origin: 50% bottom;
+	 will-change: transform;
+}
+ .clock--started .clock__pointer {
+	 background-color: #ff415a;
+}
+ .clock__inner-center {
+	 position: absolute;
+	 top: 50%;
+	 left: 50%;
+	 width: 25px;
+	 height: 25px;
+	 border-radius: 50%;
+	 border: 1px solid #4e4e4e;
+	 transform: translate(-50%, -50%);
+}
+ .clock__inner-center:nth-child(1) {
+	 width: 20px;
+	 height: 20px;
+	 border-color: rgba(78, 78, 78, 0.25);
+}
+ .clock__inner-center:nth-child(2) {
+	 width: 40px;
+	 height: 40px;
+	 border-color: rgba(78, 78, 78, 0.5);
+}
+ .clock__inner-center:nth-child(3) {
+	 width: 60px;
+	 height: 60px;
+	 border-color: rgba(78, 78, 78, 0.75);
+}
+ .clock-time {
+	 display: block;
+	 width: auto;
+	 margin: 0 auto 30px;
+	 color: rgb(94, 19, 19);
+	 font-size: 2em;
+	 letter-spacing: 2px;
+}
+ .clock-button {
+	 position: relative;
+	 display: inline-block;
+	 height: 100px;
+	 width: 100px;
+	 margin: 0 20px;
+	 background-color: #ebebeb;
+	 border-radius: 50%;
+	 border: none;
+	 color: #5e5e5e;
+	 font-size: 1.5em;
+	 font-family: "PT Sans", "Helvetica", sans-serif;
+	 box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+ .clock-button::before {
+	 z-index: 0;
+	 content: '';
+	 position: absolute;
+	 top: -7.5px;
+	 left: -7.5px;
+	 right: -7.5px;
+	 bottom: -7.5px;
+	 background-color: rgba(235, 235, 235, 0.5);
+	 border-radius: 50%;
+	 transition: transform 0.2s;
+}
+ .clock-button:hover {
+	 cursor: pointer;
+}
+ .clock-button:active::before {
+	 transform: scale(0.95);
+}
+ .clock-button:active, .clock-button:focus {
+	 outline: 0;
+	 -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	 -moz-tap-highlight-color: rgba(0, 0, 0, 0);
+	 tap-highlight-color: rgba(0, 0, 0, 0);
+}
+ .clock-button--start {
+	 background-color: #4fe3c1;
+	 color: #fff;
+}
+ .clock-button--start::before {
+	 background-color: rgba(79, 227, 193, 0.5);
+}
+ .clock-button--pause {
+	 background-color: #ff415a;
+	 color: #fff;
+}
+ .clock-button--pause::before {
+	 background-color: rgba(255, 65, 90, 0.5);
+}
+ .clock-button__text {
+	 z-index: 1;
+	 position: absolute;
+	 top: 50%;
+	 left: 50%;
+	 transform: translate(-50%, -50%);
+}
+ .svg {
+	 position: absolute;
+	 top: 50%;
+	 left: 50%;
+	 width: 100%;
+	 height: 100%;
+	 transform: translate(-50%, -50%) rotate(-90deg);
+}
+ .svg ellipse {
+	 stroke-dasharray: 136%;
+	 stroke-dashoffset: -136%;
+}
+ 
   </style>
 </head>
 

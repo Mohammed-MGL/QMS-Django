@@ -80,7 +80,7 @@ class Search_ServiceCenter(ListAPIView):
 
 
 class ServiceCenterDetails(APIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     
     
     def get(self , request ,id, *args ,**kwargs):
@@ -151,21 +151,31 @@ class  InCenter(APIView):
 
 
 
-class  QueueCountNumber(APIView ):
+class  ServiceDetails(APIView ):
     permission_classes = (IsAuthenticated,)
     
     
     def get(self , request ,SID, *args ,**kwargs):
         
-        
         user =request.user
         service =Service.objects.get(id = SID) 
-        book = Service_Record.objects.filter(Service=service , user=user, IS_InCenter = False ,  Queue_type = 'B' ).count()
-        
+        queue = Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,Queue_type = 'B' )
+        is_inQ = Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,user= user ).exists()
+        queueCount = queue.count()
 
+        waitingTime = "5 min"
+
+    
+        
+        serviceName = service.name
 
         
-        return Response({  'count': book  }) 
+        return Response({
+            "serviceName" : serviceName,
+            "queueCount" : queueCount,
+            "waitingTime" : waitingTime,
+            "is_inQ" : is_inQ,
+        }) 
 
 
 

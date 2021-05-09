@@ -10,13 +10,10 @@
   <div class="row  ">
     <div class="col-6 ">
       <div class="card">
-        <div class="card-header">
-          Featured
-        </div>
+        
         <div class="card-body">
-          <h5 class="card-title">Special title treatment</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+          {% include 'EmployeeTemp\timer.html' %}
+          
         </div>
       </div>
     </div>
@@ -70,17 +67,19 @@
   </div>
   <div class="row justify-content-center mt-5 ">
     <div class="col-4 ">
-      <button type="button" class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click to</b>
-        <br><b>receive<br> a new customer</b></button>
+      <a href="{% url 'CallNext'  %}"  class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click to</b>
+        <br><b>receive<br> a new customer</b></a>
     </div>
 
 
     
 
+
+    
     <div class="col-4 ">
-      <button type="button" class="btn btn-outline-warning " style="width: 10rem; height: 10rem ;">
+      <a href="{% url 'userServed'  %}" type="button" class="btn btn-outline-warning " style="width: 10rem; height: 10rem ;">
         <b>Click here</b> <br><b>if you are finished <br> serving the client</b>
-        </b></button>
+        </b></a>
     </div>
     <div class="col-4 ">
       <div class="card">
@@ -88,10 +87,14 @@
         <div class="card-body">
           <div class="form-group">
             <label for="exampleFormControlSelect1">sent customer to</label>
+            
+<form action="" method="POST">
+  {% csrf_token %}
+  
             {{form}}
           </div>
           <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change </button>
-
+</form>
         </div>
       </div>
     </div>
