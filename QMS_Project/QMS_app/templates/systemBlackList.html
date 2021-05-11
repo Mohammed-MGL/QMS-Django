@@ -1,0 +1,96 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+
+<div class="countainer">
+    <div class="row ml-1">
+
+        <div class="col-9  ">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title ">users</h4>
+                    <div class="d-flex justify-content-between">
+                        <div class="p-2">
+                            ======
+                        </div>
+                        <div class="p-2"> <a href="{% url 'copysystemBlackList' %}" class="btn btn-sm btn-secondary ">Add user
+                            &nbsp;<i class="material-icons">block all</i> </a></div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <tr>
+                                    <th>
+                                        user ID
+                                    </th>
+                                    <th>
+                                        user name
+                                    </th>
+                                    <th>
+                                        first name
+                                    </th>
+                                    <th>
+                                        Last name
+                                    </th>
+                                    <th>
+                                        Reason
+                                    </th>
+                                    <th>
+                                     
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for sb in SystemBlackList %}
+
+                                <tr>
+
+
+                                    <td>
+                                        {{sb.user.id}}
+                                    </td>
+                                    <td>
+                                        {{sb.user.username}}
+                                    </td>
+                                    <td>
+                                        {{sb.user.first_name}}
+                                    </td>
+                                    <td>
+                                        {{sb.user.last_name}}<span class="material-icons-round">
+
+                                        </span>
+                                    </td>
+                                    <td class="text-primary">
+                                        {{sb.reason}}
+
+                                    </td>
+                                    <td class="text-primary">
+                                        <a href="{% url 'addToBlackLIst' sb.user.id %}"
+                                            class="btn btn-sm btn-danger btn-round"> + black list </a>
+
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        
+    </div>
+</div>
+{% endblock%}

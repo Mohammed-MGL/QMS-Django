@@ -414,7 +414,54 @@ def addToWhiteLIst(request, uID):
    
     return redirect('bwlist')    
 
+
+
+
+@login_required(login_url='login')
+@manager_only
+def systemBlackList(request):
+    sc = Manager.objects.get(user = request.user ).Service_center
+
+    SystemBlackList = Black_list.objects.filter(is_BySystem= True)
     
+   
+    context = {
+        'SystemBlackList':SystemBlackList ,
+        
+        
+        'sc':sc,
+
+        }
+
+    return render(request ,"systemBlackList.html" , context)  
+
+    
+
+@login_required(login_url='login')
+@manager_only
+def copysystemBlackList(request):
+    sc = Manager.objects.get(user = request.user ).Service_center
+    
+
+    SystemBlackList = Black_list.objects.filter(is_BySystem = True).user
+    print(SystemBlackList)
+
+    for u in SystemBlackList:
+        t = Black_list.objects.filter(user=u ,Service_center=sc).count()
+        x = White_list.objects.filter(user=u ,Service_center=sc).count()
+        if t>0:
+
+            messages.warning(request, u.username +' already in blacklist') 
+
+        elif  x>0:
+            messages.warning(request,u.username +' already in whitelist') 
+
+        elif  t==0 and x==0:
+
+            Black_list.objects.create(user=u ,Service_center=sc)
+        
+      
+    return redirect('bwlist')
 
     
 

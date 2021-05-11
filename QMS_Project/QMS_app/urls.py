@@ -61,6 +61,9 @@ urlpatterns = [
     path('serachForUser',views.serachForUser, name = 'serachForUser'),
     path('addToBlackLIst/<str:uID>',views.addToBlackLIst, name = 'addToBlackLIst'),
     path('addToWhiteLIst/<str:uID>',views.addToWhiteLIst, name = 'addToWhiteLIst'),
+    path('systemBlackList/',views.systemBlackList, name = 'systemBlackList'),
+    path('copysystemBlackList/',views.copysystemBlackList, name = 'copysystemBlackList'),
+    
     
 
     path('BookAsGuest/<str:scID>',views.BookAsGuest, name = 'BookAsGuest'), 

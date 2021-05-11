@@ -106,7 +106,7 @@ class Service_Record(models.Model):
 
 
 class Black_list(models.Model):
-    Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE ,null=True )
+    Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE ,null=True , blank=True )
     user = models.ForeignKey(User,on_delete=models.CASCADE )
     reason = models.CharField(max_length=600 , blank=True)
     is_BySystem = models.BooleanField(default=False)
