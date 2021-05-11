@@ -6,7 +6,7 @@ from .filters import EmployeeFilter , UserFilter
 from django.contrib import messages
 from django.contrib.auth import authenticate ,login , logout
 from django.contrib.auth.decorators import login_required
-from .decorators import unauthenticated_user , manager_only
+from .decorators import unauthenticated_user , manager_only , employee_only
 from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime
 from django.contrib.auth import update_session_auth_hash
@@ -30,7 +30,7 @@ def loginPage(request):
 
                 return redirect('dashboard')
             if user.is_employee == True:
-                return redirect('HomeEmployee')
+                return redirect('home')
 
             
         else:
@@ -526,112 +526,87 @@ def ServiceCnterProfile(request):
 
 
 
- 
-  
-@login_required(login_url='login')
-def HomeEmployee(request):
-    sc = Employee.objects.get(user = request.user ).Service_center
-    emp = Employee.objects.get(user = request.user)
-    
-
-
-    context = {
-        'sc':sc,
-        'emp':emp
-        }
-    return render(request ,"EmployeeTemp/base.html" , context)
-
 
 
 @login_required(login_url='login')
+@employee_only
 def home(request):
     emp = Employee.objects.get(user = request.user)
     sc = emp.Service_center
     
     service =emp.Service
-    CustomerNumber= Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service )
+    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service )
     CustomerNumber =CustomerNumber.count() 
 
 
-    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ).filter(is_served= True ).filter(is_cancelled= False ).filter(Service=service )
+    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service )
     ServiedCustomerNumber =ServiedCustomerNumber.count() 
 
     form = MoveCustomerForm(sc)
 
-    if request.method == 'POST':
+
+    customer = None
+    if request.method=='POST' and 'callNext' in request.POST:
+
+        CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True ).first()
+
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+        CustomerCalling.P_Time = now
+        CustomerCalling.Employee = emp
+        CustomerCalling.save()
+
+        customer = CustomerCalling.user
+    
+    elif request.method=='POST' and 'userServed' in request.POST:
+    
+        CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
+
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+        CustomerCalling.O_Time = now
+        CustomerCalling.is_served = True 
+        CustomerCalling.save()
+
+
+    elif request.method == 'POST' and 'send' in request.POST:
+
         form = MoveCustomerForm(sc ,data=request.POST)
         if form.is_valid():
+            CustomerCalling = Service_Record.objects.filter(is_accept = True,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).first()
+            
+            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
-            CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
-            CustomerCalling.Service= form.cleaned_data['Service']
+            CustomerCalling.O_Time = now
+            CustomerCalling.is_served = True 
             CustomerCalling.save()
-             
-            return redirect('home')
 
+            customer = CustomerCalling.user
+
+            ser = form.cleaned_data['Service']
+            book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
     
+    # served = Service_Record.objects.filter(Employee=emp,is_served = True)
+    # TotalServingTime = served.O_Time - served.P_Time
+    # for x in served:
+    #     i = x.O_Time - x.P_Time
+        
+        
 
+    #     TotalServingTime = current_date_and_time + time_added
+
+     
     context = {
         'sc':sc,
         'emp':emp ,
         'CustomerNumber':CustomerNumber ,
         'ServiedCustomerNumber':ServiedCustomerNumber ,
-        'form': form
+        'form': form ,
+        'Customer' : customer,
+        # 'TotalServingTime': TotalServingTime
         }
     return render(request ,"EmployeeTemp/home.html" , context)   
 
-     
-    
-@login_required(login_url='login')
-def callNext(request):
-    emp = Employee.objects.get(user = request.user)
-    sc = emp.Service_center
-    
-    service =emp.Service
-
-    CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).first()
-
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-
-    CustomerCalling.P_Time = now
-    CustomerCalling.Employee = emp
-    CustomerCalling.save()
-    
-    return redirect('home')
-
-
-    
-    
-    
-@login_required(login_url='login')
-def userServed(request):
-    emp = Employee.objects.get(user = request.user)
-    sc = emp.Service_center
-    
-    service =emp.Service
-
-    CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
-
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-
-    CustomerCalling.O_Time = now
-    CustomerCalling.is_served = True 
-    CustomerCalling.save()
-    
-    return redirect('home')
-
-
-    # if request.method == 'POST':
-    #     form = ImageForm(request.POST, request.FILES)
-    #     if form.is_valid():
-    #         form.save()
-    #         # Get the current instance object to display in the template
-    #         img_obj = form.instance
-    #         return render(request, 'ServiceCnterProfile.html', {'form': form, 'img_obj': img_obj})
-    # else:
-    #     form = ImageForm()
-    # return render(request, 'ServiceCnterProfile.html', {'form': form})
-
-     
 ###########################################
 # from django.shortcuts import render
 # from django.http import HttpResponse

@@ -10,10 +10,14 @@
   <div class="row  ">
     <div class="col-6 ">
       <div class="card">
-        
+
         <div class="card-body">
           {% include 'EmployeeTemp\timer.html' %}
-          
+          {% if Customer %}
+          {{Customer.username}}
+          {% endif %}
+          <label id="minutes" onload="setTime()">00</label>:<label id="seconds">00</label>
+
         </div>
       </div>
     </div>
@@ -22,7 +26,7 @@
         <div class="row">
           <div class="col-6 ">
             <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
-              
+
               <div class="card-body">
                 <h5 class="card-title">Customer Number</h5>
                 <p class="card-text">{{CustomerNumber}} </p>
@@ -32,10 +36,10 @@
 
           <div class="col-6 ">
             <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
-           
+
               <div class="card-body">
                 <h5 class="card-title">Servied Customer Number</h5>
-                <p class="card-text">{{ServiedCustomerNumber}}</p>
+                <p class="card-text"></p>
               </div>
             </div>
           </div>
@@ -43,21 +47,21 @@
         <div class="row">
           <div class="col-6 ">
             <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
-            
+
               <div class="card-body">
                 <h5 class="card-title">Avrage serving time</h5>
                 <p class="card-text"></p>
               </div>
             </div>
-            
+
           </div>
 
           <div class="col-6 ">
             <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
-              
+
               <div class="card-body">
                 <h5 class="card-title">Total serving Time</h5>
-                <p class="card-text"></p>
+                <p class="card-text">{{TotalServingTime}}</p>
               </div>
             </div>
           </div>
@@ -67,34 +71,59 @@
   </div>
   <div class="row justify-content-center mt-5 ">
     <div class="col-4 ">
-      <a href="{% url 'CallNext'  %}"  class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click to</b>
-        <br><b>receive<br> a new customer</b></a>
+      <div class="clock-buttons">
+        <button type="button" class="clock-button" data-role="clock-reset">
+          <span class="clock-button__text">Reset</span>
+        </button>
+
+        <button type="submit" class="clock-button clock-button--start" data-role="clock-start-stop">
+          <span class="clock-button__text">Start</span>
+        </button>
+      </div>
+      <form action="" method="POST">
+        {% csrf_token %}
+
+
+        <button type="submit " name="callNext" data-role="clock-start-stop" class="btn btn-primary pull-right btn-round {% if Customer %} disabled {% endif %}"{% if Customer %} disabled {% endif %}> receive a new customer
+        </button>
+      </form>
+      <!-- <a href="" class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click
+          to</b>
+        <br><b>receive<br> a new customer</b></a> -->
+
     </div>
 
 
-    
 
 
-    
+
+
     <div class="col-4 ">
-      <a href="{% url 'userServed'  %}" type="button" class="btn btn-outline-warning " style="width: 10rem; height: 10rem ;">
+      <form action="" method="POST">
+        {% csrf_token %}
+
+
+        <button type="submit " name="userServed" class="btn btn-primary pull-right btn-round {% if not Customer %} disabled {% endif %}"{% if not Customer %} disabled {% endif %}> receive a new customer
+        </button>
+      </form>
+      <!-- <a href="" type="button" class="btn btn-outline-warning "
+        style="width: 10rem; height: 10rem ;">
         <b>Click here</b> <br><b>if you are finished <br> serving the client</b>
-        </b></a>
+        </b></a> -->
     </div>
     <div class="col-4 ">
       <div class="card">
-       
+
         <div class="card-body">
           <div class="form-group">
             <label for="exampleFormControlSelect1">sent customer to</label>
-            
-<form action="" method="POST">
-  {% csrf_token %}
-  
-            {{form}}
+
+            <form action="" method="POST">
+              {% csrf_token %}
+              {{form}}
           </div>
-          <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change </button>
-</form>
+          <button type="submit " name="send" class="btn btn-primary pull-right btn-round {% if not Customer %} disabled {% endif %}"{% if not Customer %} disabled {% endif %}> change </button>
+          </form>
         </div>
       </div>
     </div>

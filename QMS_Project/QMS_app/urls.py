@@ -21,9 +21,11 @@ urlpatterns = [
     path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
     path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
     # Service
+    path('API/ServiceDetails/<str:SID>',ServiceDetails.as_view(), ),
+    path('API/UserReservations/',UserReservations.as_view(), ),
+
     path('API/BookInService/<str:sID>',BookInService.as_view(), ),
     path('API/cancelBook/<str:BID>',cancelBook.as_view(), ),
-    path('API/ServiceDetails/<str:SID>',ServiceDetails.as_view(), ),
     path('API/InCenter/<str:BID>',InCenter.as_view(), ),
 
 
@@ -67,10 +69,8 @@ urlpatterns = [
 
 
     # employee template
-    path('base',views.HomeEmployee, name = 'HomeEmployee'),
     path('home',views.home, name = 'home'), 
-    path('callNext',views.callNext, name = 'CallNext'),
-    path('userServed',views.userServed, name = 'userServed'),
+   
 
     
     

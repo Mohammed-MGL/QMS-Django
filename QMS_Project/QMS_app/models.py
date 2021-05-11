@@ -23,6 +23,9 @@ class Employee(models.Model):
     desk_num = models.CharField(max_length=50 , blank=True)
     notes =  models.CharField(max_length=1000 , blank=True)
 
+    class Meta:
+        unique_together = ('Service_center', 'desk_num',)
+
     def __str__(self):
         """String for representing the Model object."""
         return self.user.username  
@@ -37,7 +40,6 @@ class Service_center(models.Model):
     QR = models.ImageField(upload_to='service_center/QR/', verbose_name="QR" , blank=True)
     is_online = models.BooleanField(default=True)
     
-
 
     def __str__(self):
         """String for representing the Model object."""
@@ -66,6 +68,9 @@ class Service(models.Model):
     name = models.CharField(max_length=350)
     IS_Active = models.BooleanField(default=True)
     
+    class Meta:
+        unique_together = ('Service_center', 'name',)
+
     
     def __str__(self):
         """String for representing the Model object."""

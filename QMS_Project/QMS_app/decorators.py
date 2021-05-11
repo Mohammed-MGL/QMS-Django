@@ -34,6 +34,16 @@ def manager_only(view_func):
     return wrapper_function
 
 
+def employee_only(view_func):
+    def wrapper_function(request, *args, **kwargs):
+        try:
+            employee = Employee.objects.get(user = request.user)
+            return view_func(request, *args, **kwargs)
+        except Employee.DoesNotExist:
+            return redirect('logout')
+    return wrapper_function
+
+
 # def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
 #     actual_decorator = user_passes_test(
 #         lambda u: u.is_active and u.is_student,

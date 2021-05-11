@@ -16,10 +16,16 @@ from datetime import datetime
 from datetime import date
 from rest_framework.permissions import IsAuthenticated
 
+class UserReservations(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    # queryset = Service_center.objects.order_by('name')
+    # pagination_class = CustomPagination
+    # serializer_class = Service_centerListSerializer
+
 
 
 class ServiceCenter(ListAPIView):
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     # queryset = Service_center.objects.all() 
     queryset = Service_center.objects.order_by('name')
     pagination_class = CustomPagination
@@ -32,7 +38,7 @@ class ServiceCenter(ListAPIView):
 
 
 class Search_ServiceCenter(ListAPIView):
-    
+    permission_classes = (IsAuthenticated,)
     pagination_class = CustomPagination
     serializer_class = Service_centerListSerializer
 
