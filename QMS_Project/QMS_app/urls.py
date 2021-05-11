@@ -27,6 +27,7 @@ urlpatterns = [
     path('API/BookInService/<str:sID>',BookInService.as_view(), ),
     path('API/cancelBook/<str:BID>',cancelBook.as_view(), ),
     path('API/InCenter/<str:BID>',InCenter.as_view(), ),
+    
 
 
 

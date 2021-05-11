@@ -1,32 +1,76 @@
-{% extends 'base_generic.html' %}
+{% load static %}
+<html lang="en">
 
-{% block content %}
+<head>
+    <title>Hello, world!</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <!-- Material Kit CSS -->
+    <link href="{% static 'css/material-dashboard.css' %}" rel="stylesheet" />
+</head>
 
-<div class="container ">
-    <div class="row ">
-        {% for s in Services %}
-        <div class="col-lg-2   ">
-            <div class="card border-info ">
+<body>
 
-                <div class="card-body">
+    <div class="container p-3">
+        <div class="row justify-content-center ">
 
-                    <h5 class="card-title">{{s.name}}</h5>
+            <img src="{{serviceCenter.Icon.url}}" cla width="150" height="150">
 
 
-                    <a href="{% url 'book_in_service' s.id %}" class="btn btn-sm btn-info">
-                        <dev class="material-icons">r</dev>
-                    </a>
-                    
+        </div>
+        <div class="row justify-content-center ">
+
+
+
+            <b>
+                <h2>{{serviceCenter.name}}</h2>
+            </b>
+        </div>
+        <div class="row justify-content-center mt-5 ">
+            {% for s in sdList %}
+            <div class="col-3  ">
+
+
+                <div class="card border-info ">
+                    <div class="card-header card-header-primary">
+                        <b>{{s.name}}</b>
+                    </div>
+
+                    <div class="card-body">
+
+                        <!-- <h5 class="card-title"></h5> -->
+                      {{s.CustomerNumber}} <br>
+                      {{s.WaitingTime}} <br>
+
+                        <a href="{% url 'book_in_service' s.sid %}" class="btn btn-sm btn-info">
+                           book in service
+                        </a>
+
+                    </div>
                 </div>
             </div>
+            {% endfor %}
+
+
         </div>
-        {% endfor %}
-
-
     </div>
-</div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
 
-
-
-
-{% endblock%}
+</html>

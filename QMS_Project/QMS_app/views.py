@@ -462,13 +462,35 @@ def deleteUserFromWL(request, uID):
 def BookAsGuest(request, scID):
     
     Services = Service.objects.filter(Service_center=scID)
+    serviceCenter = Service_center.objects.get(id = scID )
+    
+    class ServiceDetails:
+        
+        name = None
+        CustomerNumber   = None
+        WaitingTime  = None
+        sid = None
+        def __init__(self,name,CustomerNumber ,WaitingTime , sid):
+            self.name = name
+            self.CustomerNumber = CustomerNumber
+            self.WaitingTime = WaitingTime
+            self.sid = sid
 
-    # guest = User.objects.create()
-    
-    
+    sdList = [] 
+    for s in Services:
+        name = s.name
+        CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service= s).count()
+        WaitingTime = "5 min test"
+        sid=  s.id
+        sd = ServiceDetails(name,CustomerNumber,WaitingTime , sid)
+        
+        sdList.append(sd)
+
 
     context = {
-        "Services" : Services,
+        "sdList" : sdList,
+        'serviceCenter':serviceCenter ,
+        'CustomerNumber':CustomerNumber 
     }
     
     return render(request ,"BookAsGuest.html" , context)    
@@ -480,8 +502,9 @@ def BookAsGuest(request, scID):
 def book_in_service(request, sID):
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     service =Service.objects.get(id = sID)
+    serviceCenter =service.Service_center 
     guest = User.objects.create(username='Guest'+" "+now , is_guest= True)
-
+    
     def random_string(letter_count, digit_count):  
         str1 = ''.join((random.choice(string.ascii_letters) for x in range(letter_count)))  
         str1 += ''.join((random.choice(string.digits) for x in range(digit_count)))  
@@ -497,7 +520,7 @@ def book_in_service(request, sID):
     guest.save()
     book = Service_Record.objects.create(Service=service , user=guest , IS_InCenter = True ,  Queue_type = 'B' )
     
-    return render(request ,"book_in_service.html" , {})
+    return render(request ,"book_in_service.html" , {'user':guest , 'serviceCenter':serviceCenter})
 
 
 
@@ -539,25 +562,33 @@ def home(request):
     CustomerNumber =CustomerNumber.count() 
 
 
-    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service )
-    ServiedCustomerNumber =ServiedCustomerNumber.count() 
+    
 
     form = MoveCustomerForm(sc)
 
 
-    customer = None
     if request.method=='POST' and 'callNext' in request.POST:
 
-        CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True ).first()
+        # CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True ).first()
+        if(CustomerNumber>0):
 
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+            lastCustomer = Service_Record.objects.filter(is_accept = True ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
+           
+            if(lastCustomer == None):
+                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A'  ).first()
+                if CustomerCalling == None:
+                    CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B'  ).first()
+            elif(lastCustomer.Queue_type == 'B'):
+                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A'  ).first()
+            else:
+                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B'  ).first()
+            
+            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
-        CustomerCalling.P_Time = now
-        CustomerCalling.Employee = emp
-        CustomerCalling.save()
+            CustomerCalling.P_Time = now
+            CustomerCalling.Employee = emp
+            CustomerCalling.save()
 
-        customer = CustomerCalling.user
-    
     elif request.method=='POST' and 'userServed' in request.POST:
     
         CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
@@ -586,6 +617,13 @@ def home(request):
             ser = form.cleaned_data['Service']
             book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
     
+    t = Service_Record.objects.filter(Employee=emp,is_served = False).first()
+    if(t is not None):
+        customer=t.user
+    else:
+
+        customer= None  
+    
     # served = Service_Record.objects.filter(Employee=emp,is_served = True)
     # TotalServingTime = served.O_Time - served.P_Time
     # for x in served:
@@ -595,7 +633,9 @@ def home(request):
 
     #     TotalServingTime = current_date_and_time + time_added
 
-     
+    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
+    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service )
+    CustomerNumber =CustomerNumber.count() 
     context = {
         'sc':sc,
         'emp':emp ,

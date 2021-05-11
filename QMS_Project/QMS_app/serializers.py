@@ -25,6 +25,12 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'IS_Active']
 
 
+class ServiceRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service_Record
+        fields = ['id', ]
+
+
 class Service_center_detailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service_center

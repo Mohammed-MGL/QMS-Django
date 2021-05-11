@@ -106,9 +106,10 @@ class Service_Record(models.Model):
 
 
 class Black_list(models.Model):
-    Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE)
+    Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE ,null=True )
     user = models.ForeignKey(User,on_delete=models.CASCADE )
     reason = models.CharField(max_length=600 , blank=True)
+    is_BySystem = models.BooleanField(default=False)
     
 
     def __str__(self):
@@ -116,13 +117,7 @@ class Black_list(models.Model):
         return self.user.username  
 
 
-class System_Black_list(models.Model):
-    user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
-    reason = models.CharField(max_length=600 , blank=True)
 
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.user   
 
 
 class White_list(models.Model):

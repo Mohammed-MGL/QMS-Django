@@ -16,12 +16,33 @@ from datetime import datetime
 from datetime import date
 from rest_framework.permissions import IsAuthenticated
 
-class UserReservations(ListAPIView):
+    
+class UserReservations(APIView):
     permission_classes = (IsAuthenticated,)
-    # queryset = Service_center.objects.order_by('name')
-    # pagination_class = CustomPagination
-    # serializer_class = Service_centerListSerializer
+    pagination_class = CustomPagination
 
+    
+    def get(self , request ,id, *args ,**kwargs):
+        user = request.user
+
+        qs = Service_Record.objects.filter(user = user ,is_accept =False ,is_served = False ,is_cancelled =False)
+
+        for s in qs:
+            sid = s.id
+            SCname = s.Service.Service_center
+            Sname = s.Service.name
+
+        # SC_serializer =Service_center_detailSerializer(x ,many= False) 
+        # w = Work_time.objects.get(Service_center= id)
+        # w_serializer = Work_timeSerializer(w ,many= False)
+        # y = Service.objects.filter(Service_center= id).order_by('name')
+        # S_serializer = ServiceSerializer(y ,many= True) 
+        content = {
+            # 'service_center' : SC_serializer.data,
+            # 'work_time' :    w_serializer.data ,
+            # 'services' :  S_serializer.data ,  
+        } 
+        return Response(content)  
 
 
 class ServiceCenter(ListAPIView):
