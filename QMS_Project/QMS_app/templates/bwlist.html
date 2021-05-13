@@ -6,22 +6,40 @@
 {% block content %}
 {% load static %}
 <div class="countainer">
-  <div class = "row" >
+  <div class="row  justify-content-center ">
+    <div class="col-8 ">
+      <div class="card card-profile">
+        <div class="card-body">
 
-    <form class="form-inline" action="" method="POST">
-      <div class="form-group no-border">
-        <input type="text" class="form-control" name="Search"  placeholder="Search">
+
+
+
+          <form action="/serachForUser" method="GET">
+
+            <div class="row   ">
+             
+              <div class="col-6 ">
+                {{UserFilter.form.username}}
+
+              </div>
+
+
+
+              <div class="col-2 ">
+                <button class="btn btn-primary  my-sm-0 btn-round" type="submit">Add user</button>
+              </div>
+            </div>
+          </form>
+
+
+        </div>
       </div>
-      <button type="submit" class="btn btn-just-icon btn-round">
-        <i class="material-icons">search</i>
-      </button>
-  </form>
+    </div>
+
   </div>
-  <div class="row ">
-    
 
-
-    <div class="col-6 ">
+  <div class="row  justify-content-center ">
+    <div class="col-5 ">
       <div class="card">
         <div class="card-header card-header-primary">
           <h4 class="card-title ">white list </h4>
@@ -29,8 +47,7 @@
             <div class="p-2">
               ======
             </div>
-            <div class="p-2"> <a href="{% url 'serachForUser' %}" class="btn btn-sm btn-secondary ">Add user
-                &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
+
           </div>
         </div>
 
@@ -73,7 +90,7 @@
       </div>
     </div>
 
-    <div class="col-6 ">
+    <div class="col-5 ">
       <div class="card">
         <div class="card-header card-header-primary">
           <h4 class="card-title ">Black list </h4>
@@ -119,6 +136,7 @@
       </div>
     </div>
   </div>
+
 
 </div>
 

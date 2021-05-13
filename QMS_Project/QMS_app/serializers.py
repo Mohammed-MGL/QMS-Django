@@ -31,6 +31,30 @@ class ServiceRecordSerializer(serializers.ModelSerializer):
         fields = ['id', ]
 
 
+class UserServics(serializers.ModelSerializer):
+
+    class Meta:
+        model = Service_Record
+        fields = ['id', 'Service_Service_center','Service']
+
+    Service_Service_center = serializers.SerializerMethodField("get_Service_Service_center")
+    
+    def get_Service_Service_center(self, args):
+        return [{"name": i.id} for i in args.Service_center.all()]
+
+
+# class ProfileBySlugSerializer(serializers.ModelSerializer):
+    # profile_products = ProfileProductsSerializer(many=True, read_only=True)
+    # class Meta:
+        # model = Profile
+        fields = ['id', 'title', 'description', 'slug', 'image', 'status', 'profile_products']
+    # profile_products = serializers.SerializerMethodField("get_profile_products")
+    
+    # def get_profile_products(self, args):
+    #     return [{"id": i.video_product.id, "title": i.video_product.title} for i in args.profile_products.all()]
+
+
+
 class Service_center_detailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service_center

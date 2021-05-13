@@ -32,7 +32,7 @@ class EmployeeFilter(django_filters.FilterSet):
 
 class UserFilter(django_filters.FilterSet):
 
-    username = CharFilter(field_name = 'username' , lookup_expr= 'icontains' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'User name'} ),label ='') 
+    username = CharFilter(required = True ,field_name = 'username' , lookup_expr= 'icontains' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'User name'} ),label ='') 
     first_name = CharFilter(field_name = 'first_name' , lookup_expr= 'icontains' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'First name'} ),label ='') 
     last_name = CharFilter(field_name = 'last_name' , lookup_expr= 'icontains' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'Last name'} ),label ='') 
    

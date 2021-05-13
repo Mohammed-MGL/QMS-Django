@@ -355,13 +355,18 @@ def bwlist(request):
 
     w_list = White_list.objects.filter(Service_center = sc)
     b_list = Black_list.objects.filter(Service_center = sc)
+    users = User.objects.filter(is_employee = False ).filter(is_manager= False ).filter(is_guest= False ).filter(is_superuser= False )
+    usersFilter = UserFilter(request.GET, request=request,queryset = users )
+    users = usersFilter.qs
     
-    if request.method == 'POST':
-        searchWord = request.POST.get('Search')
+    # if request.method == 'POST':
+    #     searchWord = request.POST.get('Search')
    
     context = {
         'w_list':w_list ,
         'b_list':b_list ,
+        'users':users ,
+        "UserFilter" : usersFilter,
         
         'sc':sc,
 
@@ -474,12 +479,13 @@ def copysystemBlackList(request):
 @manager_only
 def serachForUser(request):
     sc = Manager.objects.get(user = request.user ).Service_center
-    users = User.objects.filter(is_employee = False ).filter(is_manager= False ).filter(is_guest= False ).filter(is_superuser= False )
+    users = User.objects.filter(is_employee = False,is_manager= False ,is_guest= False ,is_superuser= False )
+    
     usersFilter = UserFilter(request.GET, request=request,queryset = users )
     users = usersFilter.qs
     context = {
               'users':users ,
-              "UserFilter" : usersFilter,
+            #   "UserFilter" : usersFilter,
               'sc':sc,
         }
 # UserFilter

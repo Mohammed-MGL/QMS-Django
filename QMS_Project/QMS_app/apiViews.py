@@ -1,3 +1,4 @@
+from django.http.response import JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
@@ -15,34 +16,70 @@ from .models import Service_center
 from datetime import datetime
 from datetime import date
 from rest_framework.permissions import IsAuthenticated
+from django.core.serializers import json
+
+    # UserServics
 
     
-class UserReservations(APIView):
+class UserReservations(ListAPIView):
     permission_classes = (IsAuthenticated,)
+    
+    def get_queryset(self):
+        
+        
+
+        # Here you can do the following thing:
+        user = self.request.user
+
+        # And use it as you wish in the filtering below:
+
+        return Service_Record.objects.filter(user = user ,is_accept = True ,is_served = False ,is_cancelled =False)
+
     pagination_class = CustomPagination
+    serializer_class = UserServics
+# class UserReservations(APIView):
+#     permission_classes = (IsAuthenticated,)
+#     pagination_class = CustomPagination
 
     
-    def get(self , request ,id, *args ,**kwargs):
-        user = request.user
+#     def get(self , request , *args ,**kwargs):
+#         user = request.user
 
-        qs = Service_Record.objects.filter(user = user ,is_accept =False ,is_served = False ,is_cancelled =False)
+#         qs = Service_Record.objects.filter(user = user ,is_accept = True ,is_served = False ,is_cancelled =False)
 
-        for s in qs:
-            sid = s.id
-            SCname = s.Service.Service_center
-            Sname = s.Service.name
+#         class UserR:
+#             sid = None
+#             SCname   = None
+#             Sname  = None
 
-        # SC_serializer =Service_center_detailSerializer(x ,many= False) 
-        # w = Work_time.objects.get(Service_center= id)
-        # w_serializer = Work_timeSerializer(w ,many= False)
-        # y = Service.objects.filter(Service_center= id).order_by('name')
-        # S_serializer = ServiceSerializer(y ,many= True) 
-        content = {
-            # 'service_center' : SC_serializer.data,
-            # 'work_time' :    w_serializer.data ,
-            # 'services' :  S_serializer.data ,  
-        } 
-        return Response(content)  
+#             def __init__(self,sid,SCname  , Sname):
+#                 self.name = sid
+#                 self.SCname = SCname
+#                 self.Sname = Sname
+
+#         sdList = [] 
+
+#         for s in qs:
+#             sid = s.id
+#             SCname = s.Service.Service_center
+#             Sname = s.Service.name
+#             sd = UserR(sid,SCname , Sname)
+        
+#             sdList.append(sd)
+#         print(sdList)
+#         json_serializer = json.Serializer()
+#         json_serialized = json_serializer.serialize(sdList)
+#         # SC_serializer =Service_center_detailSerializer(x ,many= False) 
+#         # w = Work_time.objects.get(Service_center= id)
+#         # w_serializer = Work_timeSerializer(w ,many= False)
+#         # y = Service.objects.filter(Service_center= id).order_by('name')
+#         # S_serializer = ServiceSerializer(y ,many= True) 
+#         content = {
+#             # 'service_center' : SC_serializer.data,
+#             # 'work_time' :    w_serializer.data ,
+#             # 'services' :  S_serializer.data ,  
+#         } 
+#         return Response(json_serialized)  
 
 
 class ServiceCenter(ListAPIView):
