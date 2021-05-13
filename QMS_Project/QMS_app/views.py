@@ -355,6 +355,9 @@ def bwlist(request):
 
     w_list = White_list.objects.filter(Service_center = sc)
     b_list = Black_list.objects.filter(Service_center = sc)
+    
+    if request.method == 'POST':
+        searchWord = request.POST.get('Search')
    
     context = {
         'w_list':w_list ,
@@ -443,10 +446,11 @@ def copysystemBlackList(request):
     sc = Manager.objects.get(user = request.user ).Service_center
     
 
-    SystemBlackList = Black_list.objects.filter(is_BySystem = True).user
+    SystemBlackList = Black_list.objects.filter(is_BySystem = True)
     print(SystemBlackList)
 
-    for u in SystemBlackList:
+    for bl in SystemBlackList:
+        u = bl.user
         t = Black_list.objects.filter(user=u ,Service_center=sc).count()
         x = White_list.objects.filter(user=u ,Service_center=sc).count()
         if t>0:
