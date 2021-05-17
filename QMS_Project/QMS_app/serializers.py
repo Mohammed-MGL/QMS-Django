@@ -19,10 +19,35 @@ class Work_timeSerializer(serializers.ModelSerializer):
         fields = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 
+
+class Qdetails(serializers.Field):
+
+    def to_representation(self, value):
+
+        queue = Service_Record.objects.filter(Service=value ,is_accept =True ,is_served= False ,is_cancelled= False ,Queue_type = 'B' ).count()
+
+        ret = {
+            "C N": queue,
+            "W T":"5 Min test",
+            # "y": value.y_coordinate
+        }
+        return ret
+
+    def to_internal_value(self, data):
+        ret = {
+            "x_coordinate":' data["x"]',
+            # "y_coordinate": data["y"],
+        }
+        return ret
+
+
 class ServiceSerializer(serializers.ModelSerializer):
+
+    Qdetails =Qdetails(source='*')
+    # waitingTime = serializers.SerializerMethodField('is_named_bar')
     class Meta:
         model = Service
-        fields = ['id', 'name', 'IS_Active']
+        fields = ['id', 'name', 'IS_Active','Qdetails']
 
 
 

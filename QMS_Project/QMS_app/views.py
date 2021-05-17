@@ -615,9 +615,10 @@ def home(request):
     sc = emp.Service_center
     
     service =emp.Service
-    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service )
+    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True )
+    print(CustomerNumber)
     CustomerNumber =CustomerNumber.count() 
-
+    print(CustomerNumber)
 
     
 
@@ -676,6 +677,12 @@ def home(request):
             customer = CustomerCalling.user
 
             ser = form.cleaned_data['Service']
+
+            is_have_book = Service_Record.objects.filter(Service=ser , user=customer ,is_accept = True , is_served= False ).first()
+            if is_have_book is not None:
+                is_have_book.is_cancelled= True
+                is_have_book.save()
+                
             book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
     
     t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
@@ -695,7 +702,7 @@ def home(request):
     #     TotalServingTime = current_date_and_time + time_added
 
     ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
-    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service )
+    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True)
     CustomerNumber =CustomerNumber.count() 
     context = {
         'sc':sc,
