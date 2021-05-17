@@ -1,37 +1,10 @@
-from django.urls import path ,include 
+from django.urls import path  
 
 from . import views
-# from .views import *
-from .apiViews import *
-from rest_framework_simplejwt import views as jwt_views
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-#koko
-#Mohammed
+
 urlpatterns = [
-    # API endpoints 
-    # account
-    path('API/account/register/', RegisterView.as_view()),
-    path('API/account/login/', TokenObtainPairView.as_view() ),
-    # path('API/account/token/refresh/', TokenRefreshView.as_view() ),
-    path('API/account/change_password/<int:pk>/', ChangePasswordView.as_view()),
-    path('API/account/update_profile/<int:pk>/', UpdateProfileView.as_view()),
-    # ServiceCenter
-    path('API/allServiceCenter/',ServiceCenter.as_view(),),
-    path('API/search/ServiceCenter/<str:name>',Search_ServiceCenter.as_view(), ),
-    path('API/ServiceCenterDetails/<int:id>',ServiceCenterDetails.as_view(), ),
-    # Service
-    path('API/ServiceDetails/<str:SID>',ServiceDetails.as_view(), ),
-    path('API/UserReservations/',UserReservations.as_view(), ),
-
-    path('API/BookInService/<str:sID>',BookInService.as_view(), ),
-    path('API/cancelBook/<str:BID>',cancelBook.as_view(), ),
-    path('API/InCenter/<str:BID>',InCenter.as_view(), ),
     
-
-
-
-    # web endpoints:
     path('login/',views.loginPage, name = 'login'),
     path('logout/',views.logoutUser, name = 'logout'),
     # dashboard
@@ -73,12 +46,6 @@ urlpatterns = [
 
 
     # employee template
-    path('home',views.home, name = 'home'), 
-   
+    path('home',views.home, name = 'home'),
 
-    
-    
 ]
-
-
-    

@@ -1,5 +1,5 @@
 from django.shortcuts import render , redirect
-from django.http import HttpResponse
+# from django.http import HttpResponse
 from .models import *
 from .forms import *
 from .filters import EmployeeFilter , UserFilter
@@ -10,7 +10,7 @@ from .decorators import unauthenticated_user , manager_only , employee_only
 from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime
 from django.contrib.auth import update_session_auth_hash
-from datetime import date
+# from datetime import date
 import random  
 import string  
 
@@ -636,7 +636,11 @@ def home(request):
                 if CustomerCalling == None:
                     CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B'  ).first()
             elif(lastCustomer.Queue_type == 'B'):
+
                 CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A'  ).first()
+                if CustomerCalling == None:
+                    
+                    CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B'  ).first()
             else:
                 CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B'  ).first()
             
@@ -674,7 +678,7 @@ def home(request):
             ser = form.cleaned_data['Service']
             book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
     
-    t = Service_Record.objects.filter(Employee=emp,is_served = False).first()
+    t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
     if(t is not None):
         customer=t.user
     else:

@@ -38,7 +38,7 @@ class Service_center(models.Model):
     Image = models.ImageField(upload_to='service_center/', verbose_name="Image" ,default='service_center/default-image.jpg')
     Icon = models.ImageField(upload_to='service_center/Icon/', verbose_name="icon" , default='service_center/Icon/default-logo.png')
     QR = models.ImageField(upload_to='service_center/QR/', verbose_name="QR" , blank=True)
-    is_online = models.BooleanField(default=True)
+    is_online = models.BooleanField(default=False)
     
 
     def __str__(self):
@@ -99,9 +99,9 @@ class Service_Record(models.Model):
     )
     
 
-    # def __str__(self):
-    #     """String for representing the Model object."""
-    #     return self.user   
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.user.username
 
 
 

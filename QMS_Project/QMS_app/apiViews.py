@@ -25,18 +25,11 @@ class UserReservations(ListAPIView):
     permission_classes = (IsAuthenticated,)
     
     def get_queryset(self):
-        
-        
-
-        # Here you can do the following thing:
         user = self.request.user
-
-        # And use it as you wish in the filtering below:
-
         return Service_Record.objects.filter(user = user ,is_accept = True ,is_served = False ,is_cancelled =False)
 
     pagination_class = CustomPagination
-    serializer_class = UserServics
+    serializer_class = ServiceRecordSerializer
 # class UserReservations(APIView):
 #     permission_classes = (IsAuthenticated,)
 #     pagination_class = CustomPagination
@@ -149,7 +142,7 @@ class ServiceCenterDetails(APIView):
     
     def get(self , request ,id, *args ,**kwargs):
         x = Service_center.objects.get(id=id)
-        SC_serializer =Service_center_detailSerializer(x ,many= False) 
+        SC_serializer =Service_center_detailSerializer(x ,many= False , context={'request': request}) 
         w = Work_time.objects.get(Service_center= id)
         w_serializer = Work_timeSerializer(w ,many= False)
         y = Service.objects.filter(Service_center= id).order_by('name')
@@ -167,50 +160,61 @@ class  BookInService(APIView):
     
     
     def post(self , request ,sID, *args ,**kwargs):
+        
+        user =request.user
         service =Service.objects.get(id = sID)
-        user =request.user
+    
+        sr =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False)
+        if (sr):
+            return Response({'Accepted':False }) 
+    
         book = Service_Record.objects.create(Service=service , user=user, IS_InCenter = False ,  Queue_type = 'B' )
-        return Response({'Accepted':True ,'Bookid':book.id}) 
+        return Response({'Accepted':True }) 
 
-class  cancelBook(APIView):
+class  cancelReservation(APIView):
     permission_classes = (IsAuthenticated,)
     
     
-    def post(self , request ,BID, *args ,**kwargs):
+    def post(self , request ,sID, *args ,**kwargs):
         
         user =request.user
-        book = Service_Record.objects.get(id = BID) 
-        if book.user !=user:
-            
-            raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
+        service =Service.objects.get(id = sID)
+        is_inQ = False
+        book =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False).first()
+        if(book):
 
-        book.O_Time = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-        book.is_cancelled = True
-        book.save()
-          
-        
-        return Response({  'response':'done :('  }) 
-        
+            book.O_Time = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+            book.is_cancelled = True
+            print(book)
+            book.save()
+
+            is_inQ = True
+
+            return Response({ 'Accepted': True }) 
+        else:
+            return Response({ 'Accepted': False }) 
 
 
-class  InCenter(APIView):
+class  UserInCenter(APIView):
     permission_classes = (IsAuthenticated,)
     
     
-    def post(self , request ,BID, *args ,**kwargs):
+    def post(self , request ,sID, *args ,**kwargs):
         
         user =request.user
-        book = Service_Record.objects.get(id = BID) 
-        if book.user !=user:
-            
-            raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
-
-        book.IS_InCenter = True
         
-        book.save()
-
         
-        return Response({  'response':'done :('  }) 
+        service =Service.objects.get(id = sID)
+        book =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False).last()
+        if(book):
+
+            book.IS_InCenter = True
+            book.save()
+
+            return Response({ 'Accepted': True })
+
+        else:
+            return Response({ 'Accepted': False }) 
         
 
 
@@ -223,19 +227,29 @@ class  ServiceDetails(APIView ):
         
         user =request.user
         service =Service.objects.get(id = SID) 
+        serviceName = service.name
         queue = Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,Queue_type = 'B' )
-        is_inQ = Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,user= user ).exists()
-        queueCount = queue.count()
+        userReservation= Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,user= user ).first()
+        
+        if(userReservation is None):
+            is_inQ =  False
+        else:
+            is_inQ =  True
 
+
+        if (is_inQ):
+            queue = queue.filter(IQ_Time__lte=userReservation.IQ_Time)
+
+        queueCount = queue.count()
         waitingTime = "5 min"
 
-    
-        
-        serviceName = service.name
+
+
 
         
         return Response({
-            "serviceName" : serviceName,
+            "id" : service.id,
+            "name" : serviceName,
             "queueCount" : queueCount,
             "waitingTime" : waitingTime,
             "is_inQ" : is_inQ,

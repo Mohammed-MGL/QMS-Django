@@ -25,40 +25,50 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'IS_Active']
 
 
+
+
+class ServiceCenterNameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Service_center
+        fields = [ 'name']
+
+
+
+
+class ServiceNameSerializer(serializers.ModelSerializer):
+
+    Service_center = ServiceCenterNameSerializer()
+    class Meta:
+        model = Service
+        fields = [ 'name','Service_center']
+
+
 class ServiceRecordSerializer(serializers.ModelSerializer):
+
+    Service = ServiceNameSerializer()
     class Meta:
         model = Service_Record
-        fields = ['id', ]
-
-
-class UserServics(serializers.ModelSerializer):
-
-    class Meta:
-        model = Service_Record
-        fields = ['id', 'Service_Service_center','Service']
-
-    Service_Service_center = serializers.SerializerMethodField("get_Service_Service_center")
-    
-    def get_Service_Service_center(self, args):
-        return [{"name": i.id} for i in args.Service_center.all()]
+        fields = ['id','Service']
 
 
 # class ProfileBySlugSerializer(serializers.ModelSerializer):
     # profile_products = ProfileProductsSerializer(many=True, read_only=True)
     # class Meta:
         # model = Profile
-        fields = ['id', 'title', 'description', 'slug', 'image', 'status', 'profile_products']
+        # fields = ['id', 'title', 'description', 'slug', 'image', 'status', 'profile_products']
     # profile_products = serializers.SerializerMethodField("get_profile_products")
     
     # def get_profile_products(self, args):
     #     return [{"id": i.video_product.id, "title": i.video_product.title} for i in args.profile_products.all()]
 
 
-
 class Service_center_detailSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Service_center
-        fields = ['id', 'name', 'location', 'phone' , 'Image', 'Icon' , 'is_online', 'mapLocations']        
+        fields = ['id', 'name', 'location', 'phone' , 'Image', 'Icon' , 'is_online', 'mapLocations']
+
 
 
 class UserSerializer(serializers.ModelSerializer):
