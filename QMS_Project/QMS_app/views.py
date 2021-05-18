@@ -105,6 +105,7 @@ def viewEmployee(request, eID):
 
     context = {
         'sc':sc,
+        'emp':emp
         }
     return render(request ,"Employee/employee.html" , context)
 
@@ -176,16 +177,16 @@ def updateEmployeePassWord(request, eID):
 
 @login_required(login_url='login')
 @manager_only
-def updatePassWord(request):
+def ManagerProfile(request):
     sc = Manager.objects.get(user = request.user ).Service_center
 
     user = request.user
-    form = PasswordChangeForm(user)
+    passwordChangeForm = PasswordChangeForm(user)
 
     if request.method == 'POST':
-        form = PasswordChangeForm(user, request.POST)
-        if form.is_valid():
-            user = form.save()
+        passwordChangeForm = PasswordChangeForm(user, request.POST)
+        if passwordChangeForm.is_valid():
+            user = passwordChangeForm.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Profile details updated.')
             # messages.success(request, 'Your password was successfully updated!')
@@ -195,10 +196,12 @@ def updatePassWord(request):
 
 
     context = {
-        "form":form,
+        "passwordChangeForm":passwordChangeForm,
         'sc':sc,
+        'user':user
+
         }
-    return render(request ,"Employee/employeePassWordUpdate.html" , context) 
+    return render(request ,"ManagerProfile.html" , context) 
 
 
 

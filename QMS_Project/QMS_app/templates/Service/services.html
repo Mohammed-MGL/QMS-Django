@@ -15,8 +15,16 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-            <h4><b>{{ser.IS_Active}}</b></h4>
+            <h4><b>
+              {% if ser.IS_Active %} online {%else%} offline {% endif %}
+              
+              
+              
+              
+              
+              <br> {{ser.time}}</b></h4>
           </li>
+          
           <li class="list-group-item"><a href="{% url 'editService' ser.id %}" class="btn btn-sm btn-info">
               <dev class="material-icons">edit</dev>
             </a>
@@ -24,11 +32,16 @@
             <a href="{% url 'deleteService' ser.id %}" class="btn btn-sm btn-danger">
               <dev class="material-icons">delete</dev>
             </a>
-            <a href="{% url 'serviceChangeState' ser.id %}" class="btn btn-sm btn-info">
-              togoll
-            </a>
-            <a   input href="{% url 'serviceChangeState' ser.id %}" type="checkbox" checked data-toggle="toggle"> </a>
+            
 
+            <a input href="{% url 'serviceChangeState' ser.id %}"class="switch">
+              
+                <input type="checkbox" {% if ser.IS_Active %} checked {% endif %}>
+                <span class="slider round"></span>
+              
+            </a>
+
+&nbsp;  &nbsp; &nbsp;
             <a href="{% url 'viewService' ser.id %}" class="btn btn-sm btn-info"> View </a>
           </li>
         </ul>
@@ -46,29 +59,29 @@
           <h5 class="card-title"> create service
           </h5>
         </div>
-        
+
         <div class="card-body p-3">
 
           <form action="" method="POST">
             {% csrf_token %}
             {{form.name}}
-  
+
             <div class="d-flex justify-content-between">
               <div>{{form.IS_Active}}
                 {{form.IS_Active.label}} </div>
-  
-  
+
+
               <button type="submit " name="submit" class="btn btn-primary btn-round btn-sm"> create </button>
-  
+
             </div>
           </form>
+        </div>
       </div>
+
+
     </div>
-
-
   </div>
-</div>
 
 
 
-{% endblock %}
+  {% endblock %}

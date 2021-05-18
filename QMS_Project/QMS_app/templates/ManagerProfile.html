@@ -1,0 +1,61 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="card">
+        <div class="card-header card-header-primary">
+            <h4 class="card-title"> change your password
+            </h4>
+            <p class="card-category">Fill following form </p>
+        </div>
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="col-md-5 ">
+                    <br>
+            <b>First name:</b>        {{user.first_name}} <br> <br>
+              <b> Last name:</b>     {{user.last_name}} <br> <br>
+              <b>username:</b>       {{user.username}}<br> <br>
+                </div>
+                
+                <div class="col-md-5 ">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+        
+                        <table>
+                            <tr>
+                                <th>{{passwordChangeForm.old_password.label}} </th>
+                                <th>{{passwordChangeForm.old_password}} </th>
+                            </tr> <br>
+                            <tr>
+                                <th>{{passwordChangeForm.new_password1.label}}</th>
+                                <th>{{passwordChangeForm.new_password1}}</th>
+        
+                            </tr>
+                            <tr>
+                                <th>{{passwordChangeForm.new_password2.label}}</th>
+                                <th>{{passwordChangeForm.new_password2}}</th>
+                            </tr>
+        
+                        </table>
+                        {{passwordChangeForm.error}}
+        
+                        <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change
+                        </button>
+        
+        
+                    </form>
+                </div>
+
+            </div>
+            
+            
+        </div>
+
+    </div>
+
+
+    
+</div>
+
+{% endblock%}
