@@ -547,7 +547,7 @@ def BookAsGuest(request, scID):
     context = {
         "sdList" : sdList,
         'serviceCenter':serviceCenter ,
-        'CustomerNumber':CustomerNumber 
+        # 'CustomerNumber':CustomerNumber 
     }
     
     return render(request ,"BookAsGuest.html" , context)    

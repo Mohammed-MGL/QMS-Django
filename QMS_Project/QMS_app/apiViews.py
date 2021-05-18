@@ -29,7 +29,7 @@ class UserReservations(ListAPIView):
         return Service_Record.objects.filter(user = user ,is_accept = True ,is_served = False ,is_cancelled =False)
 
     pagination_class = CustomPagination
-    serializer_class = ServiceRecordSerializer
+    serializer_class = ReservationsSerializer
 # class UserReservations(APIView):
 #     permission_classes = (IsAuthenticated,)
 #     pagination_class = CustomPagination

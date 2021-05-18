@@ -12,11 +12,20 @@
       <div class="card">
 
         <div class="card-body">
-          {% include 'EmployeeTemp\timer.html' %}
+
+          <img src="{{sc.Image.url}}"  width="350" height="250">
+          <br>
+          <br>
+          
           {% if Customer %}
-          {{Customer.username}}
+          Customer username : {{Customer.username}}
+          <br>
+          Customer first name : {{Customer.first_name}}
+          <br>
+
+          Customer last name : {{Customer.last_name}}
           {% endif %}
-          <label id="minutes" onload="setTime()">00</label>:<label id="seconds">00</label>
+          
 
         </div>
       </div>
@@ -70,21 +79,13 @@
     </div>
   </div>
   <div class="row justify-content-center mt-5 ">
-    <div class="col-4 ">
-      <div class="clock-buttons">
-        <button type="button" class="clock-button" data-role="clock-reset">
-          <span class="clock-button__text">Reset</span>
-        </button>
-
-        <button type="submit" class="clock-button clock-button--start" data-role="clock-start-stop">
-          <span class="clock-button__text">Start</span>
-        </button>
-      </div>
+    <div class="col-4 my-auto ">
+      
       <form action="" method="POST">
         {% csrf_token %}
 
 
-        <button type="submit " name="callNext" data-role="clock-start-stop" class="btn btn-primary pull-right btn-round {% if Customer %} disabled {% endif %}"{% if Customer %} disabled {% endif %}> receive a new customer
+        <button type="submit " name="callNext" data-role="clock-start-stop" class="btn btn-danger pull-right btn-round btn-lg  btn-block{% if Customer %} disabled {% endif %}"{% if Customer %} disabled {% endif %}> receive a new customer
         </button>
       </form>
       <!-- <a href="" class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click
@@ -98,12 +99,12 @@
 
 
 
-    <div class="col-4 ">
+    <div class="col-4 my-auto ">
       <form action="" method="POST">
         {% csrf_token %}
 
 
-        <button type="submit " name="userServed" class="btn btn-primary pull-right btn-round {% if not Customer %} disabled {% endif %}"{% if not Customer %} disabled {% endif %}> receive a new customer
+        <button type="submit " name="userServed" class="btn btn-danger pull-right btn-round btn-lg btn-block {% if not Customer %} disabled {% endif %}"{% if not Customer %} disabled {% endif %}> End of serving the customer
         </button>
       </form>
       <!-- <a href="" type="button" class="btn btn-outline-warning "
@@ -111,18 +112,18 @@
         <b>Click here</b> <br><b>if you are finished <br> serving the client</b>
         </b></a> -->
     </div>
-    <div class="col-4 ">
+    <div class="col-4 my-auto">
       <div class="card">
 
         <div class="card-body">
           <div class="form-group">
-            <label for="exampleFormControlSelect1">sent customer to</label>
+            <label for="exampleFormControlSelect1">send customer to service</label>
 
             <form action="" method="POST">
               {% csrf_token %}
-              {{form}}
+              {{form.Service}}
           </div>
-          <button type="submit " name="send" class="btn btn-primary pull-right btn-round {% if not Customer %} disabled {% endif %}"{% if not Customer %} disabled {% endif %}> change </button>
+          <button type="submit " name="send" class="btn btn-danger pull-right btn-round  {% if not Customer %} disabled {% endif %}"{% if not Customer %} disabled {% endif %}> send </button>
           </form>
         </div>
       </div>
