@@ -18,12 +18,13 @@
               <form action="/serachForUser" method="GET">
 
                 {{UserFilter.form.username}}
-              </form>
+              
             </div>
 
             <div class="p-2  my-auto">
 
               <button class="btn btn-primary  my-sm-0 btn-round" type="submit">Add user</button>
+            </form>
             </div>
 
 
@@ -98,7 +99,7 @@
           <div class="p-2">
             ======
           </div>
-          <div class="p-2"> <a href="{% url 'systemBlackList' %}" class="btn btn-sm btn-secondary ">Add user
+          <div class="p-2"> <a href="{% url 'systemBlackList' %}" class="btn btn-sm btn-secondary ">see systemBlackList
               &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
         </div>
       </div>

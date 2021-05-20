@@ -16,15 +16,15 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
             <h4><b>
-              {% if ser.IS_Active %} online {%else%} offline {% endif %}
-              
-              
-              
-              
-              
-              <br> {{ser.time}}</b></h4>
+                {% if ser.IS_Active %} online {%else%} offline {% endif %}
+
+
+
+
+
+                <br> {{ser.time}}</b></h4>
           </li>
-          
+
           <li class="list-group-item"><a href="{% url 'editService' ser.id %}" class="btn btn-sm btn-info">
               <dev class="material-icons">edit</dev>
             </a>
@@ -32,16 +32,16 @@
             <a href="{% url 'deleteService' ser.id %}" class="btn btn-sm btn-danger">
               <dev class="material-icons">delete</dev>
             </a>
-            
 
-            <a input href="{% url 'serviceChangeState' ser.id %}"class="switch">
-              
-                <input type="checkbox" {% if ser.IS_Active %} checked {% endif %}>
-                <span class="slider round"></span>
-              
+
+            <a input href="{% url 'serviceChangeState' ser.id %}" class="switch">
+
+              <input type="checkbox" {% if ser.IS_Active %} checked {% endif %}>
+              <span class="slider round"></span>
+
             </a>
 
-&nbsp;  &nbsp; &nbsp;
+            &nbsp; &nbsp; &nbsp;
             <a href="{% url 'viewService' ser.id %}" class="btn btn-sm btn-info"> View </a>
           </li>
         </ul>

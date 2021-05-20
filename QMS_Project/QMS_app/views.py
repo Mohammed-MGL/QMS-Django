@@ -154,19 +154,13 @@ def updateEmployeePassWord(request, eID):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Profile details updated.')
+            messages.success(request, 'password was successfully updated!')
             # messages.success(request, 'Your password was successfully updated!')
             return redirect('employees')
         else:
             messages.error(request, 'Please correct the error below.')
 
-    # form = EmployeeForm(instance = emp)
-
-    # if request.method == 'POST':
-    #     form = EmployeeForm(request.POST ,instance = emp)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('employees')
+   
 
     context = {
         "form":form,
@@ -178,9 +172,11 @@ def updateEmployeePassWord(request, eID):
 @login_required(login_url='login')
 @manager_only
 def ManagerProfile(request):
-    sc = Manager.objects.get(user = request.user ).Service_center
 
     user = request.user
+    sc = Manager.objects.get(user = user ).Service_center
+
+    
     passwordChangeForm = PasswordChangeForm(user)
 
     if request.method == 'POST':
@@ -188,9 +184,8 @@ def ManagerProfile(request):
         if passwordChangeForm.is_valid():
             user = passwordChangeForm.save()
             update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Profile details updated.')
-            # messages.success(request, 'Your password was successfully updated!')
-            return redirect('employees')
+            messages.success(request, 'password was successfully updated!')
+            return redirect('dashboard')
         else:
             messages.error(request, 'Please correct the error below.')
 
@@ -285,23 +280,23 @@ def serviceChangeState(request, sID):
     services= Service.objects.filter(Service_center = sc )
 
     if not service in services:
-        return redirect('bwlist')
+        return redirect('services')
    
     service.IS_Active =  not service.IS_Active
     service.save()
     return redirect('services')
 
 
-@login_required(login_url='login')
-@manager_only
-def serviceCenterChangeState(request):
+# @login_required(login_url='login')
+# @manager_only
+# def serviceCenterChangeState(request):
     
 
-    sc = Manager.objects.get(user = request.user ).Service_center
-    context = {
-        'sc' : sc
-    }
-    return render(request ,"base_generic.html" , context) 
+#     sc = Manager.objects.get(user = request.user ).Service_center
+#     context = {
+#         'sc' : sc
+#     }
+#     return render(request ,"base_generic.html" , context) 
 
      
    
@@ -358,7 +353,7 @@ def bwlist(request):
 
     w_list = White_list.objects.filter(Service_center = sc)
     b_list = Black_list.objects.filter(Service_center = sc)
-    users = User.objects.filter(is_employee = False ).filter(is_manager= False ).filter(is_guest= False ).filter(is_superuser= False )
+    users = User.objects.filter(is_employee = False,is_manager= False ,is_guest= False ,is_superuser= False )
     usersFilter = UserFilter(request.GET, request=request,queryset = users )
     users = usersFilter.qs
     
@@ -455,7 +450,6 @@ def copysystemBlackList(request):
     
 
     SystemBlackList = Black_list.objects.filter(is_BySystem = True)
-    print(SystemBlackList)
 
     for bl in SystemBlackList:
         u = bl.user
@@ -488,21 +482,24 @@ def serachForUser(request):
     users = usersFilter.qs
     context = {
               'users':users ,
-            #   "UserFilter" : usersFilter,
               'sc':sc,
         }
-# UserFilter
     return render(request ,"serachForUser.html" , context)
 
 
 
 def deleteUserFromBL(request, uID):
+    sc = Manager.objects.get(user = request.user ).Service_center
 
     u = Black_list.objects.get(id = uID)
     context = {"item":u}
     if request.method == 'POST':
         u.delete()
         return redirect('bwlist')
+    context = {
+             
+              'sc':sc,
+        }
 
     return render(request ,"delete.html" , context) 
 
@@ -550,7 +547,6 @@ def BookAsGuest(request, scID):
     context = {
         "sdList" : sdList,
         'serviceCenter':serviceCenter ,
-        # 'CustomerNumber':CustomerNumber 
     }
     
     return render(request ,"BookAsGuest.html" , context)    
@@ -575,7 +571,6 @@ def book_in_service(request, sID):
         return final_string 
     
     gPassword = random_string(8,8)
-    print(gPassword)
     guest.set_password(gPassword)
     guest.save()
     book = Service_Record.objects.create(Service=service , user=guest , IS_InCenter = True ,  Queue_type = 'B' )
@@ -718,36 +713,3 @@ def home(request):
         }
     return render(request ,"EmployeeTemp/home.html" , context)   
 
-###########################################
-# from django.shortcuts import render
-# from django.http import HttpResponse
-# from .models import User , Service_center , Employee , Black_list , White_list
-
-
-
-
-# def bwlist(request):
-#     ph_list = Black_list.objects.all()
-    
-#     context = {
-#         'ph_list':ph_list }
-#     return render(request ,"bwlist.html" , context)
-
-
-# def dash(request):
-#     return render(request ,"dashboard.html" , {})    
-
-
-
-
-# def d(request):
-#     return render(request ,"dash.html" , {})   
-
-
-
-
-
-
-
-# def addservice(request):
-#     return render(request ,"addservice.html" , {})     

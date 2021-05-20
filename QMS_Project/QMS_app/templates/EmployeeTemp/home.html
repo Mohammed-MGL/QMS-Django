@@ -85,7 +85,7 @@
         {% csrf_token %}
 
 
-        <button type="submit " name="callNext" data-role="clock-start-stop" class="btn btn-danger pull-right btn-round btn-lg  btn-block{% if Customer %} disabled {% endif %}"{% if Customer %} disabled {% endif %}> receive a new customer
+        <button type="submit " name="callNext" data-role="clock-start-stop" class="btn btn-danger pull-right btn-round btn-lg  btn-block{% if Customer %} disabled {% endif %} {% if CustomerNumber == 0 %} disabled {% endif %}"> receive a new customer
         </button>
       </form>
       <!-- <a href="" class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click
