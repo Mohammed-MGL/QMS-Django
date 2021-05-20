@@ -613,10 +613,10 @@ def home(request):
     sc = emp.Service_center
     
     service =emp.Service
-    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True )
-    print(CustomerNumber)
+    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
+   
     CustomerNumber =CustomerNumber.count() 
-    print(CustomerNumber)
+    
 
     
 
@@ -631,17 +631,17 @@ def home(request):
             lastCustomer = Service_Record.objects.filter(is_accept = True ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
            
             if(lastCustomer == None):
-                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A'  ).first()
+                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None ).first()
                 if CustomerCalling == None:
-                    CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B'  ).first()
+                    CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
             elif(lastCustomer.Queue_type == 'B'):
 
-                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A'  ).first()
+                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  ).first()
                 if CustomerCalling == None:
                     
-                    CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B'  ).first()
+                    CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None ).first()
             else:
-                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B'  ).first()
+                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
             
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
@@ -651,7 +651,7 @@ def home(request):
 
     elif request.method=='POST' and 'userServed' in request.POST:
     
-        CustomerCalling = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
+        CustomerCalling = Service_Record.objects.filter(is_accept = True , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
 
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
@@ -700,7 +700,7 @@ def home(request):
     #     TotalServingTime = current_date_and_time + time_added
 
     ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
-    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True)
+    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True  ,Employee = None)
     CustomerNumber =CustomerNumber.count() 
     context = {
         'sc':sc,
