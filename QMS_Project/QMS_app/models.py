@@ -105,31 +105,37 @@ class Service_Record(models.Model):
         """String for representing the Model object."""
         return self.user.username
 
-    def CallCustomer (self , emp , service):
-        lastCustomer = Service_Record.objects.filter(is_accept = True ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
-           
-        if(lastCustomer == None):
-
-            CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None ).first()
-            if CustomerCalling == None:
-                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
-        elif(lastCustomer.Queue_type == 'B'):
-
-
-
-
-            CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  ).first()
-            if CustomerCalling == None:
-                    
-                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None ).first()
-        else:
-            CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
-            
+    def CallCustomer (self , emp):
+        
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
-        CustomerCalling.P_Time = now
-        CustomerCalling.Employee = emp
-        CustomerCalling.save()
+        updated = Service_Record.objects.filter(
+            id = self.id,
+            version=self.version,
+
+        ).update(
+            P_Time= now,
+            Employee= emp ,
+            version=self.version + 1,
+        )
+
+        return updated > 0
+
+    def Customer (self , emp):
+        
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+        updated = Service_Record.objects.filter(
+            id = self.id,
+            version=self.version,
+
+        ).update(
+            P_Time= now,
+            Employee= emp ,
+            version=self.version + 1,
+        )
+
+        return updated > 0
 
 
 

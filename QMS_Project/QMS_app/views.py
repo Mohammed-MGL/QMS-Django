@@ -643,11 +643,13 @@ def home(request):
             else:
                 CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
             
-            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+            # now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
-            CustomerCalling.P_Time = now
-            CustomerCalling.Employee = emp
-            CustomerCalling.save()
+            # CustomerCalling.P_Time = now
+            # CustomerCalling.Employee = emp
+            # CustomerCalling.save()
+            CustomerCalling.CallCustomer(emp)
+
 
     elif request.method=='POST' and 'userServed' in request.POST:
     
