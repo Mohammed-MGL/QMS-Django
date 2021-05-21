@@ -233,3 +233,60 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance        
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name','last_name' , 'email']        
+
+
+
+class HServiceNameSerializer(serializers.ModelSerializer):
+
+    Service_center = ServiceCenterNameSerializer()
+    
+    class Meta:
+        model = Service
+        fields = [ 'id','name','Service_center'  ]
+
+
+
+class HistorySerializer(serializers.ModelSerializer):
+    Service = HServiceNameSerializer()
+  
+    status = serializers.SerializerMethodField() # add field
+
+    
+
+     
+    class Meta:
+        model = Service_Record
+        fields = [ 'id' , 'Service', 'IQ_Time'  ,'status' ]  
+
+    def get_status(self, obj):
+        # here write the logic to compute the value based on object
+        if obj.is_cancelled:
+            return 'cancelled'
+
+        if obj.is_served:
+            return 'served'
+
+
+
+        if  obj.is_accept == False:
+            return 'not accept'    
+            
+
+
+
+
+
+            
+
+       
+
+
+
+     
+

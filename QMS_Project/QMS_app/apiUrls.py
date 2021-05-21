@@ -9,6 +9,7 @@ urlpatterns = [
     # account
     path('account/register/', apiViews.RegisterView.as_view()),
     path('account/login/', TokenObtainPairView.as_view() ),
+    path('account/profile/', apiViews.Profile.as_view() ),
     # path('account/token/refresh/', TokenRefreshView.as_view() ),
     path('account/change_password/<int:pk>/', apiViews.ChangePasswordView.as_view()),
     path('account/update_profile/<int:pk>/', apiViews.UpdateProfileView.as_view()),
@@ -19,6 +20,7 @@ urlpatterns = [
     # Service
     path('ServiceDetails/<str:SID>',apiViews.ServiceDetails.as_view(), ),
     path('UserReservations/',apiViews.UserReservations.as_view(), ),
+    path('userhistory/', apiViews.UserHistory.as_view() ),
 
     path('BookInService/<str:sID>',apiViews.BookInService.as_view(), ),
     path('CancelReservation/<str:sID>',apiViews.cancelReservation.as_view(), ),

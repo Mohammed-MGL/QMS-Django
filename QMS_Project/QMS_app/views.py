@@ -556,7 +556,7 @@ def BookAsGuest(request, scID):
 
 
 def book_in_service(request, sID):
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     service =Service.objects.get(id = sID)
     serviceCenter =service.Service_center 
     guest = User.objects.create(username='Guest'+" "+now , is_guest= True)
@@ -626,7 +626,10 @@ def home(request):
     if request.method=='POST' and 'callNext' in request.POST:
 
         # CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True ).first()
-        if(CustomerNumber>0):
+        
+        t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
+
+        if(CustomerNumber>0 and t is  None):
 
             lastCustomer = Service_Record.objects.filter(is_accept = True ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
            
@@ -648,42 +651,54 @@ def home(request):
             # CustomerCalling.P_Time = now
             # CustomerCalling.Employee = emp
             # CustomerCalling.save()
+            print( CustomerCalling.user)
             CustomerCalling.CallCustomer(emp)
+            print(emp )
+            print(CustomerCalling)
+            print("...")
 
 
     elif request.method=='POST' and 'userServed' in request.POST:
-    
-        CustomerCalling = Service_Record.objects.filter(is_accept = True , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
 
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+        t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
+        if(t is not None):
 
-        CustomerCalling.O_Time = now
-        CustomerCalling.is_served = True 
-        CustomerCalling.save()
+            customer= None  
+            CustomerCalling = Service_Record.objects.filter(is_accept = True , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
 
-
-    elif request.method == 'POST' and 'send' in request.POST:
-
-        form = MoveCustomerForm(sc ,data=request.POST)
-        if form.is_valid():
-            CustomerCalling = Service_Record.objects.filter(is_accept = True,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).first()
-            
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
             CustomerCalling.O_Time = now
             CustomerCalling.is_served = True 
             CustomerCalling.save()
 
-            customer = CustomerCalling.user
 
-            ser = form.cleaned_data['Service']
+    elif request.method == 'POST' and 'send' in request.POST:
 
-            is_have_book = Service_Record.objects.filter(Service=ser , user=customer ,is_accept = True , is_served= False ).first()
-            if is_have_book is not None:
-                is_have_book.is_cancelled= True
-                is_have_book.save()
+        
+        t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
+        if(t is not None):
+
+            form = MoveCustomerForm(sc ,data=request.POST)
+            if form.is_valid():
+                CustomerCalling = Service_Record.objects.filter(is_accept = True,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).first()
                 
-            book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+                CustomerCalling.O_Time = now
+                CustomerCalling.is_served = True 
+                CustomerCalling.save()
+
+                customer = CustomerCalling.user
+
+                ser = form.cleaned_data['Service']
+
+                is_have_book = Service_Record.objects.filter(Service=ser , user=customer ,is_accept = True , is_served= False ).first()
+                if is_have_book is not None:
+                    is_have_book.is_cancelled= True
+                    is_have_book.save()
+                    
+                book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
     
     t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
     if(t is not None):

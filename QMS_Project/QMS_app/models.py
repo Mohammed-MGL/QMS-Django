@@ -101,18 +101,18 @@ class Service_Record(models.Model):
     )
     
     version = models.IntegerField(default=0)
+
     def __str__(self):
         """String for representing the Model object."""
         return self.user.username
 
-    def CallCustomer (self , emp):
+    def CallCustomer(self , emp):
         
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
         updated = Service_Record.objects.filter(
             id = self.id,
             version=self.version,
-
         ).update(
             P_Time= now,
             Employee= emp ,

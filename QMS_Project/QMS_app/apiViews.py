@@ -12,11 +12,12 @@ from QMS_Project.pagination import CustomPagination
 from rest_framework.permissions import IsAuthenticated  , AllowAny
 
 from .serializers import *
-from .models import Service_center
+from .models import Service_center , User ,Service
 from datetime import datetime
 from datetime import date
 from rest_framework.permissions import IsAuthenticated
 from django.core.serializers import json
+from django.utils import timezone
 
     # UserServics
 
@@ -152,7 +153,7 @@ class ServiceCenterDetails(APIView):
             'work_time' :    w_serializer.data ,
             'services' :  S_serializer.data ,  
         } 
-        return Response(content)  
+        return Response(content)
 
 
 class  BookInService(APIView):
@@ -183,7 +184,7 @@ class  cancelReservation(APIView):
         book =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False).first()
         if(book):
 
-            book.O_Time = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+            book.O_Time = timezone.now().strftime("%Y-%m-%d %H:%M:%S") 
             book.is_cancelled = True
             print(book)
             book.save()
@@ -278,3 +279,36 @@ class UpdateProfileView(generics.UpdateAPIView):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UpdateUserSerializer        
+
+
+
+
+ 
+class Profile(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self , request , *args ,**kwargs):
+
+        user =  request.user
+        user_serializer = UserSerializer(user ,many= False)
+    
+        return Response(user_serializer.data)
+
+
+
+
+class UserHistory(ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    
+    def get_queryset(self):
+        user = self.request.user
+        serviceRecords = Service_Record.objects.filter(user = user ,is_served = True)
+        qs2 = Service_Record.objects.filter(user = user ,is_cancelled = True)
+        qs3 = Service_Record.objects.filter(user = user ,is_accept = False)
+        serviceRecords = serviceRecords.union(qs2,qs3)
+        serviceRecords = serviceRecords.order_by('IQ_Time')
+        return serviceRecords
+
+    pagination_class = CustomPagination
+    serializer_class = HistorySerializer
+
+  
