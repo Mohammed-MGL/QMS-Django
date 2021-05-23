@@ -100,13 +100,50 @@ def viewEmployee(request, eID):
     emp = Employee.objects.get(user = eID)
     emps = Employee.objects.filter(Service_center = sc.id)
 
+    service =emp.Service
+    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
+   
+    CustomerNumber =CustomerNumber.count() 
+
     if not emp in emps:
         return redirect('employees')
+
+    
+    today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+    today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+    
+    todayRecord = Service_Record.objects.filter(
+        Employee=emp,
+        is_served = True,
+        P_Time__range=(today_min, today_max)        
+        ).order_by('P_Time')
+
+    totalServingTime = 0
+    avrageServingTime =0 
+
+    if todayRecord:
+        for i in todayRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime += servingTime.seconds
+
+        avrageServingTime =totalServingTime / todayRecord.count()
+
+    totalServingTime = timedelta(seconds=totalServingTime)
+    avrageServingTime = timedelta(seconds=avrageServingTime)
+
+
+    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
+        
 
 
     context = {
         'sc':sc,
-        'emp':emp
+        'emp':emp ,
+        'CustomerNumber':CustomerNumber ,
+        'totalServingTime':totalServingTime ,
+        'ServiedCustomerNumber':ServiedCustomerNumber ,
+        'avrageServingTime':avrageServingTime
         }
     return render(request ,"Employee/employee.html" , context)
 
@@ -708,23 +745,26 @@ def home(request):
     else:
         customer= None  
     
+
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
-
     
     todayRecord = Service_Record.objects.filter(
         Employee=emp,
         is_served = True,
-        P_Time__range=(today_min, today_max)
-        
+        P_Time__range=(today_min, today_max)        
         ).order_by('P_Time')
 
     totalServingTime = 0
-    for i in todayRecord:
-        servingTime  = i.O_Time - i.P_Time 
-        totalServingTime += servingTime.seconds
+    avrageServingTime =0 
 
-    avrageServingTime =totalServingTime / todayRecord.count()
+    if todayRecord:
+        for i in todayRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime += servingTime.seconds
+
+        avrageServingTime =totalServingTime / todayRecord.count()
 
     totalServingTime = timedelta(seconds=totalServingTime)
 

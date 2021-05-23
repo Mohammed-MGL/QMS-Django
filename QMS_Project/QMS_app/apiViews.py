@@ -166,7 +166,11 @@ class  BookInService(APIView):
         sr =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False)
         if (sr):
             return Response({'Accepted':False }) 
-    
+
+        is_userBlocked = Black_list.objects.filter(user= user ,Service_center = service.Service_center )
+        if is_userBlocked:
+            return Response({'Accepted':False })
+                
         book = Service_Record.objects.create(Service=service , user=user, IS_InCenter = False ,  Queue_type = 'B' )
         return Response({'Accepted':True }) 
 
