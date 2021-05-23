@@ -13,8 +13,6 @@ from rest_framework.permissions import IsAuthenticated  , AllowAny
 
 from .serializers import *
 from .models import Service_center , User ,Service
-from datetime import datetime
-from datetime import date
 from rest_framework.permissions import IsAuthenticated
 from django.core.serializers import json
 from django.utils import timezone
@@ -186,7 +184,7 @@ class  cancelReservation(APIView):
 
             book.O_Time = timezone.now().strftime("%Y-%m-%d %H:%M:%S") 
             book.is_cancelled = True
-            print(book)
+            # print(book)
             book.save()
 
             is_inQ = True

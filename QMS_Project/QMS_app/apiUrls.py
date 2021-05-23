@@ -20,7 +20,7 @@ urlpatterns = [
     # Service
     path('ServiceDetails/<str:SID>',apiViews.ServiceDetails.as_view(), ),
     path('UserReservations/',apiViews.UserReservations.as_view(), ),
-    path('userhistory/', apiViews.UserHistory.as_view() ),
+    path('UserHistory/', apiViews.UserHistory.as_view() ),
 
     path('BookInService/<str:sID>',apiViews.BookInService.as_view(), ),
     path('CancelReservation/<str:sID>',apiViews.cancelReservation.as_view(), ),

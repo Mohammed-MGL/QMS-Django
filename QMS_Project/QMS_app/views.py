@@ -8,8 +8,9 @@ from django.contrib.auth import authenticate ,login , logout
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user , manager_only , employee_only
 from django.contrib.auth.forms import PasswordChangeForm
-from datetime import datetime
 from django.contrib.auth import update_session_auth_hash
+from django.utils import timezone
+from datetime import timedelta, date, time, datetime 
 # from datetime import date
 import random  
 import string  
@@ -556,7 +557,9 @@ def BookAsGuest(request, scID):
 
 
 def book_in_service(request, sID):
-    now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    
+    now = timezone.localtime().strftime("%Y-%m-%d %H:%M:%S.%f")
+    
     service =Service.objects.get(id = sID)
     serviceCenter =service.Service_center 
     guest = User.objects.create(username='Guest'+" "+now , is_guest= True)
@@ -622,14 +625,15 @@ def home(request):
 
     form = MoveCustomerForm(sc)
 
+    customerAtEmp = Service_Record.objects.filter(is_accept = True, is_served= False, is_cancelled= False, Service=service, IS_InCenter= True, Employee=emp).first()
+
 
     if request.method=='POST' and 'callNext' in request.POST:
 
         # CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True ).first()
         
-        t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
 
-        if(CustomerNumber>0 and t is  None):
+        if(CustomerNumber>0 and customerAtEmp is  None):
 
             lastCustomer = Service_Record.objects.filter(is_accept = True ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
            
@@ -651,22 +655,21 @@ def home(request):
             # CustomerCalling.P_Time = now
             # CustomerCalling.Employee = emp
             # CustomerCalling.save()
-            print( CustomerCalling.user)
+            # print( CustomerCalling.user)
             CustomerCalling.CallCustomer(emp)
-            print(emp )
-            print(CustomerCalling)
-            print("...")
+            # print(emp )
+            # print(CustomerCalling)
+            # print("...")
 
 
     elif request.method=='POST' and 'userServed' in request.POST:
 
-        t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
-        if(t is not None):
+        if(customerAtEmp is not None):
 
             customer= None  
             CustomerCalling = Service_Record.objects.filter(is_accept = True , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
 
-            now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+            now = timezone.localtime().strftime("%Y-%m-%d %H:%M:%S.%f")
 
             CustomerCalling.O_Time = now
             CustomerCalling.is_served = True 
@@ -676,14 +679,13 @@ def home(request):
     elif request.method == 'POST' and 'send' in request.POST:
 
         
-        t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
-        if(t is not None):
+        if(customerAtEmp is not None):
 
             form = MoveCustomerForm(sc ,data=request.POST)
             if form.is_valid():
                 CustomerCalling = Service_Record.objects.filter(is_accept = True,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).first()
                 
-                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+                now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
                 CustomerCalling.O_Time = now
                 CustomerCalling.is_served = True 
@@ -700,22 +702,35 @@ def home(request):
                     
                 book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
     
-    t = Service_Record.objects.filter(is_accept = True ).filter(is_served= False ).filter(is_cancelled= False ).filter(Service=service ).filter(IS_InCenter= True ).filter(Employee=emp).first()
-    if(t is not None):
-        customer=t.user
+    customerAtEmp = Service_Record.objects.filter(is_accept = True, is_served= False, is_cancelled= False, Service=service, IS_InCenter= True, Employee=emp).first()
+    if(customerAtEmp is not None):
+        customer=customerAtEmp.user
     else:
-
         customer= None  
     
-    # served = Service_Record.objects.filter(Employee=emp,is_served = True)
-    # TotalServingTime = served.O_Time - served.P_Time
-    # for x in served:
-    #     i = x.O_Time - x.P_Time
-        
-        
+    today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+    today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
 
-    #     TotalServingTime = current_date_and_time + time_added
+    
+    todayRecord = Service_Record.objects.filter(
+        Employee=emp,
+        is_served = True,
+        P_Time__range=(today_min, today_max)
+        
+        ).order_by('P_Time')
 
+    totalServingTime = 0
+    for i in todayRecord:
+        servingTime  = i.O_Time - i.P_Time 
+        totalServingTime += servingTime.seconds
+
+    avrageServingTime =totalServingTime / todayRecord.count()
+
+    totalServingTime = timedelta(seconds=totalServingTime)
+
+    avrageServingTime = timedelta(seconds=avrageServingTime)
+
+    
     ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
     CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True  ,Employee = None)
     CustomerNumber =CustomerNumber.count() 
@@ -726,7 +741,8 @@ def home(request):
         'ServiedCustomerNumber':ServiedCustomerNumber ,
         'form': form ,
         'Customer' : customer,
-        # 'TotalServingTime': TotalServingTime
+        'TotalServingTime': totalServingTime ,
+        'avrageServingTime':avrageServingTime
         }
     return render(request ,"EmployeeTemp/home.html" , context)   
 

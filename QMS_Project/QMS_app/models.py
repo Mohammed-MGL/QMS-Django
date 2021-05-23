@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User , AbstractUser
-from datetime import datetime
+from django.utils import  timezone
 
 
 class User(AbstractUser):
@@ -108,7 +108,7 @@ class Service_Record(models.Model):
 
     def CallCustomer(self , emp):
         
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+        now = timezone.localtime().strftime("%Y-%m-%d %H:%M:%S.%f")
 
         updated = Service_Record.objects.filter(
             id = self.id,
@@ -123,7 +123,7 @@ class Service_Record(models.Model):
 
     def Customer (self , emp):
         
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+        now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
         updated = Service_Record.objects.filter(
             id = self.id,
