@@ -119,7 +119,7 @@ def viewEmployee(request, eID):
         ).order_by('P_Time')
 
     totalServingTime = 0
-    avrageServingTime =0 
+    avrageServingTime = 0 
 
     if todayRecord:
         for i in todayRecord:

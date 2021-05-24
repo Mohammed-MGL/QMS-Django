@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User , AbstractUser
 from django.utils import  timezone
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 class User(AbstractUser):
     is_employee = models.BooleanField(default=False)
@@ -47,16 +50,28 @@ class Service_center(models.Model):
         return self.name
 
 
+@receiver(post_save, sender=Service_center)
+def CreateWork_time(sender, instance, created, **kwargs):
+    if created:
+        Work_time.objects.create(Service_center=instance)
+
+
+@receiver(post_save, sender=Service_center)
+def save_user_profile(sender, instance, created, **kwargs):
+    if created == False:
+        instance.Service_center.save()
+
+
 
 class Work_time(models.Model):
     Service_center = models.OneToOneField(Service_center, on_delete=models.CASCADE)
-    Saturday=models.CharField(max_length=200)
-    Sunday=models.CharField(max_length=200)
-    Monday=models.CharField(max_length=200)
-    Tuesday=models.CharField(max_length=200)
-    Wednesday=models.CharField(max_length=200)
-    Thursday=models.CharField(max_length=200)
-    Friday=models.CharField(max_length=200)
+    Saturday=models.CharField(max_length=200 , default=" no data ")
+    Sunday=models.CharField(max_length=200, default=" no data ")
+    Monday=models.CharField(max_length=200, default=" no data ")
+    Tuesday=models.CharField(max_length=200, default=" no data ")
+    Wednesday=models.CharField(max_length=200, default=" no data ")
+    Thursday=models.CharField(max_length=200, default=" no data ")
+    Friday=models.CharField(max_length=200, default=" no data ")
     
     
     def __str__(self):
