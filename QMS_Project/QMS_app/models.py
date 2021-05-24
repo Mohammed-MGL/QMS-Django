@@ -4,6 +4,15 @@ from django.utils import  timezone
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import pyqrcode
+import png
+from pyqrcode import QRCode
+import qrcode
+from io import BytesIO
+from django.core.files import File
+from PIL import Image, ImageDraw
+
+
 
 
 class User(AbstractUser):
@@ -35,7 +44,7 @@ class Employee(models.Model):
         return self.user.username  
 
 class Service_center(models.Model):
-    name = models.CharField(max_length=300)
+    name = models.CharField(max_length=300 , unique=True)
     location = models.CharField(max_length=500 , blank=True)
     mapLocations = models.CharField(max_length=500 , blank=True , default='' )
     phone =  models.CharField(max_length=100 , blank=True)
@@ -50,14 +59,39 @@ class Service_center(models.Model):
         return self.name
 
 
+    def save(self, *args, **kwargs):
+        qrcode_img = qrcode.make(self.name)
+        canvas = Image.new('RGB', (512, 512), 'white')
+        canvas.paste(qrcode_img)
+        fname = f'QR-{self.name}.png'
+        buffer = BytesIO()
+        canvas.save(buffer,'PNG')
+        self.QR.save(fname, File(buffer), save=False)
+        canvas.close()
+        super(Service_center,self).save(*args, **kwargs)
+
+
 @receiver(post_save, sender=Service_center)
-def CreateWork_time(sender, instance, created, **kwargs):
+def onService_centerCreate(sender, instance, created, **kwargs):
     if created:
         Work_time.objects.create(Service_center=instance)
+        # s =  instance.id
+        # url = pyqrcode.create(s)
+        # url.png('media\images\service_center\QR\qr-'+ instance.name + '.png' , scale = 6)   
+
+        # qrcode_img = qrcode.make(instance.id)
+        # canvas = Image.new('RGB', (512, 512), 'white')
+        # canvas.paste(qrcode_img)
+        # fname = f'qr_code-{instance.name}.png'
+        # buffer = BytesIO()
+        # canvas.save(buffer,'PNG')
+        # instance.QR=(fname, File(buffer)) 
+        # instance.save()
+        # canvas.close()
 
 
 @receiver(post_save, sender=Service_center)
-def save_user_profile(sender, instance, created, **kwargs):
+def onService_centerSave(sender, instance, created, **kwargs):
     if created == False:
         instance.Service_center.save()
 

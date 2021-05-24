@@ -132,6 +132,31 @@ def viewEmployee(request, eID):
     totalServingTime = timedelta(seconds=totalServingTime)
     avrageServingTime = timedelta(seconds=avrageServingTime)
 
+    totalServingTime_month = 0
+    avrageServingTime_month = 0
+    print(today_min.month)
+    
+    monthRecord = Service_Record.objects.filter(
+        Employee=emp,
+        is_served = True,
+        P_Time__month = today_min.month
+        )
+    print(monthRecord)
+
+
+    if monthRecord:
+        for i in monthRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime_month += servingTime.seconds
+
+        avrageServingTime_month =totalServingTime_month / monthRecord.count()
+
+    totalServingTime_month = timedelta(seconds=totalServingTime_month)
+
+    avrageServingTime_month = timedelta(seconds=avrageServingTime_month)
+    
+
 
     ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
         
@@ -143,7 +168,10 @@ def viewEmployee(request, eID):
         'CustomerNumber':CustomerNumber ,
         'totalServingTime':totalServingTime ,
         'ServiedCustomerNumber':ServiedCustomerNumber ,
-        'avrageServingTime':avrageServingTime
+        'avrageServingTime':avrageServingTime ,
+        'totalServingTime_month':totalServingTime_month ,
+        'avrageServingTime_month':avrageServingTime_month
+
         }
     return render(request ,"Employee/employee.html" , context)
 
@@ -755,8 +783,11 @@ def home(request):
         P_Time__range=(today_min, today_max)        
         ).order_by('P_Time')
 
+   
+
     totalServingTime = 0
     avrageServingTime =0 
+    
 
     if todayRecord:
         for i in todayRecord:
@@ -770,6 +801,7 @@ def home(request):
 
     avrageServingTime = timedelta(seconds=avrageServingTime)
 
+
     
     ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
     CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True  ,Employee = None)
@@ -782,7 +814,9 @@ def home(request):
         'form': form ,
         'Customer' : customer,
         'TotalServingTime': totalServingTime ,
-        'avrageServingTime':avrageServingTime
+        'avrageServingTime':avrageServingTime ,
+       
+
         }
     return render(request ,"EmployeeTemp/home.html" , context)   
 
