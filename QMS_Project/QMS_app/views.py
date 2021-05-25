@@ -134,13 +134,20 @@ def viewEmployee(request, eID):
 
     totalServingTime_month = 0
     avrageServingTime_month = 0
+ 
     print(today_min.month)
     
     monthRecord = Service_Record.objects.filter(
         Employee=emp,
         is_served = True,
-        P_Time__month = today_min.month
+        P_Time__month = today_min.month,
+        P_Time__year = today_min.year,
+
         )
+
+    
+        
+        
     print(monthRecord)
 
 
@@ -156,6 +163,51 @@ def viewEmployee(request, eID):
 
     avrageServingTime_month = timedelta(seconds=avrageServingTime_month)
     
+    avrageServingTime_year =0
+    totalServingTime_year=0
+    yearhRecord = Service_Record.objects.filter(
+        Employee=emp,
+        is_served = True,
+        
+        P_Time__year = today_min.year,
+
+        )
+    if yearhRecord:
+        for i in yearhRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime_year += servingTime.seconds
+
+        avrageServingTime_year =totalServingTime_year / yearhRecord.count()
+
+    totalServingTime_year = timedelta(seconds=totalServingTime_year)
+
+    avrageServingTime_year = timedelta(seconds=avrageServingTime_year)
+
+
+
+
+    
+    avrageServingTime_all =0
+    totalServingTime_all=0
+    allRecord = Service_Record.objects.filter(
+        Employee=emp,
+        is_served = True,
+
+        )
+    if allRecord:
+        for i in allRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime_all += servingTime.seconds
+
+        avrageServingTime_all =totalServingTime_all / allRecord.count()
+
+    totalServingTime_all = timedelta(seconds=totalServingTime_all)
+
+    avrageServingTime_all = timedelta(seconds=avrageServingTime_all)    
+    
+
 
 
     ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
@@ -170,7 +222,11 @@ def viewEmployee(request, eID):
         'ServiedCustomerNumber':ServiedCustomerNumber ,
         'avrageServingTime':avrageServingTime ,
         'totalServingTime_month':totalServingTime_month ,
-        'avrageServingTime_month':avrageServingTime_month
+        'avrageServingTime_month':avrageServingTime_month ,
+        'totalServingTime_year':totalServingTime_year ,
+        'avrageServingTime_year':avrageServingTime_year ,
+        'totalServingTime_all':totalServingTime_all ,
+        'avrageServingTime_all':avrageServingTime_all
 
         }
     return render(request ,"Employee/employee.html" , context)
