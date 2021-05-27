@@ -90,10 +90,10 @@ def onService_centerCreate(sender, instance, created, **kwargs):
         # canvas.close()
 
 
-@receiver(post_save, sender=Service_center)
-def onService_centerSave(sender, instance, created, **kwargs):
-    if created == False:
-        instance.Service_center.save()
+# @receiver(post_save, sender=Service_center)
+# def onService_centerSave(sender, instance, created, **kwargs):
+#     if created == False:
+        # instance.Service_center.save()
 
 
 
@@ -157,7 +157,7 @@ class Service_Record(models.Model):
 
     def CallCustomer(self , emp):
         
-        now = timezone.localtime().strftime("%Y-%m-%d %H:%M:%S.%f")
+        now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
         updated = Service_Record.objects.filter(
             id = self.id,

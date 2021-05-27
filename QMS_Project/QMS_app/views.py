@@ -120,12 +120,16 @@ def viewEmployee(request, eID):
 
     totalServingTime = 0
     avrageServingTime = 0 
+    customerNumberDay = 0
 
     if todayRecord:
         for i in todayRecord:
 
             servingTime  = i.O_Time - i.P_Time 
             totalServingTime += servingTime.seconds
+            customerNumberDay += 1
+
+            
 
         avrageServingTime =totalServingTime / todayRecord.count()
 
@@ -134,6 +138,7 @@ def viewEmployee(request, eID):
 
     totalServingTime_month = 0
     avrageServingTime_month = 0
+    customerNumberMonth = 0
  
     print(today_min.month)
     
@@ -156,6 +161,7 @@ def viewEmployee(request, eID):
 
             servingTime  = i.O_Time - i.P_Time 
             totalServingTime_month += servingTime.seconds
+            customerNumberMonth += 1
 
         avrageServingTime_month =totalServingTime_month / monthRecord.count()
 
@@ -172,11 +178,13 @@ def viewEmployee(request, eID):
         P_Time__year = today_min.year,
 
         )
+    customerNumberyear =0
     if yearhRecord:
         for i in yearhRecord:
 
             servingTime  = i.O_Time - i.P_Time 
             totalServingTime_year += servingTime.seconds
+            customerNumberyear += 1
 
         avrageServingTime_year =totalServingTime_year / yearhRecord.count()
 
@@ -195,11 +203,13 @@ def viewEmployee(request, eID):
         is_served = True,
 
         )
+    customerNumberall =0
     if allRecord:
         for i in allRecord:
 
             servingTime  = i.O_Time - i.P_Time 
             totalServingTime_all += servingTime.seconds
+            customerNumberall  += 1
 
         avrageServingTime_all =totalServingTime_all / allRecord.count()
 
@@ -226,7 +236,11 @@ def viewEmployee(request, eID):
         'totalServingTime_year':totalServingTime_year ,
         'avrageServingTime_year':avrageServingTime_year ,
         'totalServingTime_all':totalServingTime_all ,
-        'avrageServingTime_all':avrageServingTime_all
+        'avrageServingTime_all':avrageServingTime_all ,
+        'customerNumberDay':customerNumberDay ,
+        'customerNumberMonth':customerNumberMonth ,
+        'customerNumberyear':customerNumberyear ,
+        'customerNumberall':customerNumberall
 
         }
     return render(request ,"Employee/employee.html" , context)
@@ -373,19 +387,150 @@ def services(request):
 
 @login_required(login_url='login')
 @manager_only
-def viewService(request, sID):
+def viewService(request, sID  ):
     service = Service.objects.get(id=sID)
 
     sc = Manager.objects.get(user = request.user ).Service_center
-
+    
+    emps = Employee.objects.filter(Service_center = sc.id)
+    print(emps)
     services= Service.objects.filter(Service_center = sc )
 
     if not service in services:
         return redirect('services')
 
+    today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+    today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+    
+    todayRecord = Service_Record.objects.filter(
+        Service=service,
+        is_served = True,
+        P_Time__range=(today_min, today_max)        
+        ).order_by('P_Time')
+
+    totalServingTime = 0
+    avrageServingTime = 0 
+    customerNumberDay = 0
+
+    if todayRecord:
+        for i in todayRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime += servingTime.seconds
+            customerNumberDay += 1
+
+            
+
+        avrageServingTime =totalServingTime / todayRecord.count()
+
+    totalServingTime = timedelta(seconds=totalServingTime)
+    avrageServingTime = timedelta(seconds=avrageServingTime)
+
+    totalServingTime_month = 0
+    avrageServingTime_month = 0
+    customerNumberMonth = 0
+ 
+    print(today_min.month)
+    
+    monthRecord = Service_Record.objects.filter(
+        Service=service,
+        is_served = True,
+        P_Time__month = today_min.month,
+        P_Time__year = today_min.year,
+
+        )
+
+    
+        
+        
+    print(monthRecord)
+
+
+    if monthRecord:
+        for i in monthRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime_month += servingTime.seconds
+            customerNumberMonth += 1
+
+        avrageServingTime_month =totalServingTime_month / monthRecord.count()
+
+    totalServingTime_month = timedelta(seconds=totalServingTime_month)
+
+    avrageServingTime_month = timedelta(seconds=avrageServingTime_month)
+    
+    avrageServingTime_year =0
+    totalServingTime_year=0
+    yearhRecord = Service_Record.objects.filter(
+        Service=service,
+        is_served = True,
+        
+        P_Time__year = today_min.year,
+
+        )
+    customerNumberyear =0
+    if yearhRecord:
+        for i in yearhRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime_year += servingTime.seconds
+            customerNumberyear += 1
+
+        avrageServingTime_year =totalServingTime_year / yearhRecord.count()
+
+    totalServingTime_year = timedelta(seconds=totalServingTime_year)
+
+    avrageServingTime_year = timedelta(seconds=avrageServingTime_year)
+
+
+
+
+    
+    avrageServingTime_all =0
+    totalServingTime_all=0
+    allRecord = Service_Record.objects.filter(
+        Service=service,
+        is_served = True,
+
+        )
+    customerNumberall =0
+    if allRecord:
+        for i in allRecord:
+
+            servingTime  = i.O_Time - i.P_Time 
+            totalServingTime_all += servingTime.seconds
+            customerNumberall  += 1
+
+        avrageServingTime_all =totalServingTime_all / allRecord.count()
+
+    totalServingTime_all = timedelta(seconds=totalServingTime_all)
+
+    avrageServingTime_all = timedelta(seconds=avrageServingTime_all)    
+    
+
+
+
+    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ).count() 
+        
+
+
     context = {
         'service' : service ,
-        'sc':sc
+        'sc':sc ,
+        'emps':emps ,
+        'totalServingTime':totalServingTime ,
+        'ServiedCustomerNumber':ServiedCustomerNumber ,
+        'avrageServingTime':avrageServingTime ,
+        'totalServingTime_month':totalServingTime_month ,
+        'avrageServingTime_month':avrageServingTime_month ,
+        'totalServingTime_year':totalServingTime_year ,
+        'avrageServingTime_year':avrageServingTime_year ,
+        'totalServingTime_all':totalServingTime_all ,
+        'avrageServingTime_all':avrageServingTime_all ,
+        'customerNumberDay':customerNumberDay ,
+        'customerNumberMonth':customerNumberMonth ,
+        'customerNumberyear':customerNumberyear ,
+        'customerNumberall':customerNumberall
     }
     return render(request ,"Service/service.html" , context) 
 
@@ -790,7 +935,7 @@ def home(request):
             customer= None  
             CustomerCalling = Service_Record.objects.filter(is_accept = True , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
 
-            now = timezone.localtime().strftime("%Y-%m-%d %H:%M:%S.%f")
+            now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
             CustomerCalling.O_Time = now
             CustomerCalling.is_served = True 
