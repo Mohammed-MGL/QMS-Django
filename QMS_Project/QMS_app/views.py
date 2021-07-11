@@ -993,6 +993,8 @@ def home(request):
     totalServingTime = timedelta(seconds=totalServingTime)
 
     avrageServingTime = timedelta(seconds=avrageServingTime)
+    
+    
 
 
     
@@ -1007,7 +1009,7 @@ def home(request):
         'form': form ,
         'Customer' : customer,
         'TotalServingTime': totalServingTime ,
-        'avrageServingTime':avrageServingTime ,
+        'avrageServingTime':str(avrageServingTime).split('.')[0] ,
        
 
         }
