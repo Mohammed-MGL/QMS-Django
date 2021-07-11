@@ -2,14 +2,14 @@ from django.forms import ModelForm
 from .models import *
 from django.db import transaction
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm , PasswordChangeForm
 
 
 class EmployeeCreationForm(UserCreationForm):
     Fist_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}))
     Last_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
     Service = forms.ModelChoiceField(queryset=Service.objects.all(), widget=forms.Select(attrs={'class': 'form-control mb-4 ml-2  '}))
-    desk_num = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 mt-1'}  ) )
+    desk_num = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 mt-4'}  ) )
     notes = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '} ) )
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '}))
@@ -27,7 +27,7 @@ class EmployeeCreationForm(UserCreationForm):
         model = User
 
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control mb-4 '}),
+            'username': forms.TextInput(attrs={'class': 'form-control mb-4 ml-2'}),
         }
 
     @transaction.atomic
@@ -38,7 +38,14 @@ class EmployeeCreationForm(UserCreationForm):
         employee = Employee.objects.create(user=user,Service_center = self.osc,Service= self.cleaned_data['Service'] ,desk_num = self.cleaned_data['desk_num'],notes = self.cleaned_data['notes'] )
         return user
 
-
+class EmployeePasswordChangeForm(PasswordChangeForm):
+        
+    def __init__(self, *args, **kwargs):
+        super(EmployeePasswordChangeForm, self).__init__(*args, **kwargs)
+        
+        self.fields['old_password'].widget = forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '})
+        self.fields['new_password1'].widget = forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '})
+        self.fields['new_password2'].widget = forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '})
 
 class EmployeeForm(ModelForm):
     """Form definition for Employee."""
@@ -95,6 +102,8 @@ class scform(forms.ModelForm):
     location = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
     
     phone = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 mt-1'}  ) )
+    mapLocations = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}  ),label="Map Location")
+    
     # Image = forms.ImageField(required = False , widget=forms.choices(attrs={'class': 'form-control mb-4 ml-2 '}  ))
     # Icon = forms.ImageField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
     # QR = forms.ImageField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
@@ -138,54 +147,3 @@ class MoveCustomerForm(ModelForm):
     #     return Service
         
 
-# class EmployeeEditForm(ModelForm):
-
-#     Fist_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}))
-#     Last_Name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
-#     Service = forms.ModelChoiceField(queryset=Service.objects.all, widget=forms.Select(attrs={'class': 'form-control mb-4  '}))
-#     desk_num = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 mt-1'}  ) )
-#     notes = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '} ) )
-
-#     def __init__(self, sc, *args, **kwargs):
-#         super(EmployeeCreationForm, self).__init__(*args, **kwargs)
-#         self.fields['Service'].queryset = Service.objects.filter(Service_center = sc.id)
-
-#     class Meta:
-#         """Meta definition for Employeeform."""
-
-#         model = User
-#         # fields = '__all__'
-
-#         def save(self):
-#         user = super().save(commit=False)
-#         user.save()
-#         employee = Employee.objects.create(user=user,Service_center = self.osc,Service= self.cleaned_data['Service'] ,desk_num = self.cleaned_data['desk_num'],notes = self.cleaned_data['notes'] )
-#         return user
-
-        
-# ######
-# def editprofile(request):
-#     profile = Profile.objects.get(user=request.user)
-#     if request.method=='POST':
-#         x = UserForm(request.POST,request.FILES , instance=request.user)
-#         y = ProfileForm(request.POST,instance= profile)
-#         if x.is_valid and y.is_valid:
-#             x.save()
-#             myprofile = y.save(commit=False)
-#             myprofile.user= request.user
-#             myprofile.save()
-#             return redirect(reverse('accounts:profile'))
-#     else:
-#         x = UserForm(instance=request.user)
-#         y = ProfileForm(instance= profile)
-
-#     return render(request ,'registration/accounts/profile_edit.html' ,{'x':x , 'y':y  }) 
-
-
-######
-
-
-
- 
-
-             

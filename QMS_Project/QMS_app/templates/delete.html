@@ -1,21 +1,33 @@
-{% extends 'base_generic.html' %}
+{% extends "layouts/base.html" %}
+
+{% block title %}Delete Page{% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
 <br><br><br>
 <div class="row justify-content-around">
-    <div class="col-md-7">
-        <div class="card card-body ">
+    <div class="col-md-8 ">
+        <div class="card card-body pt-4 pb-4">
+            
             <div class="d-flex justify-content-around">
                 <p>Are you sure you want to delete "{{item}}"?</p>
             </div>
+            
             <form action="" method="POST">
-                {% csrf_token %}
+                {% csrf_token %}<br>
                 <div class="d-flex justify-content-around">
-                    <div class="p-2"><input class="btn btn-primary" type="submit" value="Cancel" name ="Cancel"/></div>
-                    <div class="p-2"><input class="btn btn-danger" type="submit" value="Confirm" name ="Confirm"/></div>
+                    <div class="p-2"><input class="btn btn-primary" type="submit" value="Cancel" name="Cancel" /></div>
+                    <div class="p-2"><input class="btn btn-danger" type="submit" value="Confirm" name="Confirm" /></div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-{% endblock%}
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

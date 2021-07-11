@@ -14,7 +14,6 @@ from PIL import Image, ImageDraw
 
 
 
-
 class User(AbstractUser):
     is_employee = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
@@ -61,7 +60,7 @@ class Service_center(models.Model):
 
     def save(self, *args, **kwargs):
         qrcode_img = qrcode.make(self.name)
-        canvas = Image.new('RGB', (512, 512), 'white')
+        canvas = Image.new('RGB', (290, 290), 'white')
         canvas.paste(qrcode_img)
         fname = f'QR-{self.name}.png'
         buffer = BytesIO()

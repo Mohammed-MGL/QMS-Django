@@ -28,7 +28,7 @@ urlpatterns = [
     path('serviceChangeState/<str:sID>',views.serviceChangeState, name = 'serviceChangeState'),
 
     # Black_list & White_list
-    path('black&whiteList/',views.bwlist, name = 'bwlist'),
+    path('black&whiteList/',views.black_WhiteList, name = 'black_WhiteList'),
     path('deleteUserFromBL/<str:uID>',views.deleteUserFromBL, name = 'deleteUserFromBL'),
     path('deleteUserFromWL/<str:uID>',views.deleteUserFromWL, name = 'deleteUserFromWL'),
     path('serachForUser',views.serachForUser, name = 'serachForUser'),
@@ -39,8 +39,8 @@ urlpatterns = [
     
     
 
-    path('BookAsGuest/<str:scID>',views.BookAsGuest, name = 'BookAsGuest'), 
-    path('book_in_service/<str:sID>',views.book_in_service, name = 'book_in_service'),
+    path('BookInServiceCenter/<str:scID>',views.BookInServiceCenter, name = 'BookInServiceCenter'), 
+    path('BookInService/<str:sID>',views.BookInService, name = 'BookInService'),
     path('ServiceCnterProfile',views.ServiceCnterProfile, name = 'ServiceCnterProfile'),
 
 

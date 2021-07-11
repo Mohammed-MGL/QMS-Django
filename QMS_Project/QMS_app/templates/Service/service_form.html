@@ -1,32 +1,41 @@
-{% extends 'base_generic.html' %}
+{% extends "layouts/base.html" %}
+
+{% block title %} Page Blank {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
+
+
 <form action="" method="POST">
     {% csrf_token %}
-    
-    
 
-<div class="row justify-content-center">
-    <div class="col-md-6  ">
-        <div class="card">
-            <div class="card-header card-header-primary">
-                <h4 class="card-title"> Edit services
-                </h4>
-                <p class="card-category">Fill following form </p>
+
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 ">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title"> Edit services
+                    </h4>
+                    <p class="card-category">Fill following form </p>
+                </div>
+               
+                <div class="card-body">
+                    <br>
+                    {{form}}
+                    <br>
+                    <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change </button>
+                </div>
             </div>
-            <div class="card-body">
-                {{form}}
-   
-                            <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change </button>
-                           
-
+        </div>
+    </div>
 </form>
 
 
-{% endblock%}
+{% endblock content %}
 
-
-
-    
-
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

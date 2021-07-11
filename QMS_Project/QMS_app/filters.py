@@ -18,11 +18,17 @@ def ourService(request):
 
 class EmployeeFilter(django_filters.FilterSet):
 
-    desk_num = CharFilter(field_name = 'desk_num' , lookup_expr= 'icontains',widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-5  ', 'placeholder' : 'Desk num Name'}),label ='') 
-    Service = ModelChoiceFilter( queryset=ourService,field_name = 'Service' ,widget=forms.Select(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'Desk num Name'}),label ='')
+    user__username = django_filters.CharFilter(
+        field_name = 'user__username' ,
+        lookup_expr='icontains',
+        label='username' ,
+        widget=forms.TextInput(attrs={'class': 'form-control  mb-4  ', 'placeholder' : 'Employee username'})
+        )
+    desk_num = CharFilter(field_name = 'desk_num' , lookup_expr= 'icontains',widget=forms.TextInput(attrs={'class': 'form-control  mb-4 ', 'placeholder' : 'Desk num Name'}),label ='') 
+    Service = ModelChoiceFilter( queryset=ourService,field_name = 'Service' ,
+    # empty_label="all Service" ,
+    widget=forms.Select(attrs={'class': 'form-control mr-3  '}),label ='')
     
-    user__username = django_filters.CharFilter(field_name = 'user__username' ,lookup_expr='icontains', label='username' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-5  ', 'placeholder' : 'Employee username'}))
-
     class Meta:
        
         model = Employee
@@ -32,7 +38,7 @@ class EmployeeFilter(django_filters.FilterSet):
 
 class UserFilter(django_filters.FilterSet):
 
-    username = CharFilter(required = True ,field_name = 'username' , lookup_expr= 'icontains' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'User name'} ),label ='') 
+    username = CharFilter(required = True ,field_name = 'username' , lookup_expr= 'icontains' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'User name' ,'name':"username"} ),label ='') 
     first_name = CharFilter(field_name = 'first_name' , lookup_expr= 'icontains' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'First name'} ),label ='') 
     last_name = CharFilter(field_name = 'last_name' , lookup_expr= 'icontains' ,widget=forms.TextInput(attrs={'class': 'form-control mx-3 mb-4 ', 'placeholder' : 'Last name'} ),label ='') 
    

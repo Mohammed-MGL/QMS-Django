@@ -1,7 +1,15 @@
-{% extends 'base_generic.html' %}
+
+{% extends "layouts/base.html" %}
+
+{% block title %} Page Blank {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
+
+    
 <div class="row justify-content-center">
   <div class="col-md-3 mb-3 ">
 
@@ -160,5 +168,8 @@
 
 
 </div>
+{% endblock content %}
 
-{% endblock%}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
+

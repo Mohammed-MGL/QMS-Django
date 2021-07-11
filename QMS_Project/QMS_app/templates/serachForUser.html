@@ -1,9 +1,46 @@
-{% extends 'base_generic.html' %}
+
+{% extends "layouts/base.html" %}
+
+{% block title %}Serach for user {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
 
 <div class="countainer">
+
+    <div class="row  justify-content-center ">
+        <div class="col-8 ">
+          <div class="card ">
+            <div class="card-body">
+              <div class="d-flex justify-content-between ">
+                <div class="p-2  my-auto">
+                  <b>Search for user to add into black / white list </b>
+                </div>
+                <div class="p-2  my-auto">
+                  <form action="/serachForUser" method="GET">
+    
+                    {{UserFilter.form.username}}
+    
+                </div>
+    
+                <div class="p-2  my-auto">
+    
+                  <button class="btn btn-primary  my-sm-0 btn-round" type="submit">Search</button>
+                  </form>
+                </div>
+    
+    
+    
+              </div>
+            </div>
+    
+          </div>
+        </div>
+      </div>
+
     <div class="row ml-1 justify-content-center">
 
         <div class="col-9  ">
@@ -45,13 +82,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                               
-                                
+
+
                                 {% for user in users %}
-                                
-          
-          
-                                
+
+
+
+
                                 <tr>
 
 
@@ -80,11 +117,11 @@
 
                                     </td>
                                 </tr>
-                                
+
                                 {% endfor %}
-                             
-                                
-                                
+
+
+
 
 
                             </tbody>
@@ -96,10 +133,12 @@
 
 
         </div>
-        
-                </div>
-            </div> 
-        </div>
+
     </div>
 </div>
-{% endblock%}
+
+    
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

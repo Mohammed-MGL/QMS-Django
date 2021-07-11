@@ -7,13 +7,20 @@ from django.contrib import messages
 from django.contrib.auth import authenticate ,login , logout
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user , manager_only , employee_only
-from django.contrib.auth.forms import PasswordChangeForm
+
 from django.contrib.auth import update_session_auth_hash
 from django.utils import timezone
 from datetime import timedelta, date, time, datetime 
 # from datetime import date
 import random  
 import string  
+
+    # messages.info(request, 'info.')
+    # messages.success(request, 'success')
+    # messages.warning(request, 'warning.')
+    # messages.error(request, 'error')
+
+
 
 
 
@@ -33,7 +40,6 @@ def loginPage(request):
             if user.is_employee == True:
                 return redirect('home')
 
-            
         else:
             messages.warning(request, 'username and password do not match!')
 
@@ -66,14 +72,11 @@ def employees(request):
     emps = Employee.objects.filter(Service_center = sc)
     empFilter = EmployeeFilter(request.GET, request=request,queryset = emps )
     emps = empFilter.qs
-    # uNameFilter = UserFilter(request.GET,queryset = emps)
-    # emps = uNameFilter.qs
 
     context = {
         'sc':sc,
         "employees" : emps ,
         "empFilter" : empFilter,
-        # "uNameFilter" : uNameFilter
     }
     return render(request ,"Employee/employees.html" , context) 
 
@@ -283,10 +286,10 @@ def updateEmployeePassWord(request, eID):
     if not emp in emps:
         return redirect('employees')
 
-    form = PasswordChangeForm(emp.user)
+    form = EmployeePasswordChangeForm(emp.user)
 
     if request.method == 'POST':
-        form = PasswordChangeForm(emp.user, request.POST)
+        form = EmployeePasswordChangeForm(emp.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
@@ -301,6 +304,7 @@ def updateEmployeePassWord(request, eID):
     context = {
         "form":form,
         'sc':sc,
+        'emp':emp,
         }
     return render(request ,"Employee/employeePassWordUpdate.html" , context) 
 
@@ -554,26 +558,6 @@ def serviceChangeState(request, sID):
     return redirect('services')
 
 
-# @login_required(login_url='login')
-# @manager_only
-# def serviceCenterChangeState(request):
-    
-
-#     sc = Manager.objects.get(user = request.user ).Service_center
-#     context = {
-#         'sc' : sc
-#     }
-#     return render(request ,"base_generic.html" , context) 
-
-     
-   
-
-#koko
-    # context = {
-    #     'service' : service
-    # }
-    # return render(request ,"Service/service.html" , context)    
-
 @login_required(login_url='login')
 @manager_only
 def editService(request, sID):
@@ -615,7 +599,7 @@ def deleteService(request, sID):
 # Black_list & White_list
 @login_required(login_url='login')
 @manager_only
-def bwlist(request):
+def black_WhiteList(request):
     sc = Manager.objects.get(user = request.user ).Service_center
 
     w_list = White_list.objects.filter(Service_center = sc)
@@ -637,7 +621,7 @@ def bwlist(request):
 
         }
 
-    return render(request ,"bwlist.html" , context)
+    return render(request ,"black_WhiteList.html" , context)
 
 
     # addToBlackLIst
@@ -662,7 +646,7 @@ def addToBlackLIst(request, uID):
 
         Black_list.objects.create(user=u ,Service_center=sc)
       
-    return redirect('bwlist')
+    return redirect('black_WhiteList')
 
 
 
@@ -685,7 +669,7 @@ def addToWhiteLIst(request, uID):
     elif  t==0 and x==0:
         White_list.objects.create(user=u ,Service_center=sc)
    
-    return redirect('bwlist')    
+    return redirect('black_WhiteList')    
 
 
 
@@ -734,7 +718,7 @@ def copysystemBlackList(request):
             Black_list.objects.create(user=u ,Service_center=sc)
         
       
-    return redirect('bwlist')
+    return redirect('black_WhiteList')
 
     
 
@@ -742,14 +726,18 @@ def copysystemBlackList(request):
 @login_required(login_url='login')
 @manager_only
 def serachForUser(request):
+    if not request.GET.get('username'):
+        return redirect('black_WhiteList')
     sc = Manager.objects.get(user = request.user ).Service_center
     users = User.objects.filter(is_employee = False,is_manager= False ,is_guest= False ,is_superuser= False )
-    
+    users = User.objects.filter()
     usersFilter = UserFilter(request.GET, request=request,queryset = users )
     users = usersFilter.qs
+
     context = {
-              'users':users ,
-              'sc':sc,
+        'users':users ,
+        "UserFilter" : usersFilter,
+        'sc':sc,
         }
     return render(request ,"serachForUser.html" , context)
 
@@ -759,13 +747,13 @@ def deleteUserFromBL(request, uID):
     sc = Manager.objects.get(user = request.user ).Service_center
 
     u = Black_list.objects.get(id = uID)
-    context = {"item":u}
     if request.method == 'POST':
         u.delete()
-        return redirect('bwlist')
+        return redirect('black_WhiteList')
     context = {
-             
-              'sc':sc,
+        'sc':sc,
+        "item":u
+
         }
 
     return render(request ,"delete.html" , context) 
@@ -774,16 +762,21 @@ def deleteUserFromBL(request, uID):
 
 def deleteUserFromWL(request, uID):
 
+    sc = Manager.objects.get(user = request.user ).Service_center
     u = White_list.objects.get(id = uID)
-    context = {"item":u}
+
     if request.method == 'POST':
         u.delete()
-        return redirect('bwlist')
+        return redirect('black_WhiteList')
 
+    context = {
+        'sc':sc,
+        "item":u
+    }
     return render(request ,"delete.html" , context) 
 
 
-def BookAsGuest(request, scID):
+def BookInServiceCenter(request, scID):
     
     Services = Service.objects.filter(Service_center=scID)
     serviceCenter = Service_center.objects.get(id = scID )
@@ -810,21 +803,20 @@ def BookAsGuest(request, scID):
         
         sdList.append(sd)
 
-
     context = {
         "sdList" : sdList,
         'serviceCenter':serviceCenter ,
     }
     
-    return render(request ,"BookAsGuest.html" , context)    
+    return render(request ,"BookInServiceCenter.html" , context)    
 
 
 
 
 
-def book_in_service(request, sID):
+def BookInService(request, sID):
     
-    now = timezone.localtime().strftime("%Y-%m-%d %H:%M:%S.%f")
+    now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     
     service =Service.objects.get(id = sID)
     serviceCenter =service.Service_center 
@@ -844,7 +836,7 @@ def book_in_service(request, sID):
     guest.save()
     book = Service_Record.objects.create(Service=service , user=guest , IS_InCenter = True ,  Queue_type = 'B' )
     
-    return render(request ,"book_in_service.html" , {'user':guest , 'serviceCenter':serviceCenter})
+    return render(request ,"BookInService.html" , {'user':guest , 'serviceCenter':serviceCenter})
 
 
 
@@ -987,7 +979,7 @@ def home(request):
    
 
     totalServingTime = 0
-    avrageServingTime =0 
+    avrageServingTime = 0 
     
 
     if todayRecord:
@@ -1019,5 +1011,5 @@ def home(request):
        
 
         }
-    return render(request ,"EmployeeTemp/home.html" , context)   
+    return render(request ,"EmpTemplates/home.html" , context)   
 

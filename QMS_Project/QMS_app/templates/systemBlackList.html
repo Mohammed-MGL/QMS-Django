@@ -1,27 +1,61 @@
-{% extends 'base_generic.html' %}
+{% extends "layouts/base.html" %}
+
+{% block title %}System BlackList{% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+    
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 10; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+ 
+    
+   
+    
+    </style>
+{% endblock stylesheets %}
 
 {% block content %}
 
 
 <div class="countainer">
-    <div class="row ml-1">
+    <div class="row justify-content-center">
 
         <div class="col-9  ">
             <div class="card">
                 <div class="card-header card-header-primary">
-                    <h4 class="card-title ">users</h4>
+                    <h4 class="card-title ">System BlackList</h4>
                     <div class="d-flex justify-content-between">
                         <div class="p-2">
-                            ======
+
                         </div>
-                        <div class="p-2"> <a href="{% url 'copysystemBlackList' %}" class="btn btn-sm btn-secondary ">+ all users
-                            &nbsp;<i class="material-icons">block all</i> </a></div>
+                        <button id="myBtn">Open Modal</button>
+
+                        <div class="p-2"> <a href="{% url 'copysystemBlackList' %}" class="btn btn-sm btn-danger  ">
+                                block all users </a>
+                            <!-- <i class="material-icons">block
+                                all</i> -->
+                        </div>
                     </div>
                 </div>
 
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table text-center">
                             <thead class=" text-primary">
                                 <tr>
                                     <th>
@@ -40,7 +74,7 @@
                                         Reason
                                     </th>
                                     <th>
-                                     
+
                                     </th>
 
                                 </tr>
@@ -50,7 +84,6 @@
                                 {% for sb in SystemBlackList %}
 
                                 <tr>
-
 
                                     <td>
                                         {{sb.user.id}}
@@ -66,11 +99,11 @@
 
                                         </span>
                                     </td>
-                                    <td class="text-primary">
+                                    <td>
                                         {{sb.reason}}
 
                                     </td>
-                                    <td class="text-primary">
+                                    <td>
                                         <a href="{% url 'addToBlackLIst' sb.user.id %}"
                                             class="btn btn-sm btn-danger btn-round"> + black list </a>
 
@@ -90,7 +123,68 @@
 
 
         </div>
-        
+
     </div>
 </div>
-{% endblock%}
+
+<div id="myModal" class="modal">
+
+<div class="row justify-content-around">
+    <div class="col-md-5 ">
+        <div class="card card-body pt-4 pb-4">
+
+            <div class="d-flex justify-content-around">
+                <p>Are you sure you want to Bl"?</p>
+            </div>
+
+            
+                {% csrf_token %}<br>
+                <div class="d-flex justify-content-around">
+
+                    <div class="p-2"><input class="btn btn-primary" type="button" value="Cancel"  />
+                    </div>
+                    <div class="p-2"><a href="{% url 'copysystemBlackList' %}" class="btn  btn-danger  ">
+                        Confirm</a>
+                    </div>
+                </div>
+           
+        </div>
+    </div>
+</div>
+  
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    </script>
+    
+{% endblock javascripts %}

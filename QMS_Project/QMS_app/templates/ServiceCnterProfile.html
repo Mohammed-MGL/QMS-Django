@@ -1,20 +1,116 @@
-{% extends 'base_generic.html' %}
+{% extends "layouts/base.html" %}
+
+{% block title %} Page Blank {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
 
 <div class="row justify-content-center">
     <div class="col-md-10  ">
         <div class="card">
             <div class="card-header card-header-primary">
-                <h4 class="card-title"> change your information
+                <h4 class="card-title"> change service center profile information
                 </h4>
                 <p class="card-category">Fill following form </p>
             </div>
-            <div class="card-body">
+            <div class="card-body ">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                    <div class="row pt-4 pr-3">
+                        <div class="col-md-3">
+                            <div class="form-group bmd-form-group">
+                                <label>{{form.name.label}} :</label>
+                                {{form.name}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group bmd-form-group">
+                                <label>{{form.location.label}} :</label>
+                                {{form.location}}
+                            </div>
+                        </div>
+                        <div class="col-md-3 pr-2 ">
+                            <div class="form-group bmd-form-group">
+                                <label>{{form.mapLocations.label}} URL :</label>
+                                {{form.mapLocations}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pt-4 pr-3">
+                        <div class="col-md-3">
+                            <div class="form-group bmd-form-group">
+                                <label>{{form.name.label}} :</label>
+                                {{form.name}}
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>service center {{form.Image.label_tag}} :</label>
+                            <div class="card" style="width: 20rem;">
+                                <img class="card-img-top" src="{{ MEDIA_URL }}images/{{ form.Image.value }}"
+                                    alt="Card image cap">
+                                <div class="card-body">
+                                   
+                                    <br>
+                                    <div class="d-flex justify-content-center ">
+                                        <div class="btn btn-mdb-color btn-rounded ">
+                                          <span>to change img</span>
+                                          <input type="file" >
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                            {% if form.Image.field.widget.input_type == 'file'%}
+                            <a href="{{ MEDIA_URL }}images/{{ form.Image.value }}">{{ form.Image.value }}</a><br/>
+                            <input type="file" name="{{ form.Image.name }}" />
+                        {% endif %}
+                            
+                        </div>
+                        <div class="col-md-3 pr-2 ">
+                            <div class="form-group bmd-form-group">
+                                <label>{{form.mapLocations.label}} URL :</label>
+                                {{form.mapLocations}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <!-- show label of field -->
+                        
+                    
+                        <!--  check for input type -->
+                        {% if form.Image.field.widget.input_type == 'file'%}
+                            <a href="{{ MEDIA_URL }}images/{{ form.Image.value }}">{{ form.Image.value }}</a><br/>
+                            <input type="file" name="{{ form.Image.name }}" />
+                        {% endif %} 
+                    </div>
+                    
+
+                    <div class="row pt-4 pr-3">
+                        
+                    </div>
+
+                    <br><br>
                     {{ form.as_p }}
                     <br>
+                    <br><br>
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                        <div class="fileinput-new thumbnail img-raised">
+                            <img src="http://style.anu.edu.au/_anu/4/images/placeholders/person_8x10.png" alt="...">
+                        </div>
+                        <div class="fileinput-preview fileinput-exists thumbnail img-raised"></div>
+                        <div>
+
+                            <a href="#pablo" class="btn btn-danger btn-round fileinput-exists"
+                                data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
+                        </div>
+                    </div>
+
 
                     <button type="submit " name="submit" class="btn btn-primary btn-round"> change </button>
 
@@ -25,4 +121,7 @@
 </div>
 
 
-{% endblock%}
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
