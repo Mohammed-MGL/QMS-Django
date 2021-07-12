@@ -7,58 +7,69 @@
 {% load static %}
 
 <div class="countainer">
-  <div class="row  ">
+  <div class="row ">
     <div class="col-6 ">
       <div class="card">
 
-        <div class="card-body">
-
-          <img src="{{sc.Image.url}}"  width="350" height="250">
-          <br>
-        
-           
-
-
+        <div class="card-body ">
+          
+          {% if Customer %}
 
           <table class="table">
-            
-            
-              <tr >
-                {% if Customer %}
-               <h6><th scope="row">Customer username :</th></h6> 
-                <td><h6 class="text-success" >{{Customer.username}}</h6> </td>
-               
-              </tr>
-              <tr>
-                <th scope="row"> Customer first name :</th>
-                <td> <h6 class="text-success">{{Customer.first_name}}</h6></td>
-               
-              </tr>
 
-              <tr>
-                <th scope="row">  Customer last name :</th>
-                <td> <h6 class="text-success">{{Customer.last_name}}</h6></td>
-               
-              </tr>
-              <tr>
-                <th scope="row"> start time  :</th>
-                <td> <h4 class="text-success"> {{startTime|date:'Y-m-d H:i:s' }} </h4></td>
-               
-              </tr>
-              </table>
 
-          <table>
-           
-           
-            <tr class="table-warning" >
-               
-              <td align = "center" >  <button  type="button" class="btn btn-outline-info  " disabled><h1>  {% include 'EmpTemplates/timer.html'%}</h1></button> </td>
-             
+            <tr>
+           <h4>Customer Information</h4>  
+                <th scope="row">Username :</th>
+            
+              <td>
+                <h6 class="text-success">{{Customer.username}}</h6>
+              </td>
+
+            </tr>
+            <tr>
+              <th scope="row"> First Name :</th>
+              <td>
+                <h6 class="text-success">{{Customer.first_name}}</h6>
+              </td>
+
+            </tr>
+
+            <tr>
+              <th scope="row">Last Name : </th>
+              <td>
+                <h6 class="text-success">{{Customer.last_name}}</h6>
+              </td>
+
+            </tr>
+            <tr>
+              <th scope="row"> Start Time :</th>
+              <td>
+                <h4 class="text-success"> {{startTime|date:'Y-m-d H:i:s' }} </h4>
+              </td>
+
             </tr>
           </table>
 
-          {% endif %}
+          <table align="center" >
+
+
+            <tr class="table-warning" >
+
+              <td  > <button type="button" class="btn btn-outline-info btn-lg " disabled>
+                  <h1>  &nbsp; <big>timer : {% include 'EmpTemplates/timer.html'%} &nbsp;</h1></big> 
+                </button> </td>
+
+            </tr>
+          </table>
+
+          {% else %}
           
+           <img src="\static\assets\img\faces\homeemp.png" width="350" height="254"> <br> <br>
+         <h4> please click recive customer to recive your customers</h4> 
+
+          {% endif %}
+
 
         </div>
       </div>
@@ -71,7 +82,9 @@
 
               <div class="card-body">
                 <h5 class="card-title">Customer Number</h5>
-                <h1 style="font-size:4vw"> <p  class="card-text text-center">{{CustomerNumber}} </p></h1>
+                <h1 style="font-size:4vw">
+                  <p class="card-text text-center text-dark">{{CustomerNumber}} </p>
+                </h1>
               </div>
             </div>
           </div>
@@ -80,9 +93,13 @@
             <div class="card text-white bg-primary mb-3" style=" height: 10rem;">
 
               <div class="card-body">
-               <b> <h6 class="card-title">Servied Customer Number</h6></b>
-                <h1 style="font-size:4vw"> <p  class="card-text text-center">{{ServiedCustomerNumber}} </p></h1>
-              
+                <b>
+                  <h6 class="card-title ">Servied Customer Number</h6>
+                </b>
+                <h1 style="font-size:4vw">
+                  <p class="card-text text-center text-dark">{{ServiedCustomerNumber}} </p>
+                </h1>
+
               </div>
             </div>
           </div>
@@ -93,8 +110,10 @@
 
               <div class="card-body">
                 <h5 class="card-title">Avrage serving time</h5>
-                <h1 style="font-size:3vw"> <p  class="card-text text-center">{{avrageServingTime}} </p></h1>
-              
+                <h1 style="font-size:3vw">
+                  <p class="card-text text-center text-dark">{{avrageServingTime}} </p>
+                </h1>
+
               </div>
             </div>
 
@@ -105,8 +124,10 @@
 
               <div class="card-body">
                 <h5 class="card-title">Total serving Time</h5>
-                <h1 style="font-size:3vw"> <p  class="card-text text-center">{{TotalServingTime}} </p></h1>
-               
+                <h1 style="font-size:3vw">
+                  <p class="card-text text-center text-dark">{{TotalServingTime}} </p>
+                </h1>
+
               </div>
             </div>
           </div>
@@ -116,14 +137,16 @@
   </div>
   <div class="row justify-content-center mt-5 ">
     <div class="col-4 my-auto ">
-      
+
       <form action="" method="POST">
         {% csrf_token %}
 
 
-        <button type="submit " name="callNext" data-role="clock-start-stop" class="btn btn-danger pull-right btn-round btn-lg  btn-block{% if Customer %} disabled {% endif %} {% if CustomerNumber == 0 %} disabled {% endif %}"> receive a new customer
-        </button>
-      </form>
+<button type="submit " name="callNext" data-role="clock-start-stop"
+          class="btn btn-danger pull-right btn-round btn-lg btn-block{% if Customer %} disabled {% endif %} {% if CustomerNumber == 0 %} disabled {% endif %}">
+          receive a new customer
+              </button>
+</form>
       <!-- <a href="" class="btn btn-outline-primary" style="width: 10rem; height: 10rem ;"><b>Click
           to</b>
         <br><b>receive<br> a new customer</b></a> -->
@@ -140,7 +163,8 @@
         {% csrf_token %}
 
 
-        <button type="submit " name="userServed" class="btn btn-danger pull-right btn-round btn-lg btn-block {% if not Customer %} disabled {% endif %}"{% if not Customer %} disabled {% endif %}> End of serving the customer
+        <button type="submit " name="userServed"
+          class="btn btn-danger pull-right btn-round btn-lg btn-block {% if not Customer %} disabled {% endif %}" {% if not Customer %} disabled {% endif %}> End of serving the customer
         </button>
       </form>
       <!-- <a href="" type="button" class="btn btn-outline-warning "
@@ -159,7 +183,8 @@
               {% csrf_token %}
               {{form.Service}}
           </div>
-          <button type="submit " name="send" class="btn btn-danger pull-right btn-round  {% if not Customer %} disabled {% endif %}"{% if not Customer %} disabled {% endif %}> send </button>
+          <button type="submit " name="send"
+            class="btn btn-danger pull-right btn-round {% if not Customer %} disabled {% endif %}" {% if not Customer %} disabled {% endif %}> send </button>
           </form>
         </div>
       </div>
