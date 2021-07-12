@@ -1,99 +1,79 @@
+<html>
+<body">
 
-<div class="clock-wrapper" >
-    <div class="clock">
-      <div class="clock__inner-bg"></div>
+<span class="time hourss">00</span>:<span class="time minutess">00</span>:<span class="time secondss">00</span>
+
+
+<script language="JavaScript">
+
+
+function setDate(){
+
+	var eventdate = new Date("{{startTime|date:'Y-m-d H:i:s'}}")  //Your date should be in this format (MONTH DAY, YEAR)
+	var now = new Date();
+
+	count=Math.floor((now.getTime()-eventdate.getTime())/1000);
+
+	sec = count%60;
+	document.getElementsByClassName('secondss')[0].innerHTML = sec;
   
-      <div class="clock__inner-bg">
-        <div class="clock__markers">
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-          <div class="clock__mark"></div>
-        </div>
-      </div>
-  
-      <div class="clock__center"></div>
-  
-      <div class="clock__inners">
-        <div class="clock__inner-center"></div>
-        <div class="clock__inner-center"></div>
-        <div class="clock__inner-center"></div>
-      </div>
-  
-      <div class="clock__pointer"></div>
-  
-      <svg class="svg" xmlns="http://www.w3.org/2000/svg">
-        <!-- Created with Method Draw - https://github.com/duopixel/Method-Draw/ -->
-        <defs>
-          <radialGradient gradientTransform="translate(1,0.5) scale(-0.99,1)" r="1.200581" cy="0" cx="0" spreadMethod="pad" id="svg_9">
-            <stop offset="0" stop-opacity="0.996094" stop-color="#ff415a"/>
-            <stop offset="1" stop-opacity="0" stop-color="#252525"/>
-          </radialGradient>
-        </defs>
-        <g>
-          <title>Layer 1</title>
-          <ellipse stroke="url(#svg_9)" ry="21.5%" rx="21.5%" id="svg_1" cy="50%" cx="50%" stroke-width="12%" fill="transparent"/>
-        </g>
-      </svg>
-    </div>
-  
-    <span class="clock-time">00:00,000</span>
-  
-    
-  </div>
+	count = Math.floor(count/60);
+	
+	min = count%60;
+	document.getElementsByClassName('minutess')[0].innerHTML = min;
+	 
+	count = Math.floor(count/60);
+	
+	hour = count%24;
+	document.getElementsByClassName('hourss')[0].innerHTML = hour;
+
+	
+	timer()
+
+}
+
+function timer(){
+
+	if ((min < 10) && (min != "00")){
+	        dismin = "0" + min
+	}
+	else{
+	        dismin = min
+	}
+
+	if ((hour < 10) && (hour != "00")){
+	        dishour = "0" + hour
+	}
+	else{
+	        dishour = hour
+	}
+
+	dissec = (sec < 10) ? sec = "0" + sec : sec
+	
+	document.getElementsByClassName('secondss')[0].innerHTML =dissec;	
+	document.getElementsByClassName('minutess')[0].innerHTML = dismin;	
+	document.getElementsByClassName('hourss')[0].innerHTML = dishour;
+	
+	
+
+	if (sec < 59){
+		sec++
+	}
+
+	else{
+		sec = "0"
+		min++
+		if (min > 59){
+			min = "00"
+			hour++
+		}
+
+	}
+
+        	window.setTimeout("timer()",1000)
+}
+
+</script>
+
+</body>
+</html>

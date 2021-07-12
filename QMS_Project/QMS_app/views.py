@@ -959,11 +959,13 @@ def home(request):
                     is_have_book.save()
                     
                 book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
-    
+ 
     customerAtEmp = Service_Record.objects.filter(is_accept = True, is_served= False, is_cancelled= False, Service=service, IS_InCenter= True, Employee=emp).first()
     if(customerAtEmp is not None):
         customer=customerAtEmp.user
+        startTime= customerAtEmp.P_Time
     else:
+        startTime= None
         customer= None  
     
 
@@ -1010,6 +1012,7 @@ def home(request):
         'Customer' : customer,
         'TotalServingTime': totalServingTime ,
         'avrageServingTime':str(avrageServingTime).split('.')[0] ,
+        'startTime':startTime ,
        
 
         }

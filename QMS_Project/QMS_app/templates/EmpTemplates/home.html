@@ -15,15 +15,48 @@
 
           <img src="{{sc.Image.url}}"  width="350" height="250">
           <br>
-          <br>
-          
-          {% if Customer %}
-          Customer username : {{Customer.username}}
-          <br>
-          Customer first name : {{Customer.first_name}}
-          <br>
+        
+           
 
-          Customer last name : {{Customer.last_name}}
+
+
+          <table class="table">
+            
+            
+              <tr >
+                {% if Customer %}
+               <h6><th scope="row">Customer username :</th></h6> 
+                <td><h6 class="text-success" >{{Customer.username}}</h6> </td>
+               
+              </tr>
+              <tr>
+                <th scope="row"> Customer first name :</th>
+                <td> <h6 class="text-success">{{Customer.first_name}}</h6></td>
+               
+              </tr>
+
+              <tr>
+                <th scope="row">  Customer last name :</th>
+                <td> <h6 class="text-success">{{Customer.last_name}}</h6></td>
+               
+              </tr>
+              <tr>
+                <th scope="row"> start time  :</th>
+                <td> <h4 class="text-success"> {{startTime|date:'Y-m-d H:i:s' }} </h4></td>
+               
+              </tr>
+              </table>
+
+          <table>
+           
+           
+            <tr class="table-warning" >
+               
+              <td align = "center" >  <button  type="button" class="btn btn-outline-info  " disabled><h1>  {% include 'EmpTemplates/timer.html'%}</h1></button> </td>
+             
+            </tr>
+          </table>
+
           {% endif %}
           
 
