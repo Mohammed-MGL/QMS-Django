@@ -183,20 +183,16 @@ class  cancelReservation(APIView):
         
         user =request.user
         service =Service.objects.get(id = sID)
-        is_inQ = False
+        
         book =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False).first()
         if(book):
 
             book.O_Time = timezone.now().strftime("%Y-%m-%d %H:%M:%S") 
             book.is_cancelled = True
-            # print(book)
             book.save()
-
-            is_inQ = True
-
             return Response({ 'Accepted': True }) 
-        else:
-            return Response({ 'Accepted': False }) 
+
+        return Response({ 'Accepted': False }) 
 
 
 class  UserInCenter(APIView):

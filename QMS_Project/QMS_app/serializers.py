@@ -78,16 +78,6 @@ class ReservationsSerializer(serializers.ModelSerializer):
         fields = ['id','Service']
 
 
-# class ProfileBySlugSerializer(serializers.ModelSerializer):
-    # profile_products = ProfileProductsSerializer(many=True, read_only=True)
-    # class Meta:
-        # model = Profile
-        # fields = ['id', 'title', 'description', 'slug', 'image', 'status', 'profile_products']
-    # profile_products = serializers.SerializerMethodField("get_profile_products")
-    
-    # def get_profile_products(self, args):
-    #     return [{"id": i.video_product.id, "title": i.video_product.title} for i in args.profile_products.all()]
-
 
 class Service_center_detailSerializer(serializers.ModelSerializer):
 

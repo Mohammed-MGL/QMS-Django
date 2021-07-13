@@ -35,10 +35,19 @@ def loginPage(request):
         if user is not None:
             login(request , user)
             if user.is_manager == True:
-
+                messages.info(request, 'welcome '+username)
                 return redirect('dashboard')
+                
             if user.is_employee == True:
+                messages.info(request, 'welcome '+ username)
                 return redirect('home')
+               
+
+            if user.is_superuser == True:
+                return redirect('admin')
+            else:
+                return redirect('logout')
+            
 
         else:
             messages.warning(request, 'username and password do not match!')
@@ -47,7 +56,8 @@ def loginPage(request):
     return render(request ,"login.html" , context) 
 
 
-@login_required(login_url='login')
+
+# @login_required(login_url='login')
 def logoutUser(request):
     logout(request)
     return redirect('login')
@@ -90,6 +100,7 @@ def addEmployee(request):
         form = EmployeeCreationForm(sc,data=request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'employee added ^_^')
             return redirect('employees')
     
     context ={"form":form,'sc':sc}
@@ -102,15 +113,13 @@ def viewEmployee(request, eID):
     sc = Manager.objects.get(user = request.user ).Service_center
     emp = Employee.objects.get(user = eID)
     emps = Employee.objects.filter(Service_center = sc.id)
+    if not emp in emps:
+        return redirect('employees')
 
     service =emp.Service
     CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
    
     CustomerNumber =CustomerNumber.count() 
-
-    if not emp in emps:
-        return redirect('employees')
-
     
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
@@ -132,18 +141,17 @@ def viewEmployee(request, eID):
             totalServingTime += servingTime.seconds
             customerNumberDay += 1
 
-            
-
-        avrageServingTime =totalServingTime / todayRecord.count()
+        avrageServingTime = totalServingTime / todayRecord.count()
 
     totalServingTime = timedelta(seconds=totalServingTime)
     avrageServingTime = timedelta(seconds=avrageServingTime)
+
+
 
     totalServingTime_month = 0
     avrageServingTime_month = 0
     customerNumberMonth = 0
  
-    print(today_min.month)
     
     monthRecord = Service_Record.objects.filter(
         Employee=emp,
@@ -152,11 +160,6 @@ def viewEmployee(request, eID):
         P_Time__year = today_min.year,
 
         )
-
-    
-        
-        
-    print(monthRecord)
 
 
     if monthRecord:
@@ -266,6 +269,7 @@ def updateEmployee(request, eID):
         form = EmployeeForm(sc,request.POST ,instance = emp)
         if form.is_valid():
             form.save()
+            messages.info(request, 'Employee updated')
             return redirect('employees')
 
     context = {
@@ -294,12 +298,10 @@ def updateEmployeePassWord(request, eID):
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'password was successfully updated!')
-            # messages.success(request, 'Your password was successfully updated!')
             return redirect('employees')
         else:
             messages.error(request, 'Please correct the error below.')
 
-   
 
     context = {
         "form":form,
@@ -323,7 +325,7 @@ def ManagerProfile(request):
         passwordChangeForm = PasswordChangeForm(user, request.POST)
         if passwordChangeForm.is_valid():
             user = passwordChangeForm.save()
-            update_session_auth_hash(request, user)  # Important!
+            update_session_auth_hash(request, user)  
             messages.success(request, 'password was successfully updated!')
             return redirect('dashboard')
         else:
@@ -354,6 +356,7 @@ def deleteEmployee(request, eID):
     if request.method == 'POST':
         if 'Confirm' in request.POST:    
             emp.delete()
+            messages.success(request, 'employee deleted')
         return redirect('employees')
 
     context = {
@@ -434,8 +437,6 @@ def viewService(request, sID  ):
     avrageServingTime_month = 0
     customerNumberMonth = 0
  
-    print(today_min.month)
-    
     monthRecord = Service_Record.objects.filter(
         Service=service,
         is_served = True,
@@ -445,10 +446,6 @@ def viewService(request, sID  ):
         )
 
     
-        
-        
-    print(monthRecord)
-
 
     if monthRecord:
         for i in monthRecord:
@@ -486,10 +483,6 @@ def viewService(request, sID  ):
 
     avrageServingTime_year = timedelta(seconds=avrageServingTime_year)
 
-
-
-
-    
     avrageServingTime_all =0
     totalServingTime_all=0
     allRecord = Service_Record.objects.filter(
@@ -510,9 +503,6 @@ def viewService(request, sID  ):
     totalServingTime_all = timedelta(seconds=totalServingTime_all)
 
     avrageServingTime_all = timedelta(seconds=avrageServingTime_all)    
-    
-
-
 
     ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ).count() 
         
@@ -600,6 +590,7 @@ def deleteService(request, sID):
 @login_required(login_url='login')
 @manager_only
 def black_WhiteList(request):
+
     sc = Manager.objects.get(user = request.user ).Service_center
 
     w_list = White_list.objects.filter(Service_center = sc)
@@ -616,9 +607,7 @@ def black_WhiteList(request):
         'b_list':b_list ,
         'users':users ,
         "UserFilter" : usersFilter,
-        
         'sc':sc,
-
         }
 
     return render(request ,"black_WhiteList.html" , context)
@@ -749,7 +738,9 @@ def deleteUserFromBL(request, uID):
     u = Black_list.objects.get(id = uID)
     if request.method == 'POST':
         u.delete()
+        messages.success(request, 'user deleted from black list')
         return redirect('black_WhiteList')
+        
     context = {
         'sc':sc,
         "item":u
@@ -767,6 +758,7 @@ def deleteUserFromWL(request, uID):
 
     if request.method == 'POST':
         u.delete()
+        messages.success(request, 'user deleted from white list')
         return redirect('black_WhiteList')
 
     context = {
@@ -787,6 +779,7 @@ def BookInServiceCenter(request, scID):
         CustomerNumber   = None
         WaitingTime  = None
         sid = None
+
         def __init__(self,name,CustomerNumber ,WaitingTime , sid):
             self.name = name
             self.CustomerNumber = CustomerNumber
@@ -796,7 +789,7 @@ def BookInServiceCenter(request, scID):
     sdList = [] 
     for s in Services:
         name = s.name
-        CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service= s).count()
+        CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service = s).count()
         WaitingTime = "5 min test"
         sid=  s.id
         sd = ServiceDetails(name,CustomerNumber,WaitingTime , sid)
@@ -813,15 +806,8 @@ def BookInServiceCenter(request, scID):
 
 
 
-
 def BookInService(request, sID):
-    
-    now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-    
-    service =Service.objects.get(id = sID)
-    serviceCenter =service.Service_center 
-    guest = User.objects.create(username='Guest'+" "+now , is_guest= True)
-    
+
     def random_string(letter_count, digit_count):  
         str1 = ''.join((random.choice(string.ascii_letters) for x in range(letter_count)))  
         str1 += ''.join((random.choice(string.digits) for x in range(digit_count)))  
@@ -831,10 +817,16 @@ def BookInService(request, sID):
         final_string = ''.join(sam_list)  
         return final_string 
     
-    gPassword = random_string(8,8)
-    guest.set_password(gPassword)
-    guest.save()
-    book = Service_Record.objects.create(Service=service , user=guest , IS_InCenter = True ,  Queue_type = 'B' )
+    now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    
+    with transaction.atomic():
+        service =Service.objects.get(id = sID)
+        serviceCenter =service.Service_center 
+        guest = User.objects.create(username='Guest'+" "+now , is_guest= True)    
+        gPassword = random_string(8,8)
+        guest.set_password(gPassword)
+        guest.save()
+        book = Service_Record.objects.create(Service=service , user=guest , IS_InCenter = True ,  Queue_type = 'B' )
     
     return render(request ,"BookInService.html" , {'user':guest , 'serviceCenter':serviceCenter})
 
@@ -874,16 +866,14 @@ def home(request):
     sc = emp.Service_center
     
     service =emp.Service
-    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
+    CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
    
-    CustomerNumber =CustomerNumber.count() 
-    
+    CustomerNumber = CustomerNumber.count() 
 
-    
 
     form = MoveCustomerForm(sc)
 
-    customerAtEmp = Service_Record.objects.filter(is_accept = True, is_served= False, is_cancelled= False, Service=service, IS_InCenter= True, Employee=emp).first()
+    customerAtEmp = Service_Record.objects.filter( is_served= False, is_cancelled= False, Service=service,  Employee=emp).first()
 
 
     if request.method=='POST' and 'callNext' in request.POST:
@@ -924,14 +914,13 @@ def home(request):
 
         if(customerAtEmp is not None):
 
-            customer= None  
-            CustomerCalling = Service_Record.objects.filter(is_accept = True , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
-
+            customer = None  
+            # CustomerCalling = Service_Record.objects.filter(is_accept = True , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
             now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
-            CustomerCalling.O_Time = now
-            CustomerCalling.is_served = True 
-            CustomerCalling.save()
+            customerAtEmp.O_Time = now
+            customerAtEmp.is_served = True 
+            customerAtEmp.save()
 
 
     elif request.method == 'POST' and 'send' in request.POST:
@@ -941,24 +930,26 @@ def home(request):
 
             form = MoveCustomerForm(sc ,data=request.POST)
             if form.is_valid():
-                CustomerCalling = Service_Record.objects.filter(is_accept = True,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).first()
+                # CustomerCalling = Service_Record.objects.filter(is_accept = True,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).first()
                 
                 now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
-                CustomerCalling.O_Time = now
-                CustomerCalling.is_served = True 
-                CustomerCalling.save()
+                customerAtEmp.O_Time = now
+                customerAtEmp.is_served = True 
+                customerAtEmp.save()
 
-                customer = CustomerCalling.user
+                customer = customerAtEmp.user
 
                 ser = form.cleaned_data['Service']
 
-                is_have_book = Service_Record.objects.filter(Service=ser , user=customer ,is_accept = True , is_served= False ).first()
-                if is_have_book is not None:
-                    is_have_book.is_cancelled= True
-                    is_have_book.save()
+                with transaction.atomic():
+                    is_have_book = Service_Record.objects.filter(Service=ser , user=customer ,is_accept = True , is_served= False ).first()
+                    if is_have_book is not None:
+                        is_have_book.is_cancelled= True
+                        is_have_book.save()
                     
-                book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
+                    book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
+ 
  
     customerAtEmp = Service_Record.objects.filter(is_accept = True, is_served= False, is_cancelled= False, Service=service, IS_InCenter= True, Employee=emp).first()
     if(customerAtEmp is not None):

@@ -69,7 +69,6 @@ class EmployeeForm(ModelForm):
 
 
 class ServiceForm(ModelForm):
-    """Form definition for Employee."""
 
     osc = None
 
@@ -79,7 +78,6 @@ class ServiceForm(ModelForm):
 
 
     class Meta:
-        """Meta definition for Employeeform."""
 
         model = Service
         fields = ['name' , 'IS_Active' ]
