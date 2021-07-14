@@ -77,7 +77,7 @@ class UserReservations(ListAPIView):
 class ServiceCenter(ListAPIView):
     permission_classes = (IsAuthenticated,)
     # queryset = Service_center.objects.all() 
-    queryset = Service_center.objects.order_by('name')
+    queryset = Service_center.objects.order_by('-is_online', 'name') 
     pagination_class = CustomPagination
     serializer_class = Service_centerListSerializer
 
@@ -99,6 +99,8 @@ class Search_ServiceCenter(ListAPIView):
         qs2 = self.model.objects.filter(name__icontains=name)
         qs3 = self.model.objects.filter(name__iendswith=name)
         queryset = queryset.union(qs2,qs3)
+        queryset= queryset.order_by('-is_online') 
+
         return queryset
 
 # class ServiceCenter_View(APIView):
@@ -144,7 +146,7 @@ class ServiceCenterDetails(APIView):
         SC_serializer =Service_center_detailSerializer(x ,many= False , context={'request': request}) 
         w = Work_time.objects.get(Service_center= id)
         w_serializer = Work_timeSerializer(w ,many= False)
-        y = Service.objects.filter(Service_center= id).order_by('name')
+        y = Service.objects.filter(Service_center= id).order_by('-is_online','name')
         S_serializer = ServiceSerializer(y ,many= True) 
         content = {
             'service_center' : SC_serializer.data,

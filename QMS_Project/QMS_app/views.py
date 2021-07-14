@@ -11,6 +11,7 @@ from .decorators import unauthenticated_user , manager_only , employee_only
 from django.contrib.auth import update_session_auth_hash
 from django.utils import timezone
 from datetime import timedelta, date, time, datetime 
+import math
 # from datetime import date
 import random  
 import string  
@@ -141,7 +142,7 @@ def viewEmployee(request, eID):
             totalServingTime += servingTime.seconds
             customerNumberDay += 1
 
-        avrageServingTime = totalServingTime / todayRecord.count()
+        avrageServingTime = math.ceil(totalServingTime / todayRecord.count())
 
     totalServingTime = timedelta(seconds=totalServingTime)
     avrageServingTime = timedelta(seconds=avrageServingTime)
@@ -169,7 +170,7 @@ def viewEmployee(request, eID):
             totalServingTime_month += servingTime.seconds
             customerNumberMonth += 1
 
-        avrageServingTime_month =totalServingTime_month / monthRecord.count()
+        avrageServingTime_month =math.ceil(totalServingTime_month / monthRecord.count())
 
     totalServingTime_month = timedelta(seconds=totalServingTime_month)
 
@@ -192,7 +193,7 @@ def viewEmployee(request, eID):
             totalServingTime_year += servingTime.seconds
             customerNumberyear += 1
 
-        avrageServingTime_year =totalServingTime_year / yearhRecord.count()
+        avrageServingTime_year =math.ceil(totalServingTime_year / yearhRecord.count())
 
     totalServingTime_year = timedelta(seconds=totalServingTime_year)
 
@@ -217,7 +218,7 @@ def viewEmployee(request, eID):
             totalServingTime_all += servingTime.seconds
             customerNumberall  += 1
 
-        avrageServingTime_all =totalServingTime_all / allRecord.count()
+        avrageServingTime_all =math.ceil(totalServingTime_all / allRecord.count())
 
     totalServingTime_all = timedelta(seconds=totalServingTime_all)
 
@@ -428,7 +429,7 @@ def viewService(request, sID  ):
 
             
 
-        avrageServingTime =totalServingTime / todayRecord.count()
+        avrageServingTime =math.ceil(totalServingTime / todayRecord.count())
 
     totalServingTime = timedelta(seconds=totalServingTime)
     avrageServingTime = timedelta(seconds=avrageServingTime)
@@ -454,7 +455,7 @@ def viewService(request, sID  ):
             totalServingTime_month += servingTime.seconds
             customerNumberMonth += 1
 
-        avrageServingTime_month =totalServingTime_month / monthRecord.count()
+        avrageServingTime_month =math.ceil(totalServingTime_month / monthRecord.count())
 
     totalServingTime_month = timedelta(seconds=totalServingTime_month)
 
@@ -477,7 +478,7 @@ def viewService(request, sID  ):
             totalServingTime_year += servingTime.seconds
             customerNumberyear += 1
 
-        avrageServingTime_year =totalServingTime_year / yearhRecord.count()
+        avrageServingTime_year =math.ceil(totalServingTime_year / yearhRecord.count())
 
     totalServingTime_year = timedelta(seconds=totalServingTime_year)
 
@@ -498,7 +499,7 @@ def viewService(request, sID  ):
             totalServingTime_all += servingTime.seconds
             customerNumberall  += 1
 
-        avrageServingTime_all =totalServingTime_all / allRecord.count()
+        avrageServingTime_all =math.ceil(totalServingTime_all / allRecord.count())
 
     totalServingTime_all = timedelta(seconds=totalServingTime_all)
 
@@ -981,7 +982,8 @@ def home(request):
             servingTime  = i.O_Time - i.P_Time 
             totalServingTime += servingTime.seconds
 
-        avrageServingTime =totalServingTime / todayRecord.count()
+        avrageServingTime = totalServingTime / todayRecord.count()
+
 
     totalServingTime = timedelta(seconds=totalServingTime)
 
