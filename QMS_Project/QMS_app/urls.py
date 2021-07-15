@@ -10,6 +10,8 @@ urlpatterns = [
     # dashboard
     path('dashboard/',views.dashboard, name = 'dashboard'),
     path('ManagerProfile/',views.ManagerProfile, name = 'ManagerProfile'),
+    
+ 
 
     # employee
     path('employees/',views.employees, name = 'employees'),

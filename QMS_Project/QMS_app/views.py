@@ -291,10 +291,10 @@ def updateEmployeePassWord(request, eID):
     if not emp in emps:
         return redirect('employees')
 
-    form = EmployeePasswordChangeForm(emp.user)
+    form = PasswordChangeForm(emp.user)
 
     if request.method == 'POST':
-        form = EmployeePasswordChangeForm(emp.user, request.POST)
+        form = PasswordChangeForm(emp.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
@@ -312,6 +312,37 @@ def updateEmployeePassWord(request, eID):
     return render(request ,"Employee/employeePassWordUpdate.html" , context) 
 
 
+@login_required(login_url='login')
+@manager_only
+def ManagerProfile(request):
+
+    user = request.user
+    sc = Manager.objects.get(user = user ).Service_center
+
+    
+    passwordChangeForm = PasswordChangeForm(user)
+
+    if request.method == 'POST':
+        passwordChangeForm = PasswordChangeForm(user, request.POST)
+        if passwordChangeForm.is_valid():
+            user = passwordChangeForm.save()
+            update_session_auth_hash(request, user)  
+            messages.success(request, 'password was successfully updated!')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'Please correct the error below.')
+
+
+    context = {
+        "passwordChangeForm":passwordChangeForm,
+        'sc':sc,
+        'user':user
+
+        }
+    return render(request ,"ManagerProfile.html" , context)
+    
+
+    
 @login_required(login_url='login')
 @manager_only
 def ManagerProfile(request):

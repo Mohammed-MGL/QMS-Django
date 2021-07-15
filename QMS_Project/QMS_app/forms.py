@@ -38,10 +38,10 @@ class EmployeeCreationForm(UserCreationForm):
         employee = Employee.objects.create(user=user,Service_center = self.osc,Service= self.cleaned_data['Service'] ,desk_num = self.cleaned_data['desk_num'],notes = self.cleaned_data['notes'] )
         return user
 
-class EmployeePasswordChangeForm(PasswordChangeForm):
+class PasswordChangeForm(PasswordChangeForm):
         
     def __init__(self, *args, **kwargs):
-        super(EmployeePasswordChangeForm, self).__init__(*args, **kwargs)
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
         
         self.fields['old_password'].widget = forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '})
         self.fields['new_password1'].widget = forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '})
@@ -96,11 +96,11 @@ class ServiceForm(ModelForm):
 
 
 class scform(forms.ModelForm): 
-    name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}))
-    location = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
+    name = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control  ml-2  '}))
+    location = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control  ml-2 '}  ))
     
-    phone = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 mt-1'}  ) )
-    mapLocations = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2  '}  ),label="Map Location")
+    phone = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control  ml-2 mt-1'}  ) )
+    mapLocations = forms.CharField(required = False , widget=forms.TextInput(attrs={'class': 'form-control  ml-2  '}  ),label="Map Location")
     
     # Image = forms.ImageField(required = False , widget=forms.choices(attrs={'class': 'form-control mb-4 ml-2 '}  ))
     # Icon = forms.ImageField(required = False , widget=forms.TextInput(attrs={'class': 'form-control mb-4 ml-2 '}  ))
@@ -109,7 +109,7 @@ class scform(forms.ModelForm):
     
     class Meta: 
         model = Service_center 
-        fields = '__all__'    
+        fields = ['name','location','mapLocations','phone','Image','Icon','QR']
 
 
 

@@ -3,7 +3,15 @@
 {% block title %} Page Blank {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+ 
+.vl {
+  border-left: 2px solid rgb(49, 20, 63) ;
+  height: 250px;
+}
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -18,13 +26,36 @@
             </div>
             <div class="card-body">
                 <div class="row justify-content-center">
+
                     <div class="col-md-5 ">
-                        <br>
-                        <b>First name:</b> {{user.first_name}} <br> <br>
-                        <b>Last name:</b> {{user.last_name}} <br> <br>
-                        <b>username:</b> {{user.username}}<br> <br>
+                        <br> <br>
+                            <table class="table table-striped">
+                              <tbody>
+                                <tr>
+                                  <td>
+                                  <b>  <font size="4" color="btn-primary"> First name: </font> </b>
+                                  </td>
+                                  <td><font size="5"> {{user.first_name}}</font> </td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                  <b> <font size=4" color="btn-primary"> Last name: </font></b> 
+                                  </td>
+                                  <td>   <font size="5">{{user.last_name}} </font></td>
+                                </tr>
+                                <tr>
+                                  <td>
+                                  <b>  <font size="4" color="btn-primary"> username: </font> </b> 
+                                  </td>
+                                  <td>  <font size="5" >{{user.username}}</font></td>
+                                </tr>
+                    
+                              </tbody>
+                            </table>
+                      
                     </div>
-    
+                    <div class="vl"></div>
+
                     <div class="col-md-5 ">
                         <form action="" method="POST">
                             {% csrf_token %}
@@ -69,3 +100,8 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}
+
+
+
+
+

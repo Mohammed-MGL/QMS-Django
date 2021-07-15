@@ -211,7 +211,7 @@ input:checked + .slider:before {
                   <div class="ripple-container"></div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right " aria-labelledby="navbarDropdownProfile">
-                  <a class="dropdown-item" href="{% url 'ManagerProfile' %}">{{request.user}}</a>
+                  <a class="dropdown-item" href="{% url 'EditManagerPassword' %}"> change your password {{request.user}}</a>
                   <a class="dropdown-item" href="#">Settings</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
