@@ -15,6 +15,7 @@ import math
 # from datetime import date
 import random  
 import string  
+from .models import Message
 
     # messages.info(request, 'info.')
     # messages.success(request, 'success')
@@ -69,6 +70,10 @@ def logoutUser(request):
 @manager_only
 def dashboard(request):
     sc = Manager.objects.get(user = request.user ).Service_center
+    messages.info(request, 'm1.')
+    messages.info(request, 'm2.')
+    messages.info(request, 'm3.')
+ 
     
     context ={
         'sc':sc,
@@ -888,6 +893,17 @@ def ServiceCnterProfile(request):
     return render(request ,"ServiceCnterProfile.html" , context) 
 
 
+@login_required(login_url='login')
+@manager_only
+def SendMessageView(request , ID , msg):
+
+    sender = request.user.username
+    message = Message.objects.create(sender =sender , receiver= ID,message_text = msg  )
+    
+        
+    return redirect('dashboard')   
+
+
 
 
 
@@ -1027,6 +1043,12 @@ def home(request):
     ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
     CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True  ,Employee = None)
     CustomerNumber =CustomerNumber.count() 
+    
+    Messsagesemp = Message.objects.filter(receiver = emp.user_id , IS_read= False )
+    for msg in Messsagesemp:
+        messages.info(request, msg.message_text)
+        msg.IS_read = True
+        msg.save()
     context = {
         'sc':sc,
         'emp':emp ,
@@ -1037,6 +1059,7 @@ def home(request):
         'TotalServingTime': totalServingTime ,
         'avrageServingTime':str(avrageServingTime).split('.')[0] ,
         'startTime':startTime ,
+        
        
 
         }

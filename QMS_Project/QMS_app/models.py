@@ -11,6 +11,7 @@ import qrcode
 from io import BytesIO
 from django.core.files import File
 from PIL import Image, ImageDraw
+from django.contrib.auth import get_user_model
 
 
 
@@ -223,4 +224,12 @@ class White_list(models.Model):
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.user.username   
+        return self.user.username  
+
+class Message(models.Model):
+     sender = models.CharField(max_length=700 , blank=True)
+     receiver = models.IntegerField(blank=True)
+     message_text = models.CharField(max_length=700 , blank=True)
+     IS_read = models.BooleanField(default=False)
+     
+            

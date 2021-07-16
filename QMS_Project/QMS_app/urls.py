@@ -10,6 +10,7 @@ urlpatterns = [
     # dashboard
     path('dashboard/',views.dashboard, name = 'dashboard'),
     path('ManagerProfile/',views.ManagerProfile, name = 'ManagerProfile'),
+    path('SendMessage/<str:ID>/<str:msg>', views.SendMessageView , name="send_message") ,
     
  
 
