@@ -70,13 +70,101 @@ def logoutUser(request):
 @manager_only
 def dashboard(request):
     sc = Manager.objects.get(user = request.user ).Service_center
-    messages.info(request, 'm1.')
-    messages.info(request, 'm2.')
-    messages.info(request, 'm3.')
+    emps = Employee.objects.filter(Service_center = sc)
+    
+    service =Service.objects.filter(Service_center = sc)
+    
+    
+    CustomerNumberonline = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+   
+    CustomerNumberonline = CustomerNumberonline.count() 
+    CustomerNumberOnSConline = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True )
+   
+    CustomerNumberOnSConline = CustomerNumberOnSConline.count() 
+
+    ServiedCustomerNumberonline= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ).count() 
+    
+
+
+
+    class EmpDetails:
+        
+        name = None
+        EmployeeCustomerNumber   = None
+        EmployeeCustomerNumberOnSC  = None
+        EmployeeServiedCustomerNumber = None
+        empmsg = None
+        
+
+        def __init__(self ,name ,EmployeeCustomerNumber,EmployeeCustomerNumberOnSC ,EmployeeServiedCustomerNumber ,empmsg):
+            self.name = name
+            self.EmployeeCustomerNumber = EmployeeCustomerNumber
+            self.EmployeeCustomerNumberOnSC = EmployeeCustomerNumberOnSC
+            self.EmployeeServiedCustomerNumber = EmployeeServiedCustomerNumber
+            self.empmsg = empmsg
+
+    empList = [] 
+    for s in emps:
+        name = s.user
+        EmployeeCustomerNumber = Service_Record.objects.filter( Service=s.Service ,is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+        EmployeeCustomerNumber = EmployeeCustomerNumber.count() 
+        employees = Employee.objects.filter(Service_center = sc ,Service=s.Service)
+        empmsg = Message.objects.filter(IS_read= False)
+
+        for x in employees:
+            EmployeeCustomerNumberOnSC = Service_Record.objects.filter(Service=x.Service ,Employee =x ,is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True )
+            EmployeeCustomerNumberOnSC = EmployeeCustomerNumberOnSC.count() 
+
+
+
+
+        EmployeeServiedCustomerNumber= Service_Record.objects.filter(Service=s.Service ,Employee=s, is_accept = True ,is_served= True,is_cancelled= False ).count() 
+    
+        ed = EmpDetails( name ,EmployeeCustomerNumber,EmployeeCustomerNumberOnSC,EmployeeServiedCustomerNumber , empmsg  )
+        
+        empList.append(ed)
+   
+
+
+
+
+    
+    class ServiceDetails:
+        
+        CustomerNumber = None
+        CustomerNumberOnSC   = None
+        ServiedCustomerNumber  = None
+        name =None
+        
+
+        def __init__(self ,name,CustomerNumber ,CustomerNumberOnSC , ServiedCustomerNumber):
+            self.CustomerNumber = CustomerNumber
+            self.CustomerNumberOnSC = CustomerNumberOnSC
+            self.ServiedCustomerNumber = ServiedCustomerNumber
+            self.name = name
+
+    sdList = [] 
+    for s in service:
+        name = s.name
+        CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,IS_InCenter= False,Service = s).count()
+        CustomerNumberOnSC = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True   , Service = s).count()
+        
+        ServiedCustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False , Service = s ).count() 
+        sd = ServiceDetails( name ,CustomerNumber,CustomerNumberOnSC,ServiedCustomerNumber  )
+        
+        sdList.append(sd)
  
     
+    
     context ={
+        'empList':empList,
         'sc':sc,
+        'ServiedCustomerNumber':ServiedCustomerNumberonline ,
+        'CustomerNumber':CustomerNumberonline ,
+        'CustomerNumberOnSC':CustomerNumberOnSConline ,
+        'employees':emps ,
+        
+        'sdList':sdList ,
     }
     return render(request ,"dashboard.html" , context) 
 
@@ -895,10 +983,10 @@ def ServiceCnterProfile(request):
 
 @login_required(login_url='login')
 @manager_only
-def SendMessageView(request , ID , msg):
+def SendMessageView(request , ID ):
 
     sender = request.user.username
-    message = Message.objects.create(sender =sender , receiver= ID,message_text = msg  )
+    message = Message.objects.create(sender =sender , receiver= ID,message_text = "msg"  )
     
         
     return redirect('dashboard')   
