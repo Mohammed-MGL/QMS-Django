@@ -1,0 +1,38 @@
+{% if messages %}
+{% for message in messages %}
+
+<script>
+
+    $(document).ready(function () {
+        var msgType = "{{message.tags}}"
+        var msg = "{{ message }}";
+        if (msgType == 'info') {
+            msgType = 'primary';
+        }
+
+        $.notify({
+            // icon: "add_alert",
+            message: msg
+        }, {
+            type: msgType,
+            timer: 0,
+            placement: {
+                from: 'bottom',
+                align: 'right'
+            }
+        });
+    });
+
+</script>
+
+{% endfor %}
+
+{% else %}
+<script>
+    setTimeout(function () {
+        window.location.href = "{% url 'home' %}";
+    }, 300000);
+</script>
+
+
+{% endif %}

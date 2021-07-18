@@ -146,7 +146,7 @@ class ServiceCenterDetails(APIView):
         SC_serializer =Service_center_detailSerializer(x ,many= False , context={'request': request}) 
         w = Work_time.objects.get(Service_center= id)
         w_serializer = Work_timeSerializer(w ,many= False)
-        y = Service.objects.filter(Service_center= id).order_by('-is_online','name')
+        y = Service.objects.filter(Service_center= id).order_by('-IS_Active','name')
         S_serializer = ServiceSerializer(y ,many= True) 
         content = {
             'service_center' : SC_serializer.data,
