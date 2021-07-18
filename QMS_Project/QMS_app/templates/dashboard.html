@@ -8,22 +8,22 @@
 {% block content %}
 <div class="row">
   <div class="col-3 ">
-    <div class="card card-nav-tabs" style="width: 15rem;">
+    <div class="card card-nav-tabs" style="width: 15rem; " >
       <div class="card-header card-header-info">
         People status on Queue today
       </div>
       <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          Served
-          <span class="badge badge-primary badge-pill">{{ServiedCustomerNumber}}</span>
+        <li class="list-group-item d-flex justify-content-between align-items-center ">
+         <b> <font size="4" > Served </font></b>
+          <span class="badge badge-primary badge-pill"> <font size="4">{{ServiedCustomerNumber}} </font></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          On Queue
-          <span class="badge badge-primary badge-pill">{{CustomerNumber}}</span>
+           <b> <font size="4"> On Queue  </font></b>
+          <span class="badge badge-primary badge-pill"><font size="4">{{CustomerNumber}} </font></span></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          On service center
-          <span class="badge badge-primary badge-pill">{{CustomerNumberOnSC}}</span>
+           <b> <font size="4">  On service center   </font></b>
+          <span class="badge badge-primary badge-pill"><font size="4">{{CustomerNumberOnSC}} </font></span></span></span>
         </li>
       </ul>
     </div>
@@ -37,9 +37,10 @@
       <ul class="list-group">
         {% for ser in sdList %}
 
-        <li class="list-group-item d-flex justify-content-between align-items-center">
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="height:4rem;">
 
           <div class="btn-group">
+            
             <button type="button" class="btn btn-secondary"> {{ser.name}}</button>
             <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
@@ -117,8 +118,9 @@
 
                   <input type="text" id="Msgtext{{emp.name.id}}" name="text" size="33" class="form-control" />
 
-                  <button id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
+                  <button  id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
                     onClick="sendMsgTo('{{emp.name.id}}')">
+                    
 
                     <span class="material-icons">
                       send
@@ -181,7 +183,9 @@
         var msgText = document.getElementById('Msgtext' + empId).value;
 
         if (msgText.length == 0) {
+          
           alert("please enter message to send");
+          
 
         }
         else {
