@@ -90,37 +90,33 @@ def dashboard(request):
     class EmpDetails:
         
         name = None
-        EmployeeCustomerNumber   = None
-        EmployeeCustomerNumberOnSC  = None
         EmployeeServiedCustomerNumber = None
-        empmsg = None
+        service = None
+        
         
 
-        def __init__(self ,name ,EmployeeCustomerNumber,EmployeeCustomerNumberOnSC ,EmployeeServiedCustomerNumber ,empmsg):
+        def __init__(self ,name  ,EmployeeServiedCustomerNumber , service):
             self.name = name
-            self.EmployeeCustomerNumber = EmployeeCustomerNumber
-            self.EmployeeCustomerNumberOnSC = EmployeeCustomerNumberOnSC
+            
             self.EmployeeServiedCustomerNumber = EmployeeServiedCustomerNumber
-            self.empmsg = empmsg
+            self.service = service
+            
 
     empList = [] 
     for s in emps:
         name = s.user
-        EmployeeCustomerNumber = Service_Record.objects.filter( Service=s.Service ,is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
-        EmployeeCustomerNumber = EmployeeCustomerNumber.count() 
         employees = Employee.objects.filter(Service_center = sc ,Service=s.Service)
-        empmsg = Message.objects.filter(IS_read= False)
+        empservice = s.Service 
+        
 
-        for x in employees:
-            EmployeeCustomerNumberOnSC = Service_Record.objects.filter(Service=x.Service ,Employee =x ,is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True )
-            EmployeeCustomerNumberOnSC = EmployeeCustomerNumberOnSC.count() 
+      
 
 
 
 
         EmployeeServiedCustomerNumber= Service_Record.objects.filter(Service=s.Service ,Employee=s, is_accept = True ,is_served= True,is_cancelled= False ).count() 
     
-        ed = EmpDetails( name ,EmployeeCustomerNumber,EmployeeCustomerNumberOnSC,EmployeeServiedCustomerNumber , empmsg  )
+        ed = EmpDetails( name ,EmployeeServiedCustomerNumber , empservice  )
         
         empList.append(ed)
    
@@ -983,12 +979,12 @@ def ServiceCnterProfile(request):
 
 @login_required(login_url='login')
 @manager_only
-def SendMessageView(request , ID ):
+def SendMessageView(request , ID , MSG ):
 
     sender = request.user.username
-    message = Message.objects.create(sender =sender , receiver= ID,message_text = "msg"  )
+    message = Message.objects.create(sender =sender , receiver= ID,message_text = MSG  )
     
-        
+    messages.success(request, 'The message was sended successfully. ')
     return redirect('dashboard')   
 
 

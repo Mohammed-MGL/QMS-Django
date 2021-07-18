@@ -61,127 +61,140 @@
 
   <div class="col-6">
 
-          <div class="card">
-            <div class="card-header card-header-primary">
-              <h4 class="card-title ">Employees</h4>
-              <div class="d-flex justify-content-between">
-                <div class="p-2">
-                </div>
-                <div class="p-2"> <a href="{% url 'addEmployee' %}" class="btn btn-sm btn-secondary ">Add employee
-                    &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
-              </div>
-            </div>
-            <div class="card-body text-center">
-              <div class="table-responsive">
-                {% if employees %}
-                <table class="table text-center">
-                  <thead class=" text-primary">
-                    <tr>
-                      <th>
-    
-                      </th>
-                      <th>
-                        Name
-                      </th>
-                   
-                      <th>
-                        Edit
-                      </th>
-                      <th>
-                        Delete
-                      </th> 
-                      <th> servied</th>
-                      <th>on service center</th>
-                      <th>on Queue</th>
-                      <th>Message</th>
-                      <th>
-
-                      </th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-    
-                    {% for emp in empList %}
-    
-                    <tr>
-                      <td>
-                        <a href="{% url 'viewEmployee' emp.name.id %}" class="btn btn-sm btn-info"> View </a>
-                      </td>
-                      <td>
-                        {{emp.name}}
-                      </td>
-                    
-                      <td class="text-primary">
-                        <a href="{% url 'updateEmployee' emp.name.id %}" class="btn btn-sm btn-info">
-                          <dev class="material-icons">edit</dev>
-                        </a>
-                      </td>
-                      <td class="text-primary">
-                        <a href="{% url 'deleteEmployee' emp.name.id %}" class="btn btn-sm btn-danger">
-                          <dev class="material-icons">delete</dev>
-                        </a>
-                      </td>
-
-                      <td>{{emp.EmployeeServiedCustomerNumber}}</td>
-                      <td>{{emp.EmployeeCustomerNumberOnSC}}</td>
-                      <td>{{emp.EmployeeCustomerNumber}}</td>
-
-                      <td> 
-                        <input type="text" name="text" size="33" class="form-control" />
-                        <a href="{% url 'send_message' emp.name.id  %}"    class="btn btn-primary btn-fab btn-fab-mini btn-round">  <span class="material-icons">
-                          send
-                          </span> </a>
-                  </td>
-                      
-                      <td>
-                      <button class="btn btn-primary btn-fab btn-fab-mini btn-round">
-                        <i class="material-icons">favorite</i>
-                      </button> </td>
-                     <td> <button class="btn btn-primary btn-fab btn-fab-mini btn-round">
-                      <span class="material-icons">
-                        thumb_down
-                        </span>
-                    </button> </td> 
-                      
-
-                    </tr>
-                    {% endfor %}
-    
-    
-    
-    
-    
-    
-                  </tbody>
-                </table>
-                {% else %}
-                <br><br>
-                <h3>Sorry, there are no employees</h3>
-                <br><br>
-                {% endif %}
-    
-    
-    
-              </div>
-            </div>
-    
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">Employees</h4>
+        <div class="d-flex justify-content-between">
+          <div class="p-2">
           </div>
-    
-    
-  
+          
+        </div>
+      </div>
+      <div class="card-body text-center">
+        <div class="table-responsive">
+          {% if employees %}
+          <table class="table text-center">
+            <thead class=" text-primary">
+              <tr>
 
-{% endblock content %}
+                <th>
+                  Name
+                </th>
+                <th>
+                  Service
+                </th>
 
-<!-- Specific Page JS goes HERE  -->
-{% block javascripts %}
 
-<script>
-  $(document).ready(function () {
-    // Javascript method's body can be found in assets/js/demos.js
-    md.initDashboardPageCharts();
+                <th> servied</th>
+                
+                
+                <th>Message</th>
+                <th>
 
-  });
-</script>
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
 
-{% endblock javascripts %}
+              {% for emp in empList %}
+
+              <tr>
+
+                <td>
+                  <a href="{% url 'viewEmployee' emp.name.id %}" class="btn btn-sm btn-info"> {{emp.name}} </a>
+
+                </td>
+                <td>{{emp.service}}</td>
+
+
+
+                <td>{{emp.EmployeeServiedCustomerNumber}}</td>
+                
+                
+
+                <td>
+
+                  <input type="text" id="Msgtext{{emp.name.id}}" name="text" size="33" class="form-control" />
+
+                  <button id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
+                    onClick="sendMsgTo('{{emp.name.id}}')">
+
+                    <span class="material-icons">
+                      send
+                    </span>
+                  </button>
+                </td>
+
+                <td>
+                  <a href="{% url 'send_message' emp.name.id 'good job ^__^' %}" class="btn btn-primary btn-fab btn-fab-mini btn-round"   >
+                    <i class="material-icons">favorite</i>
+                  </a>
+                </td>
+                <td> <a href="{% url 'send_message' emp.name.id 'you have to work harder -_-' %}"class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                    <span class="material-icons">
+                      thumb_down
+                    </span>
+                  </a> </td>
+
+
+              </tr>
+              {% endfor %}
+
+
+
+
+
+
+            </tbody>
+          </table>
+          {% else %}
+          <br><br>
+          <h3>Sorry, there are no employees</h3>
+          <br><br>
+          {% endif %}
+
+
+
+        </div>
+      </div>
+
+    </div>
+
+
+
+
+    {% endblock content %}
+
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}
+
+    <script>
+      $(document).ready(function () {
+        // Javascript method's body can be found in assets/js/demos.js
+        md.initDashboardPageCharts();
+
+      });
+      function sendMsgTo(empId) {
+        var msgUrl = "{% url 'send_message' 'empId' 'error' %}";
+
+        var msgText = document.getElementById('Msgtext' + empId).value;
+
+        if (msgText.length == 0) {
+          alert("please enter message to send");
+
+        }
+        else {
+          msgUrl = msgUrl.replace('error', msgText);
+          msgUrl = msgUrl.replace('empId', empId);
+          window.location.href = msgUrl;
+
+        }
+      }
+
+    </script>
+
+
+
+
+    {% endblock javascripts %}
