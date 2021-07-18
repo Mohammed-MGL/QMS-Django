@@ -233,17 +233,34 @@ class  ServiceDetails(APIView ):
         queue = Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,Queue_type = 'B' )
         userReservation= Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,user= user ).first()
         
-        if(userReservation is None):
-            is_inQ =  False
-        else:
-            is_inQ =  True
+        empDesk_number =""
+        empName = ""
+        is_serving = False
 
+        if(userReservation):
+            is_inQ =  True
+            is_InCenter= userReservation.IS_InCenter
+
+            if(userReservation.Employee is not None):
+                is_serving = True
+                empDesk_number = Employee.desk_num
+                empName = Employee.user.first_name
+
+
+        else:
+            
+            is_inQ =  False
+            is_InCenter = False
+
+        
 
         if (is_inQ):
             queue = queue.filter(IQ_Time__lte=userReservation.IQ_Time)
 
         queueCount = queue.count()
-        waitingTime = "5 min"
+        waitingTime = "5"
+
+        
 
 
 
@@ -251,10 +268,16 @@ class  ServiceDetails(APIView ):
         
         return Response({
             "id" : service.id,
+            'scname': service.Service_center.name ,
+            'uid':user.id ,
             "name" : serviceName,
             "queueCount" : queueCount,
             "waitingTime" : waitingTime,
             "is_inQ" : is_inQ,
+            'is_InCenter': is_InCenter ,
+            'is_serving':is_serving ,
+            'empName':empName ,
+            'empDesk_number':empDesk_number ,
         }) 
 
 

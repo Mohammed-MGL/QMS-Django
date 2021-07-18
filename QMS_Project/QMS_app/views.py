@@ -75,14 +75,17 @@ def dashboard(request):
     service =Service.objects.filter(Service_center = sc)
     
     
-    CustomerNumberonline = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+    today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+    today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+    
+    CustomerNumberonline = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= False ,P_Time__range=(today_min, today_max) )
    
     CustomerNumberonline = CustomerNumberonline.count() 
-    CustomerNumberOnSConline = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True )
+    CustomerNumberOnSConline = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True ,P_Time__range=(today_min, today_max)  )
    
     CustomerNumberOnSConline = CustomerNumberOnSConline.count() 
 
-    ServiedCustomerNumberonline= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ).count() 
+    ServiedCustomerNumberonline= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,P_Time__range=(today_min, today_max) ).count() 
     
 
 
@@ -114,7 +117,7 @@ def dashboard(request):
 
 
 
-        EmployeeServiedCustomerNumber= Service_Record.objects.filter(Service=s.Service ,Employee=s, is_accept = True ,is_served= True,is_cancelled= False ).count() 
+        EmployeeServiedCustomerNumber= Service_Record.objects.filter(Service=s.Service ,Employee=s, is_accept = True ,is_served= True,is_cancelled= False ,P_Time__range=(today_min, today_max) ).count() 
     
         ed = EmpDetails( name ,EmployeeServiedCustomerNumber , empservice  )
         
@@ -142,10 +145,10 @@ def dashboard(request):
     sdList = [] 
     for s in service:
         name = s.name
-        CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,IS_InCenter= False,Service = s).count()
-        CustomerNumberOnSC = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True   , Service = s).count()
+        CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,IS_InCenter= False,Service = s,P_Time__range=(today_min, today_max) ).count()
+        CustomerNumberOnSC = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True   , Service = s ,P_Time__range=(today_min, today_max) ).count()
         
-        ServiedCustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False , Service = s ).count() 
+        ServiedCustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False , Service = s ,P_Time__range=(today_min, today_max) ).count() 
         sd = ServiceDetails( name ,CustomerNumber,CustomerNumberOnSC,ServiedCustomerNumber  )
         
         sdList.append(sd)
