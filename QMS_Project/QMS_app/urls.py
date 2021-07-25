@@ -11,6 +11,11 @@ urlpatterns = [
     path('dashboard/',views.dashboard, name = 'dashboard'),
     path('ManagerProfile/',views.ManagerProfile, name = 'ManagerProfile'),
     path('SendMessage/<str:ID>/<str:MSG>/', views.SendMessageView , name="send_message") ,
+    path('servicecenterChangeState',views.scChangeState, name = 'scChangeState'),
+    path('acceptUser/<str:ID>',views.acceptUser, name = 'acceptUser'),
+    path('rejectUser/<str:ID>',views.rejectUser, name = 'rejectUser'),
+
+    
     
  
 

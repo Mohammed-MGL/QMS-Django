@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Hello, world!</title>
+    <title>Hello</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -45,13 +45,11 @@
                     <div class="card-body">
 
                         <!-- <h5 class="card-title"></h5> -->
-                      {{s.CustomerNumber}} <br>
-                      {{s.WaitingTime}} <br>
-
-                        <a href="{% url 'BookInService' s.sid %}" class="btn btn-sm btn-info">
-                           book in service
+                        {{s.CustomerNumber}} <br>
+                        {{s.WaitingTime}} <br>
+                        <a href="{% url 'BookInService' s.sid %}" class="btn btn-sm btn-info {% if not s.is_Active %} disabled {% endif %}">
+                            book in service
                         </a>
-
                     </div>
                 </div>
             </div>

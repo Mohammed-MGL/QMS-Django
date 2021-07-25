@@ -8,26 +8,116 @@
 {% block content %}
 <div class="row">
   <div class="col-3 ">
-    <div class="card card-nav-tabs" style="width: 15rem; " >
+    <div class="card card-nav-tabs" style="width: 15rem; ">
       <div class="card-header card-header-info">
         People status on Queue today
       </div>
       <ul class="list-group">
         <li class="list-group-item d-flex justify-content-between align-items-center ">
-         <b> <font size="4" > Served </font></b>
-          <span class="badge badge-primary badge-pill"> <font size="4">{{ServiedCustomerNumber}} </font></span>
+          <b>
+            <font size="4"> Served </font>
+          </b>
+          <span class="badge badge-primary badge-pill">
+            <font size="4">{{ServiedCustomerNumber}} </font>
+          </span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-           <b> <font size="4"> On Queue  </font></b>
-          <span class="badge badge-primary badge-pill"><font size="4">{{CustomerNumber}} </font></span></span>
+          <b>
+            <font size="4"> On Queue </font>
+          </b>
+          <span class="badge badge-primary badge-pill">
+            <font size="4">{{CustomerNumber}} </font>
+          </span></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-           <b> <font size="4">  On service center   </font></b>
-          <span class="badge badge-primary badge-pill"><font size="4">{{CustomerNumberOnSC}} </font></span></span></span>
+          <b>
+            <font size="4"> On service center </font>
+          </b>
+          <span class="badge badge-primary badge-pill">
+            <font size="4">{{CustomerNumberOnSC}} </font>
+          </span></span></span>
         </li>
       </ul>
     </div>
   </div>
+  <br>
+  <div class="col-5 ">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title ">auto accept user</h4>
+        <div class="d-flex justify-content-between">
+          <div class="p-2">
+          </div>
+          <div class="p-2"> <a input href="{% url 'scChangeState' %}">
+
+              <input type="checkbox" {% if sc.isAutoAccept %} checked {% endif %}>
+              <span class="slider round">ttt</span>
+
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="card-body text-center">
+        {% if not sc.isAutoAccept %}
+        <div class="table-responsive">
+          {% if customers %}
+          <table class="table text-center">
+            <thead class=" text-primary">
+              <tr>
+
+                <th>
+                  Name
+                </th>
+
+
+
+                <th> accept</th>
+
+
+                <th>not accept</th>
+
+              </tr>
+            </thead>
+            <tbody>
+
+              {% for customer in customers %}
+
+              <tr>
+
+                <td>
+                  {{customer.user.username}}
+
+                </td>
+                <td>
+                  <a href="{% url 'acceptUser' customer.id %}" class="btn btn-sm btn-info"> accept </a>
+                </td>
+
+                <td>
+                  <a href="{% url 'rejectUser' customer.id %}"  class="btn btn-sm btn-danger"> rejected </a>
+                </td>
+
+
+              </tr>
+
+              {% endfor %}
+              {% else %} 
+              No customer in Queue
+              {% endif %}
+
+
+            </tbody>
+          </table>
+
+
+
+        </div>
+        {% endif %}
+      </div>
+
+
+    </div>
+  </div>
+
 
   <div class="col-3">
     <div class="card  " style="width: 15rem;">
@@ -40,7 +130,7 @@
         <li class="list-group-item d-flex justify-content-between align-items-center" style="height:4rem;">
 
           <div class="btn-group">
-            
+
             <button type="button" class="btn btn-secondary"> {{ser.name}}</button>
             <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
               aria-haspopup="true" aria-expanded="false">
@@ -60,6 +150,10 @@
     </div>
   </div>
 
+
+</div>
+</div>
+<div class="row">
   <div class="col-6">
 
     <div class="card">
@@ -68,7 +162,7 @@
         <div class="d-flex justify-content-between">
           <div class="p-2">
           </div>
-          
+
         </div>
       </div>
       <div class="card-body text-center">
@@ -87,8 +181,8 @@
 
 
                 <th> servied</th>
-                
-                
+
+
                 <th>Message</th>
                 <th>
 
@@ -111,16 +205,16 @@
 
 
                 <td>{{emp.EmployeeServiedCustomerNumber}}</td>
-                
-                
+
+
 
                 <td>
 
                   <input type="text" id="Msgtext{{emp.name.id}}" name="text" size="33" class="form-control" />
 
-                  <button  id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
+                  <button id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
                     onClick="sendMsgTo('{{emp.name.id}}')">
-                    
+
 
                     <span class="material-icons">
                       send
@@ -129,11 +223,13 @@
                 </td>
 
                 <td>
-                  <a href="{% url 'send_message' emp.name.id 'good job ^__^' %}" class="btn btn-primary btn-fab btn-fab-mini btn-round"   >
+                  <a href="{% url 'send_message' emp.name.id 'good job ^__^' %}"
+                    class="btn btn-primary btn-fab btn-fab-mini btn-round">
                     <i class="material-icons">favorite</i>
                   </a>
                 </td>
-                <td> <a href="{% url 'send_message' emp.name.id 'you have to work harder -_-' %}"class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                <td> <a href="{% url 'send_message' emp.name.id 'you have to work harder -_-' %}"
+                    class="btn btn-primary btn-fab btn-fab-mini btn-round">
                     <span class="material-icons">
                       thumb_down
                     </span>
@@ -156,49 +252,53 @@
           <br><br>
           {% endif %}
 
-          <button class="btn btn-primary btn-fill" onclick='swal({ title:"Good job!", text: "You clicked the button!", type: "success", buttonsStyling: false, confirmButtonClass: "btn btn-success"})'>Try me!</button>
+          <button class="btn btn-primary btn-fill"
+            onclick='swal({ title:"Good job!", text: "You clicked the button!", type: "success", buttonsStyling: false, confirmButtonClass: "btn btn-success"})'>Try
+            me!</button>
 
         </div>
       </div>
 
     </div>
+  </div>
+</div>
 
 
 
 
-    {% endblock content %}
+{% endblock content %}
 
-    <!-- Specific Page JS goes HERE  -->
-    {% block javascripts %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
 
-    <script>
-      $(document).ready(function () {
-        // Javascript method's body can be found in assets/js/demos.js
-        md.initDashboardPageCharts();
+<script>
+  $(document).ready(function () {
+    // Javascript method's body can be found in assets/js/demos.js
+    md.initDashboardPageCharts();
 
-      });
-      function sendMsgTo(empId) {
-        var msgUrl = "{% url 'send_message' 'empId' 'error' %}";
+  });
+  function sendMsgTo(empId) {
+    var msgUrl = "{% url 'send_message' 'empId' 'error' %}";
 
-        var msgText = document.getElementById('Msgtext' + empId).value;
+    var msgText = document.getElementById('Msgtext' + empId).value;
 
-        if (msgText.length == 0) {
-          
-          alert("please enter message to send");
-          
+    if (msgText.length == 0) {
 
-        }
-        else {
-          msgUrl = msgUrl.replace('error', msgText);
-          msgUrl = msgUrl.replace('empId', empId);
-          window.location.href = msgUrl;
-
-        }
-      }
-
-    </script>
+      alert("please enter message to send");
 
 
+    }
+    else {
+      msgUrl = msgUrl.replace('error', msgText);
+      msgUrl = msgUrl.replace('empId', empId);
+      window.location.href = msgUrl;
+
+    }
+  }
+
+</script>
 
 
-    {% endblock javascripts %}
+
+
+{% endblock javascripts %}

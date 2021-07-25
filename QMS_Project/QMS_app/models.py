@@ -52,6 +52,7 @@ class Service_center(models.Model):
     Icon = models.ImageField(upload_to='service_center/Icon/', verbose_name="icon" , default='service_center/Icon/default-logo.png')
     QR = models.ImageField(upload_to='service_center/QR/', verbose_name="QR" , blank=True)
     is_online = models.BooleanField(default=False)
+    isAutoAccept = models.BooleanField(default=True)
     
 
     def __str__(self):
@@ -130,14 +131,21 @@ class Service(models.Model):
 
 class Service_Record(models.Model):
     Service = models.ForeignKey('Service', on_delete=models.SET_NULL, null=True)
-    Employee = models.ForeignKey('Employee', on_delete=models.SET_NULL, null=True)
+    Employee = models.ForeignKey('Employee', on_delete=models.SET_NULL, null=True , blank=True)
     user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True)
     IQ_Time = models.DateTimeField(auto_now_add=True)
     P_Time = models.DateTimeField( blank=True ,  null=True)
     O_Time = models.DateTimeField( blank=True , null=True)
-    is_accept = models.BooleanField(default=True)
     is_served = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
+    status = models.CharField(
+        max_length=1,
+        choices= (
+        ('A', 'accepted') ,
+        ('P', 'pending'),
+        ('R', 'rejected'),
+    ),
+    )
 
     IS_InCenter =  models.BooleanField(default=False)
     Queue_type = models.CharField(

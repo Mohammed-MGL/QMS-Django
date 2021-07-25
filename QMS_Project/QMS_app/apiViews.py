@@ -25,7 +25,7 @@ class UserReservations(ListAPIView):
     
     def get_queryset(self):
         user = self.request.user
-        return Service_Record.objects.filter(user = user ,is_accept = True ,is_served = False ,is_cancelled =False)
+        return Service_Record.objects.filter(user = user ,status = 'A' ,is_served = False ,is_cancelled =False)
 
     pagination_class = CustomPagination
     serializer_class = ReservationsSerializer
@@ -37,7 +37,7 @@ class UserReservations(ListAPIView):
 #     def get(self , request , *args ,**kwargs):
 #         user = request.user
 
-#         qs = Service_Record.objects.filter(user = user ,is_accept = True ,is_served = False ,is_cancelled =False)
+#         qs = Service_Record.objects.filter(user = user ,status ='A',is_served = False ,is_cancelled =False)
 
 #         class UserR:
 #             sid = None
@@ -164,18 +164,36 @@ class  BookInService(APIView):
         
         user =request.user
         service =Service.objects.get(id = sID)
+        sc = service.Service_center
     
-        sr =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False)
+        sr =  Service_Record.objects.filter(user = user ,Service = service ,is_served = False ,is_cancelled = False)
         if (sr):
             return Response({'Accepted':False }) 
 
-        is_userBlocked = Black_list.objects.filter(user= user ,Service_center = service.Service_center )
-        if is_userBlocked:
-            Service_Record.objects.create(Service=service , user=user , is_accept= False )
-            return Response({'Accepted':False })
-                
-        book = Service_Record.objects.create(Service=service , user=user, IS_InCenter = False ,  Queue_type = 'B' )
-        return Response({'Accepted':True }) 
+        if (sc.isAutoAccept == True):
+
+            is_userBlocked = Black_list.objects.filter(user= user ,Service_center = service.Service_center )
+            if is_userBlocked:
+                Service_Record.objects.create(Service=service , user=user , status= 'R' )
+                return Response({'Accepted':False })
+
+            Service_Record.objects.create(user = user ,Service = service , status='A')
+            return Response({'Accepted':True })
+        else:
+            is_userBlocked = Black_list.objects.filter(user= user ,Service_center = service.Service_center )
+            if is_userBlocked:
+                Service_Record.objects.create(Service=service , user=user , status= 'R' )
+                return Response({'Accepted':False })
+
+            is_userWhite = White_list.objects.filter(user= user ,Service_center = service.Service_center )
+            if is_userWhite:
+                Service_Record.objects.create(user = user ,Service = service , status='A')
+                return Response({'Accepted':True })
+
+
+            Service_Record.objects.create(user = user ,Service = service , status='P')
+            return Response({'Accepted':True })
+
 
 class  cancelReservation(APIView):
     permission_classes = (IsAuthenticated,)
@@ -186,7 +204,7 @@ class  cancelReservation(APIView):
         user =request.user
         service =Service.objects.get(id = sID)
         
-        book =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False).first()
+        book =  Service_Record.objects.filter(user = user ,Service = service ,status ='A' ,is_served = False ,is_cancelled =False , Employee= None).first()
         if(book):
 
             book.O_Time = timezone.now().strftime("%Y-%m-%d %H:%M:%S") 
@@ -207,7 +225,7 @@ class  UserInCenter(APIView):
         
         
         service =Service.objects.get(id = sID)
-        book =  Service_Record.objects.filter(user = user ,Service = service ,is_accept = True ,is_served = False ,is_cancelled =False).last()
+        book =  Service_Record.objects.filter(user = user ,Service = service ,status = 'A' ,is_served = False ,is_cancelled =False).last()
         if(book):
 
             book.IS_InCenter = True
@@ -230,8 +248,8 @@ class  ServiceDetails(APIView ):
         user =request.user
         service =Service.objects.get(id = SID) 
         serviceName = service.name
-        queue = Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,Queue_type = 'B' )
-        userReservation= Service_Record.objects.filter(Service=service ,is_accept =True ,is_served= False ,is_cancelled= False ,user= user ).first()
+        queue = Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled= False ,Queue_type = 'B' )
+        userReservation= Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled= False ,user= user ).first()
         
         empDesk_number =""
         empName = ""
@@ -243,8 +261,8 @@ class  ServiceDetails(APIView ):
 
             if(userReservation.Employee is not None):
                 is_serving = True
-                empDesk_number = Employee.desk_num
-                empName = Employee.user.first_name
+                empDesk_number = userReservation.Employee.desk_num
+                empName = userReservation.Employee.user.first_name
 
 
         else:
@@ -327,7 +345,7 @@ class UserHistory(ListAPIView):
         user = self.request.user
         serviceRecords = Service_Record.objects.filter(user = user ,is_served = True)
         qs2 = Service_Record.objects.filter(user = user ,is_cancelled = True)
-        qs3 = Service_Record.objects.filter(user = user ,is_accept = False)
+        qs3 = Service_Record.objects.filter(user = user ,status ='R')
         serviceRecords = serviceRecords.union(qs2,qs3)
         serviceRecords = serviceRecords.order_by('IQ_Time')
         return serviceRecords

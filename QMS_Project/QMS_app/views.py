@@ -71,6 +71,8 @@ def logoutUser(request):
 def dashboard(request):
     sc = Manager.objects.get(user = request.user ).Service_center
     emps = Employee.objects.filter(Service_center = sc)
+   
+    customers = Service_Record.objects.filter(is_served= False ,is_cancelled= False    , status ='P' )
     
     service =Service.objects.filter(Service_center = sc)
     
@@ -78,14 +80,14 @@ def dashboard(request):
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
     
-    CustomerNumberonline = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= False ,P_Time__range=(today_min, today_max) )
+    CustomerNumberonline = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False ,P_Time__range=(today_min, today_max) )
    
     CustomerNumberonline = CustomerNumberonline.count() 
-    CustomerNumberOnSConline = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True ,P_Time__range=(today_min, today_max)  )
+    CustomerNumberOnSConline = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= True ,P_Time__range=(today_min, today_max)  )
    
     CustomerNumberOnSConline = CustomerNumberOnSConline.count() 
 
-    ServiedCustomerNumberonline= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,P_Time__range=(today_min, today_max) ).count() 
+    ServiedCustomerNumberonline= Service_Record.objects.filter(status ='A' ,is_served= True,is_cancelled= False ,P_Time__range=(today_min, today_max) ).count() 
     
 
 
@@ -117,7 +119,7 @@ def dashboard(request):
 
 
 
-        EmployeeServiedCustomerNumber= Service_Record.objects.filter(Service=s.Service ,Employee=s, is_accept = True ,is_served= True,is_cancelled= False ,P_Time__range=(today_min, today_max) ).count() 
+        EmployeeServiedCustomerNumber= Service_Record.objects.filter(Service=s.Service ,Employee=s, status ='A' ,is_served= True,is_cancelled= False ,P_Time__range=(today_min, today_max) ).count() 
     
         ed = EmpDetails( name ,EmployeeServiedCustomerNumber , empservice  )
         
@@ -145,10 +147,10 @@ def dashboard(request):
     sdList = [] 
     for s in service:
         name = s.name
-        CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,IS_InCenter= False,Service = s,P_Time__range=(today_min, today_max) ).count()
-        CustomerNumberOnSC = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False  ,IS_InCenter= True   , Service = s ,P_Time__range=(today_min, today_max) ).count()
+        CustomerNumber = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,IS_InCenter= False,Service = s,P_Time__range=(today_min, today_max) ).count()
+        CustomerNumberOnSC = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= True   , Service = s ,P_Time__range=(today_min, today_max) ).count()
         
-        ServiedCustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False , Service = s ,P_Time__range=(today_min, today_max) ).count() 
+        ServiedCustomerNumber = Service_Record.objects.filter(status ='A' ,is_served= True,is_cancelled= False , Service = s ,P_Time__range=(today_min, today_max) ).count() 
         sd = ServiceDetails( name ,CustomerNumber,CustomerNumberOnSC,ServiedCustomerNumber  )
         
         sdList.append(sd)
@@ -162,6 +164,7 @@ def dashboard(request):
         'CustomerNumber':CustomerNumberonline ,
         'CustomerNumberOnSC':CustomerNumberOnSConline ,
         'employees':emps ,
+        'customers':customers ,
         
         'sdList':sdList ,
     }
@@ -210,7 +213,7 @@ def viewEmployee(request, eID):
         return redirect('employees')
 
     service =emp.Service
-    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
+    CustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
    
     CustomerNumber =CustomerNumber.count() 
     
@@ -319,7 +322,7 @@ def viewEmployee(request, eID):
 
 
 
-    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
+    ServiedCustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
         
 
 
@@ -435,34 +438,34 @@ def ManagerProfile(request):
     
 
     
-@login_required(login_url='login')
-@manager_only
-def ManagerProfile(request):
+# @login_required(login_url='login')
+# @manager_only
+# def ManagerProfile(request):
 
-    user = request.user
-    sc = Manager.objects.get(user = user ).Service_center
+#     user = request.user
+#     sc = Manager.objects.get(user = user ).Service_center
 
     
-    passwordChangeForm = PasswordChangeForm(user)
+#     passwordChangeForm = PasswordChangeForm(user)
 
-    if request.method == 'POST':
-        passwordChangeForm = PasswordChangeForm(user, request.POST)
-        if passwordChangeForm.is_valid():
-            user = passwordChangeForm.save()
-            update_session_auth_hash(request, user)  
-            messages.success(request, 'password was successfully updated!')
-            return redirect('dashboard')
-        else:
-            messages.error(request, 'Please correct the error below.')
+#     if request.method == 'POST':
+#         passwordChangeForm = PasswordChangeForm(user, request.POST)
+#         if passwordChangeForm.is_valid():
+#             user = passwordChangeForm.save()
+#             update_session_auth_hash(request, user)  
+#             messages.success(request, 'password was successfully updated!')
+#             return redirect('dashboard')
+#         else:
+#             messages.error(request, 'Please correct the error below.')
 
 
-    context = {
-        "passwordChangeForm":passwordChangeForm,
-        'sc':sc,
-        'user':user
+#     context = {
+#         "passwordChangeForm":passwordChangeForm,
+#         'sc':sc,
+#         'user':user
 
-        }
-    return render(request ,"ManagerProfile.html" , context) 
+#         }
+#     return render(request ,"ManagerProfile.html" , context) 
 
 
 
@@ -628,7 +631,7 @@ def viewService(request, sID  ):
 
     avrageServingTime_all = timedelta(seconds=avrageServingTime_all)    
 
-    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ).count() 
+    ServiedCustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= True,is_cancelled= False ,Service=service ).count() 
         
 
 
@@ -670,6 +673,22 @@ def serviceChangeState(request, sID):
     service.IS_Active =  not service.IS_Active
     service.save()
     return redirect('services')
+
+
+ 
+@login_required(login_url='login')
+@manager_only
+def scChangeState(request):
+   
+
+    sc = Manager.objects.get(user = request.user ).Service_center
+
+    sc.isAutoAccept =  not sc.isAutoAccept
+    sc.save()
+    return redirect('dashboard')    
+
+
+    
 
 
 @login_required(login_url='login')
@@ -903,21 +922,24 @@ def BookInServiceCenter(request, scID):
         CustomerNumber   = None
         WaitingTime  = None
         sid = None
+        is_Active= None
 
-        def __init__(self,name,CustomerNumber ,WaitingTime , sid):
+
+        def __init__(self,name,CustomerNumber ,WaitingTime , sid , is_Active):
             self.name = name
             self.CustomerNumber = CustomerNumber
             self.WaitingTime = WaitingTime
             self.sid = sid
+            self.is_Active = is_Active
 
     sdList = [] 
     for s in Services:
         name = s.name
-        CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service = s).count()
+        CustomerNumber = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service = s).count()
         WaitingTime = "5 min test"
         sid=  s.id
-        sd = ServiceDetails(name,CustomerNumber,WaitingTime , sid)
-        
+        is_Active = s.IS_Active
+        sd = ServiceDetails(name,CustomerNumber,WaitingTime , sid,is_Active)
         sdList.append(sd)
 
     context = {
@@ -950,7 +972,7 @@ def BookInService(request, sID):
         gPassword = random_string(8,8)
         guest.set_password(gPassword)
         guest.save()
-        book = Service_Record.objects.create(Service=service , user=guest , IS_InCenter = True ,  Queue_type = 'B' )
+        book = Service_Record.objects.create(Service=service , user=guest , IS_InCenter = True ,  Queue_type = 'B'  , status ='A')
     
     return render(request ,"BookInService.html" , {'user':guest , 'serviceCenter':serviceCenter})
 
@@ -992,6 +1014,25 @@ def SendMessageView(request , ID , MSG ):
 
 
 
+@login_required(login_url='login')
+@manager_only
+def acceptUser(request , ID ):
+    book = Service_Record.objects.get(id=ID)
+    book.status = 'A'
+    book.save()
+    return redirect('dashboard')    
+
+@login_required(login_url='login')
+@manager_only
+def rejectUser(request , ID ):
+    book = Service_Record.objects.get(id=ID)
+    book.status = 'R'
+    book.save()
+
+    return redirect('dashboard')    
+
+
+
 
 
 @login_required(login_url='login')
@@ -1001,7 +1042,7 @@ def home(request):
     sc = emp.Service_center
     
     service =emp.Service
-    CustomerNumber = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
+    CustomerNumber = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service , IS_InCenter= True ,Employee = None )
    
     CustomerNumber = CustomerNumber.count() 
 
@@ -1013,25 +1054,25 @@ def home(request):
 
     if request.method=='POST' and 'callNext' in request.POST:
 
-        # CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True ).first()
+        # CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True ).first()
         
 
         if(CustomerNumber>0 and customerAtEmp is  None):
 
-            lastCustomer = Service_Record.objects.filter(is_accept = True ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
+            lastCustomer = Service_Record.objects.filter(status ='A' ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
            
             if(lastCustomer == None):
-                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None ).first()
+                CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None ).first()
                 if CustomerCalling == None:
-                    CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
+                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
             elif(lastCustomer.Queue_type == 'B'):
 
-                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  ).first()
+                CustomerCalling = Service_Record.objects.filter(status ='A',is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  ).first()
                 if CustomerCalling == None:
                     
-                    CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None ).first()
+                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None ).first()
             else:
-                CustomerCalling = Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
+                CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
             
             # now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
@@ -1050,7 +1091,7 @@ def home(request):
         if(customerAtEmp is not None):
 
             customer = None  
-            # CustomerCalling = Service_Record.objects.filter(is_accept = True , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
+            # CustomerCalling = Service_Record.objects.filter(status ='A' , is_served= False,is_cancelled= False ,Service=service , IS_InCenter= True,Employee=emp).first()
             now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
             customerAtEmp.O_Time = now
@@ -1065,7 +1106,7 @@ def home(request):
 
             form = MoveCustomerForm(sc ,data=request.POST)
             if form.is_valid():
-                # CustomerCalling = Service_Record.objects.filter(is_accept = True,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).first()
+                # CustomerCalling = Service_Record.objects.filter(status ='A',is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).first()
                 
                 now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
@@ -1078,7 +1119,7 @@ def home(request):
                 ser = form.cleaned_data['Service']
 
                 with transaction.atomic():
-                    is_have_book = Service_Record.objects.filter(Service=ser , user=customer ,is_accept = True , is_served= False ).first()
+                    is_have_book = Service_Record.objects.filter(Service=ser , user=customer ,status ='A' , is_served= False ).first()
                     if is_have_book is not None:
                         is_have_book.is_cancelled= True
                         is_have_book.save()
@@ -1086,7 +1127,7 @@ def home(request):
                     book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
  
  
-    customerAtEmp = Service_Record.objects.filter(is_accept = True, is_served= False, is_cancelled= False, Service=service, IS_InCenter= True, Employee=emp).first()
+    customerAtEmp = Service_Record.objects.filter(status ='A', is_served= False, is_cancelled= False, Service=service, IS_InCenter= True, Employee=emp).first()
     if(customerAtEmp is not None):
         customer=customerAtEmp.user
         startTime= customerAtEmp.P_Time
@@ -1127,8 +1168,8 @@ def home(request):
 
 
     
-    ServiedCustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
-    CustomerNumber= Service_Record.objects.filter(is_accept = True ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True  ,Employee = None)
+    ServiedCustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
+    CustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True  ,Employee = None)
     CustomerNumber =CustomerNumber.count() 
     
     Messsagesemp = Message.objects.filter(receiver = emp.user_id , IS_read= False )

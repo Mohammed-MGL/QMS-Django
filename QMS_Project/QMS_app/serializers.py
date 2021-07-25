@@ -24,7 +24,7 @@ class Qdetails(serializers.Field):
 
     def to_representation(self, value):
 
-        queue = Service_Record.objects.filter(Service=value ,is_accept =True ,is_served= False ,is_cancelled= False ,Queue_type = 'B' ).count()
+        queue = Service_Record.objects.filter(Service=value ,status ='A',is_served= False ,is_cancelled= False ,Queue_type = 'B' ).count()
 
         ret = {
             "customersNum": queue,
@@ -248,7 +248,6 @@ class HistorySerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField() # add field
 
     
-
      
     class Meta:
         model = Service_Record
@@ -264,9 +263,9 @@ class HistorySerializer(serializers.ModelSerializer):
 
 
 
-        if  obj.is_accept == False:
-            return 'not accept'    
-            
+        if  obj.status =='R':
+            return 'rejected'  
+
 
 
 
