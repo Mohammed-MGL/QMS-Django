@@ -120,7 +120,7 @@ class Service(models.Model):
     Service_center = models.ForeignKey('Service_center', on_delete=models.CASCADE)
     name = models.CharField(max_length=350)
     IS_Active = models.BooleanField(default=True)
-    time = models.CharField(max_length=350)
+    time = models.IntegerField(default=0)
     
     class Meta:
         unique_together = ('Service_center', 'name',)

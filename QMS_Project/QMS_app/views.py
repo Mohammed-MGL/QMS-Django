@@ -954,7 +954,8 @@ def BookInServiceCenter(request, scID):
     for s in Services:
         name = s.name
         CustomerNumber = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service = s).count()
-        WaitingTime = "5 min test"
+        WaitingTime = CustomerNumber * s.time
+        
         sid=  s.id
         is_Active = s.IS_Active
         sd = ServiceDetails(name,CustomerNumber,WaitingTime , sid,is_Active)
