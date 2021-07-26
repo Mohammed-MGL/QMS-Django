@@ -43,11 +43,25 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_filters',
-
-    'QMS_app',
+    "django_apscheduler",
+    
+    'QMS_app.apps.QmsAppConfig',
     
 
 ]
+
+# This scheduler config will:
+# - Store jobs in the project database
+# - Execute jobs in threads inside the application process
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    'apscheduler.executors.processpool': {
+        "type": "threadpool"
+    },
+}
+SCHEDULER_AUTOSTART = True
  
 
 MIDDLEWARE = [
