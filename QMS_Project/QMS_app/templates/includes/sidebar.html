@@ -1,24 +1,24 @@
-    <div class="sidebar" data-color="purple" data-background-color="white" data-image="/static/assets/img/sidebar-2.jpg">
-      
-      <style>
-        .MOHAMMEDcontainer {
-          position: relative;
-          z-index: 10;
-          text-align: center;
-          color: white;
-        }
-    
-        .MOHAMMEDimgCircle {
-          position: absolute;
-          z-index: 10;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          border-radius: 50%;
-    
-        }
+<div class="sidebar" data-color="purple" data-background-color="white" data-image="/static/assets/img/sidebar-2.jpg">
 
-        
+  <style>
+    .MOHAMMEDcontainer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      color: white;
+    }
+
+    .MOHAMMEDimgCircle {
+      position: absolute;
+      z-index: 10;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+
+    }
+
+
     /* onoffswitch */
 
     .onoffswitch {
@@ -77,7 +77,7 @@
       padding-right: 00px;
       background-color: #BAC0CC;
       color: #FFFFFF;
-      
+
     }
 
 
@@ -88,83 +88,87 @@
     .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
       right: 0px;
     }
-      </style>
+  </style>
 
-      <div class="MOHAMMEDcontainer">
-        <img src="{{sc.Image.url}}" style="width:100%;" height="175" >
-        <img src="{{sc.Icon.url}}" class="MOHAMMEDimgCircle" width="100" height="100">
-      </div>
+  <div class="MOHAMMEDcontainer">
+    <img src="{{sc.Image.url}}" style="width:100%;" height="175">
+    <img src="{{sc.Icon.url}}" class="MOHAMMEDimgCircle" width="100" height="100">
+  </div>
 
-      <div class="logo">
-        <a href="" class="simple-text logo-normal ">
-          <!-- Service center name -->
-          {{sc.name}} 
-          <br>
-          
+  <div class="logo">
+    <a href="" class="simple-text logo-normal ">
+      <!-- Service center name -->
+      {{sc.name}}
+      <br>
+
       <div class="d-flex justify-content-center">
-    
-        <div class="onoffswitch float-right">
+
+        <!-- <div class="onoffswitch float-right">
           <input type="checkbox" name="onoffswitch" onclick='handleClick(this);' class="onoffswitch-checkbox" id="myonoffswitch" tabindex="0">
           <label class="onoffswitch-label" for="myonoffswitch">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
           </label>
-        </div>
+        </div> -->
+    </a>
 
-      </div>
-  
-          {% if sc.is_online %}
-          <small><small>🟢</small> online</small>
-          {% else %}
-          <small><small>🔴</small>offline</small>
-          {% endif %}
+    <a href="{% url 'scChangeState' %}" class="btn btn-primary my-2 my-sm-0 btn-round">
+      {% if sc.is_online %} Online {% else %} Offline {% endif %}</a>
 
+  </div>
 
-
-        </a>
-      </div>
-      <div class="sidebar-wrapper">
-        <ul class="nav">
-
-          {% url 'dashboard' as url %}
-          <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
-            <a class="nav-link" href="{% url 'dashboard' %}">
-              <i class="material-icons">dashboard</i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-          {% url 'employees' as url %}
-          <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
-            <a class="nav-link" href="{% url 'employees' %}">
-              <i class="material-icons">group</i>
-              <p>Employees</p>
-            </a>
-          </li>
-          {% url 'services' as url %}
-          <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
-            <a class="nav-link" href="{% url 'services' %}">
-              <i class="material-icons">group</i>
-              <p>Services</p>
-            </a>
-          </li>
-          {% url 'black_WhiteList' as url %}
-          <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
-            <a class="nav-link" href="{% url 'black_WhiteList' %}">
-              <i class="material-icons">group</i>
-              <p>Black & white list </p>
-            </a>
-          </li>
+  <!-- {% if sc.is_online %}
+      <small><small>🟢</small> online</small>
+      {% else %}
+      <small><small>🔴</small>offline</small>
+      {% endif %} -->
 
 
-          {% url 'ServiceCnterProfile' as url %}
-          <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
-            <a class="nav-link" href="{% url 'ServiceCnterProfile' %}">
-              <i class="material-icons">group</i>
-              <p> Service Center Profile </p>
-            </a>
-          </li>
 
-          <!-- 
+
+</div>
+<div class="sidebar-wrapper">
+  <ul class="nav">
+
+    {% url 'dashboard' as url %}
+    <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
+      <a class="nav-link" href="{% url 'dashboard' %}">
+        <i class="material-icons">dashboard</i>
+        <p>Dashboard</p>
+      </a>
+    </li>
+    {% url 'employees' as url %}
+    <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
+      <a class="nav-link" href="{% url 'employees' %}">
+        <i class="material-icons">group</i>
+        <p>Employees</p>
+      </a>
+    </li>
+    {% url 'services' as url %}
+    <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
+      <a class="nav-link" href="{% url 'services' %}">
+        <i class="material-icons">group</i>
+        <p>Services</p>
+      </a>
+    </li>
+    {% url 'black_WhiteList' as url %}
+    <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
+      <a class="nav-link" href="{% url 'black_WhiteList' %}">
+        <i class="material-icons">group</i>
+        <p>Black & white list </p>
+      </a>
+    </li>
+
+
+    {% url 'ServiceCnterProfile' as url %}
+    <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
+      <a class="nav-link" href="{% url 'ServiceCnterProfile' %}">
+        <i class="material-icons">group</i>
+        <p> Service Center Profile </p>
+      </a>
+    </li>
+
+    <!-- 
           <li class="nav-item ">
             <a class="nav-link" href="./user.html">
               <i class="material-icons">query_stats</i>
@@ -177,9 +181,9 @@
               <p>User Profile</p>
             </a>
           </li> -->
-          <!-- your sidebar here -->
-        </ul>
-        <!-- <ul class="nav">
+    <!-- your sidebar here -->
+  </ul>
+  <!-- <ul class="nav">
           <li class="nav-item {% if 'index' == segment %} active {% endif %}">
             <a class="nav-link" href="/">
               <i class="material-icons">dashboard</i>
@@ -246,7 +250,7 @@
             </a>
           </li>
         </ul> -->
-      </div>
-      
+</div>
 
-    </div>
+
+</div>

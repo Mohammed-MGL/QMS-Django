@@ -61,14 +61,16 @@ class Service_center(models.Model):
 
 
     def save(self, *args, **kwargs):
-        qrcode_img = qrcode.make(self.name)
-        canvas = Image.new('RGB', (290, 290), 'white')
-        canvas.paste(qrcode_img)
-        fname = f'QR-{self.name}.png'
-        buffer = BytesIO()
-        canvas.save(buffer,'PNG')
-        self.QR.save(fname, File(buffer), save=False)
-        canvas.close()
+        scName = Service_center.objects.get(id = self.id).name
+        if(scName != self.name):
+            qrcode_img = qrcode.make(self.name)
+            canvas = Image.new('RGB', (290, 290), 'white')
+            canvas.paste(qrcode_img)
+            fname = f'QR-{self.name}.png'
+            buffer = BytesIO()
+            canvas.save(buffer,'PNG')
+            self.QR.save(fname, File(buffer), save=False)
+            canvas.close()
         super(Service_center,self).save(*args, **kwargs)
 
 

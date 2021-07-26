@@ -680,6 +680,16 @@ def serviceChangeState(request, sID):
 @manager_only
 def scChangeState(request):
    
+    sc = Manager.objects.get(user = request.user ).Service_center
+
+    sc.is_online =  not sc.is_online
+    sc.save()
+    return redirect('dashboard')    
+
+    
+@login_required(login_url='login')
+@manager_only
+def scChangeAutoAccept(request):
 
     sc = Manager.objects.get(user = request.user ).Service_center
 
@@ -687,8 +697,6 @@ def scChangeState(request):
     sc.save()
     return redirect('dashboard')    
 
-
-    
 
 
 @login_required(login_url='login')
@@ -718,14 +726,24 @@ def editService(request, sID):
 @manager_only
 def deleteService(request, sID):
 
+    sc = Manager.objects.get(user = request.user ).Service_center
     ser = Service.objects.get(id = sID)
-    context = {"item":ser}
+    sers = Service.objects.filter(Service_center = sc.id)
+
+    if not ser in sers:
+        return redirect('employees')
+
+    
 
     if request.method == 'POST':
         if 'Confirm' in request.POST:    
             ser.delete()
         return redirect('services')
 
+    context = {
+        "item":ser,
+        'sc':sc,
+    }
     return render(request ,"delete.html" , context) 
 
 

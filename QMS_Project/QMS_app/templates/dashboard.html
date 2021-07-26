@@ -3,7 +3,16 @@
 {% block title %} Dashboard {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+
+.scroll {
+  position: relative;
+  max-height: 200px;
+  overflow-y: auto;
+}
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 <div class="row">
@@ -44,16 +53,14 @@
   <div class="col-5 ">
     <div class="card">
       <div class="card-header card-header-primary">
-        <h4 class="card-title ">auto accept user</h4>
+
         <div class="d-flex justify-content-between">
           <div class="p-2">
+            <h4 class="card-title ">auto accept user</h4>
           </div>
-          <div class="p-2"> <a input href="{% url 'scChangeState' %}">
-
-              <input type="checkbox" {% if sc.isAutoAccept %} checked {% endif %}>
-              <span class="slider round">ttt</span>
-
-            </a>
+          <div class="p-2">
+            <a href="{% url 'scChangeAutoAccept' %}" class="btn btn-primary my-2 my-sm-0 btn-round">
+              {% if sc.isAutoAccept %} ON {% else %} OFF {% endif %}</a>
           </div>
         </div>
       </div>
@@ -93,15 +100,15 @@
                 </td>
 
                 <td>
-                  <a href="{% url 'rejectUser' customer.id %}"  class="btn btn-sm btn-danger"> rejected </a>
+                  <a href="{% url 'rejectUser' customer.id %}" class="btn btn-sm btn-danger"> rejected </a>
                 </td>
 
 
               </tr>
 
               {% endfor %}
-              {% else %} 
-              No customer in Queue
+              {% else %}
+              <h4>No customer in Queue</h4>
               {% endif %}
 
 
@@ -111,6 +118,9 @@
 
 
         </div>
+        {% else %}
+        <h4> All customers will be accepted and blacklisted customers will be rejected
+        </h4>
         {% endif %}
       </div>
 
@@ -140,7 +150,6 @@
               <a class="dropdown-item">on Queue : {{ser.CustomerNumber}}</a>
               <a class="dropdown-item"> on service center : {{ser.CustomerNumberOnSC}}</a>
               <a class="dropdown-item"> servied : {{ser.ServiedCustomerNumber}}</a>
-
             </div>
           </div>
         </li>
@@ -154,9 +163,9 @@
 </div>
 </div>
 <div class="row">
-  <div class="col-6">
+  <div class="col-6 ">
 
-    <div class="card">
+    <div class="card ">
       <div class="card-header card-header-primary">
         <h4 class="card-title ">Employees</h4>
         <div class="d-flex justify-content-between">
@@ -165,7 +174,7 @@
 
         </div>
       </div>
-      <div class="card-body text-center">
+      <div class="card-body text-center scroll">
         <div class="table-responsive">
           {% if employees %}
           <table class="table text-center">
@@ -203,14 +212,23 @@
                 <td>{{emp.service}}</td>
 
 
-
                 <td>{{emp.EmployeeServiedCustomerNumber}}</td>
-
 
 
                 <td>
 
-                  <input type="text" id="Msgtext{{emp.name.id}}" name="text" size="33" class="form-control" />
+                  <input type="text" id="Msgtext{{emp.name.id}}" name="text" size="5" class="form-control" />
+
+                  <a href="{% url 'send_message' emp.name.id 'good job ^__^' %}"
+                    class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                    <i class="material-icons">favorite</i>
+                  </a>
+                  <a href="{% url 'send_message' emp.name.id 'you have to work harder -_-' %}"
+                    class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                    <i class="material-icons">
+                      thumb_down
+                    </i>
+                  </a>
 
                   <button id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
                     onClick="sendMsgTo('{{emp.name.id}}')">
@@ -221,19 +239,6 @@
                     </span>
                   </button>
                 </td>
-
-                <td>
-                  <a href="{% url 'send_message' emp.name.id 'good job ^__^' %}"
-                    class="btn btn-primary btn-fab btn-fab-mini btn-round">
-                    <i class="material-icons">favorite</i>
-                  </a>
-                </td>
-                <td> <a href="{% url 'send_message' emp.name.id 'you have to work harder -_-' %}"
-                    class="btn btn-primary btn-fab btn-fab-mini btn-round">
-                    <span class="material-icons">
-                      thumb_down
-                    </span>
-                  </a> </td>
 
 
               </tr>
@@ -261,6 +266,7 @@
 
     </div>
   </div>
+  
 </div>
 
 
@@ -272,11 +278,12 @@
 {% block javascripts %}
 
 <script>
-  $(document).ready(function () {
-    // Javascript method's body can be found in assets/js/demos.js
-    md.initDashboardPageCharts();
+  // $(document).ready(function () {
+  //   // Javascript method's body can be found in assets/js/demos.js
+  //   md.initDashboardPageCharts();
 
-  });
+  // });
+  
   function sendMsgTo(empId) {
     var msgUrl = "{% url 'send_message' 'empId' 'error' %}";
 
@@ -284,7 +291,7 @@
 
     if (msgText.length == 0) {
 
-      alert("please enter message to send");
+      swal({ title:"Error", text: "Please enter message to send!", type: "error", buttonsStyling: false, confirmButtonClass: "btn btn-primary"});
 
 
     }
