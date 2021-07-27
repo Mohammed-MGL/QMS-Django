@@ -237,9 +237,9 @@ class White_list(models.Model):
         return self.user.username  
 
 class Message(models.Model):
-     sender = models.CharField(max_length=700 , blank=True)
+     sender = models.CharField(max_length=100 , blank=True)
      receiver = models.IntegerField(blank=True)
-     message_text = models.CharField(max_length=700 , blank=True)
+     message_text = models.CharField(max_length=500 , blank=True)
      IS_read = models.BooleanField(default=False)
      
             

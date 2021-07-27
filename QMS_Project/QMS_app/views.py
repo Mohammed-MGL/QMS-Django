@@ -925,6 +925,58 @@ def deleteUserFromBL(request, uID):
     return render(request ,"delete.html" , context) 
 
 
+@login_required(login_url='login')
+@manager_only
+def ServiceCnterscreen(request):
+    sc = Manager.objects.get(user = request.user).Service_center
+    emps = Employee.objects.filter(Service_center = sc)
+    
+    today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+    today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+
+
+
+    class EmpDetails:
+        desk_num = None
+        eid = None
+        
+
+
+        def __init__(self,desk_num  ,eid ):
+            self.desk_num = desk_num
+            self.eid = eid
+            
+
+    sdList = [] 
+    for s in emps:
+        desk_num = s.desk_num
+        customerAtEmp = Service_Record.objects.filter(status ='A', is_served= False, is_cancelled= False, IS_InCenter= True, Employee=s).first()
+        if(customerAtEmp is not None):
+                customer=customerAtEmp.user_id
+                
+        else:
+            
+            customer= None  
+        sd = EmpDetails(desk_num, customer)
+        sdList.append(sd)
+   
+    
+   
+  
+    
+        
+    context = {
+        'sdList':sdList ,
+        
+      
+
+        }
+
+    return render(request ,"ServiceCnterscreen.html" , context)     
+
+    
+
+
 
 def deleteUserFromWL(request, uID):
 

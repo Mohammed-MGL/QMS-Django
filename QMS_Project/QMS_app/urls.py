@@ -51,6 +51,7 @@ urlpatterns = [
     path('BookInServiceCenter/<str:scID>',views.BookInServiceCenter, name = 'BookInServiceCenter'), 
     path('BookInService/<str:sID>',views.BookInService, name = 'BookInService'),
     path('ServiceCnterProfile',views.ServiceCnterProfile, name = 'ServiceCnterProfile'),
+    path('ServiceCnterscreen',views.ServiceCnterscreen, name = 'ServiceCnterscreen'),
 
 
 
