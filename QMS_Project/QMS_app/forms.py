@@ -80,10 +80,11 @@ class ServiceForm(ModelForm):
     class Meta:
 
         model = Service
-        fields = ['name' , 'IS_Active' ]
+        fields = ['name' , 'IS_Active','defaultTime','IS_static' ]
 
         widgets = {
             'name' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : 'Add service name '}),
+            'defaultTime' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : 'Add default time '}),
             # 'IS_Active' : forms.CheckboxInput(attrs={'class': 'form-check-input', 'placeholder' : 'Your Name'}),
         }
 
@@ -91,6 +92,9 @@ class ServiceForm(ModelForm):
     def save(self):
         Service = super().save(commit=False)
         Service.Service_center = self.osc
+        
+        Service.time = Service.defaultTime
+            
         Service.save()
         return Service
 

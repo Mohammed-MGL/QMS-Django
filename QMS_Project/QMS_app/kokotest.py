@@ -12,35 +12,46 @@ def update_something():
 def update_service_time():
     services = Service.objects.all()
     for ser in services:
-        today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
-        today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+
+        if ser.IS_static==True:
+
+            ser.time = ser.defaultTime
+            ser.save()
+            
+        else:
+            today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+            today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+            
+            todayRecord = Service_Record.objects.filter(
+                Service = ser  ,
+                is_served = True,
+                P_Time__range=(today_min, today_max)        
+                )
+
         
-        todayRecord = Service_Record.objects.filter(
-            Service = ser  ,
-            is_served = True,
-            P_Time__range=(today_min, today_max)        
-            )
 
-    
+            totalServingTime = 0
+            avrageServingTime = 0 
+            
 
-        totalServingTime = 0
-        avrageServingTime = 0 
-        
+            if todayRecord:
+                for i in todayRecord:
 
-        if todayRecord:
-            for i in todayRecord:
+                    servingTime  = i.O_Time - i.P_Time 
+                    totalServingTime += servingTime.seconds
 
-                servingTime  = i.O_Time - i.P_Time 
-                totalServingTime += servingTime.seconds
+                avrageServingTime =  math.ceil(totalServingTime / todayRecord.count())
+            else:   
+                ser.time = ser.defaultTime
+                ser.save()
+                return
 
-            avrageServingTime =  math.ceil(totalServingTime / todayRecord.count())
-           
-        minutes = math.ceil(avrageServingTime / 60)
+            minutes = math.ceil(avrageServingTime / 60)
 
-        # avrageServingTime = timedelta(seconds=avrageServingTime)
+            # avrageServingTime = timedelta(seconds=avrageServingTime)
 
-        ser.time = minutes
-        
-        ser.save()
+            ser.time = minutes
+            
+            ser.save()
 
 

@@ -927,9 +927,9 @@ def deleteUserFromBL(request, uID):
 
 @login_required(login_url='login')
 @manager_only
-def ServiceCnterscreen(request):
-    sc = Manager.objects.get(user = request.user).Service_center
-    emps = Employee.objects.filter(Service_center = sc)
+def ServiceCnterscreen(request,sID):
+    
+    emps = Employee.objects.filter(Service_center = sID)
     
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)

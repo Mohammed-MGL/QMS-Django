@@ -118,7 +118,7 @@
     {% endfor %}
 
     <div class="col-3   ">
-      <div class="card card-nav-tabs" style="width: 13rem; height: 11rem ;">
+      <div class="card card-nav-tabs" style="width: 13rem; height: 15rem ;">
 
         <div class="card-header card-header-primary">
           <h5 class="card-title"> create service
@@ -130,10 +130,15 @@
           <form action="" method="POST">
             {% csrf_token %}
             {{form.name}}
+            {{form.defaultTime}}
+
 
             <div class="d-flex justify-content-between">
               <div>{{form.IS_Active}}
                 {{form.IS_Active.label}} </div>
+
+                <div>{{form.IS_static}}
+                  {{form.IS_static.label}} </div>
 
 
               <button type="submit " name="submit" class="btn btn-primary btn-round btn-sm"> create </button>

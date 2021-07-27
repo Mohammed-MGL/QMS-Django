@@ -121,7 +121,8 @@ class Service(models.Model):
     name = models.CharField(max_length=350)
     IS_Active = models.BooleanField(default=True)
     time = models.IntegerField(default=0)
-    
+    defaultTime =  models.IntegerField()
+    IS_static = models.BooleanField(default=False)
     class Meta:
         unique_together = ('Service_center', 'name',)
 
