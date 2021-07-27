@@ -5,12 +5,11 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
 <style>
-
-.scroll {
-  position: relative;
-  max-height: 200px;
-  overflow-y: auto;
-}
+  .scroll {
+    position: relative;
+    height: 175px;
+    overflow-y: auto;
+  }
 </style>
 {% endblock stylesheets %}
 
@@ -56,68 +55,129 @@
 
         <div class="d-flex justify-content-between">
           <div class="p-2">
-            <h4 class="card-title ">auto accept user</h4>
+            <h4 class="card-title  ">auto accept user</h4>
           </div>
           <div class="p-2">
-            <a href="{% url 'scChangeAutoAccept' %}" class="btn btn-primary my-2 my-sm-0 btn-round">
+            <a href="{% url 'scChangeAutoAccept' %}" class="btn btn-primary my-2 my-sm-0 btn-round ">
               {% if sc.isAutoAccept %} ON {% else %} OFF {% endif %}</a>
           </div>
         </div>
-      </div>
-      <div class="card-body text-center">
         {% if not sc.isAutoAccept %}
-        <div class="table-responsive">
-          {% if customers %}
-          <table class="table text-center">
-            <thead class=" text-primary">
-              <tr>
+        <ul class="nav nav-tabs nav-justified ">
+          <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#insta">Pending</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#face">Accepted</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#twit">Rejected</a>
+          </li>
+        </ul>
+        {% endif %}
 
-                <th>
-                  Name
-                </th>
+      </div>
+      <div class="card-body align-items-center justify-content-center text-center  scroll">
+        {% if not sc.isAutoAccept %}
 
+        <div class="tab-content card-body">
+          <div id="insta" class="tab-pane fade show active">
 
+            {% if pendingCustomers %}
+            <div class="table-responsive">
+              <table class="table text-center">
+                <thead class=" text-primary">
+                  <tr>
 
-                <th> accept</th>
+                    <th> Name </th>
 
+                    <th> accept</th>
 
-                <th>not accept</th>
+                    <th>not accept</th>
 
-              </tr>
-            </thead>
-            <tbody>
+                  </tr>
+                </thead>
+                <tbody>
 
-              {% for customer in customers %}
+                  {% for customer in pendingCustomers %}
 
-              <tr>
+                  <tr>
 
-                <td>
-                  {{customer.user.username}}
+                    <td>
+                      {{customer.user.username}}
+                    </td>
 
-                </td>
-                <td>
-                  <a href="{% url 'acceptUser' customer.id %}" class="btn btn-sm btn-info"> accept </a>
-                </td>
+                    <td>
+                      <a href="{% url 'acceptUser' customer.id %}" class="btn btn-sm btn-info"> accept </a>
+                    </td>
 
-                <td>
-                  <a href="{% url 'rejectUser' customer.id %}" class="btn btn-sm btn-danger"> rejected </a>
-                </td>
+                    <td>
+                      <a href="{% url 'rejectUser' customer.id %}" class="btn btn-sm btn-danger"> rejected </a>
+                    </td>
 
+                  </tr>
 
-              </tr>
+                  {% endfor %}
+                  
 
-              {% endfor %}
-              {% else %}
-              <h4>No customer in Queue</h4>
-              {% endif %}
+                </tbody>
+              </table>
 
+            </div>
+            {% else %}
+                  <h4>No customer in Queue yet</h4>
+                  {% endif %}
+          </div>
+          <div id="face" class="tab-pane fade ">
 
-            </tbody>
-          </table>
+            <div class="table-responsive">
+              {% if acceptedCustomers %}
 
+              <table class="table text-center">
+                <thead class=" text-primary">
+                  <tr>
 
+                    <th> Name </th>
 
+                    <th> accept</th>
+
+                    <th>not accept</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {% for customer in acceptedCustomers %}
+
+                  <tr>
+
+                    <td>
+                      {{customer.user.username}}
+                    </td>
+
+                    <td>
+                      <a href="" class="btn btn-sm btn-info"> accept </a>
+                    </td>
+
+                    <td>
+                      <a href="" class="btn btn-sm btn-danger"> rejected </a>
+                    </td>
+
+                  </tr>
+
+                  {% endfor %}
+                  {% else %}
+                  <h4>No customer in Queue yet</h4>
+                  {% endif %}
+
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+          <div id="twit" class="tab-pane fade ">Twitter</div>
         </div>
+
         {% else %}
         <h4> All customers will be accepted and blacklisted customers will be rejected
         </h4>
@@ -266,7 +326,23 @@
 
     </div>
   </div>
-  
+
+
+
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+
 </div>
 
 
@@ -283,7 +359,7 @@
   //   md.initDashboardPageCharts();
 
   // });
-  
+
   function sendMsgTo(empId) {
     var msgUrl = "{% url 'send_message' 'empId' 'error' %}";
 
@@ -291,7 +367,7 @@
 
     if (msgText.length == 0) {
 
-      swal({ title:"Error", text: "Please enter message to send!", type: "error", buttonsStyling: false, confirmButtonClass: "btn btn-primary"});
+      swal({ title: "Error", text: "Please enter message to send!", type: "error", buttonsStyling: false, confirmButtonClass: "btn btn-primary" });
 
 
     }

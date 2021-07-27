@@ -71,8 +71,7 @@ def logoutUser(request):
 def dashboard(request):
     sc = Manager.objects.get(user = request.user ).Service_center
     emps = Employee.objects.filter(Service_center = sc)
-   
-    customers = Service_Record.objects.filter(is_served= False ,is_cancelled= False    , status ='P' )
+    
     
     service =Service.objects.filter(Service_center = sc)
     
@@ -156,6 +155,9 @@ def dashboard(request):
         sdList.append(sd)
  
     
+    pendingCustomers  = Service_Record.objects.filter(is_served= False,is_cancelled= False , status ='P' ,IQ_Time__range=(today_min, today_max) )
+    acceptedCustomers = Service_Record.objects.filter(is_served= False,is_cancelled= False , status ='A' ,IQ_Time__range=(today_min, today_max) )
+    rejectedCustomers = Service_Record.objects.filter(is_served= False,is_cancelled= False , status ='R' ,IQ_Time__range=(today_min, today_max) )
     
     context ={
         'empList':empList,
@@ -164,7 +166,10 @@ def dashboard(request):
         'CustomerNumber':CustomerNumberonline ,
         'CustomerNumberOnSC':CustomerNumberOnSConline ,
         'employees':emps ,
-        'customers':customers ,
+        'pendingCustomers':pendingCustomers,
+        'acceptedCustomers':acceptedCustomers,
+        'rejectedCustomers':rejectedCustomers,
+
         
         'sdList':sdList ,
     }
@@ -695,6 +700,15 @@ def scChangeAutoAccept(request):
 
     sc.isAutoAccept =  not sc.isAutoAccept
     sc.save()
+    if(sc.isAutoAccept):
+        today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
+        today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
+        pendingCustomers  = Service_Record.objects.filter(is_served= False,is_cancelled= False , status ='P' ,IQ_Time__range=(today_min, today_max) )
+
+        for c in pendingCustomers:
+            c.status = 'A'
+            c.save()
+
     return redirect('dashboard')    
 
 
