@@ -39,16 +39,27 @@
 
                 <div class="card border-info  ">
                     <div class="card-header text-center card-header-primary">
-                        <b>{{s.name}}</b>
+                        <b> <font size="5">{{s.name}}</font></b>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body" style="width: 15rem; height: 15rem ;">
 
                         <!-- <h5 class="card-title"></h5> -->
-                        {{s.CustomerNumber}} <br>
-                        {{s.WaitingTime}} <br>
-                        <a href="{% url 'BookInService' s.sid %}" class="btn btn-sm btn-info {% if not s.is_Active %} disabled {% endif %}">
-                            book in service
+                        <table class="table table-hover">
+                            <tr>
+                                <th>  <b> Number of people booked</b> </th>
+                                <td> <font size="5">{{s.CustomerNumber}}</font></td>
+                           
+                        </tr>
+                        <tr>
+                            <th>  <b>  <font size="4">waiting time</font> </b> </th>
+                            <td> <font size="5">{{s.WaitingTime}} </font> minute  </td>
+                        </tr>
+                        </table>
+                   
+                        
+                        <a href="{% url 'BookInService' s.sid %}" class="btn btn-sm btn-info   {% if not s.is_Active %} disabled {% endif %}" >
+                            <font size="4"> book in service</font> 
                         </a>
                     </div>
                 </div>

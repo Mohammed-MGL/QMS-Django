@@ -369,6 +369,10 @@ def updateEmployee(request, eID):
     if request.method == 'POST':
         form = EmployeeForm(sc,request.POST ,instance = emp)
         if form.is_valid():
+            customerAtEmp = Service_Record.objects.filter( is_served= False, is_cancelled= False,  Employee=emp).count()
+            if customerAtEmp>0:
+                messages.error(request, 'The employee is serving a customer')
+                return redirect('employees')
             form.save()
             messages.info(request, 'Employee updated')
             return redirect('employees')
@@ -477,6 +481,8 @@ def ManagerProfile(request):
 @login_required(login_url='login')
 @manager_only
 def deleteEmployee(request, eID):
+     
+
 
     sc = Manager.objects.get(user = request.user ).Service_center
     emp = Employee.objects.get(user = eID)
@@ -485,8 +491,14 @@ def deleteEmployee(request, eID):
     if not emp in emps:
         return redirect('employees')
 
-    if request.method == 'POST':
-        if 'Confirm' in request.POST:    
+    if request.method == 'POST' and 'Confirm' in request.POST:
+        customerAtEmp = Service_Record.objects.filter( is_served= False, is_cancelled= False,  Employee=emp).count()
+        if customerAtEmp>0:
+            messages.error(request, 'The employee is serving a customer')
+            return redirect('employees')
+
+        else:
+
             emp.delete()
             messages.success(request, 'employee deleted')
         return redirect('employees')
@@ -745,14 +757,19 @@ def deleteService(request, sID):
     sers = Service.objects.filter(Service_center = sc.id)
 
     if not ser in sers:
-        return redirect('employees')
+        return redirect('services')
 
     
 
-    if request.method == 'POST':
-        if 'Confirm' in request.POST:    
+    if request.method == 'POST' and 'Confirm' in request.POST: 
+        CustomerNumber = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service = ser).count()
+        if CustomerNumber == 0 : 
             ser.delete()
-        return redirect('services')
+            return redirect('services')
+        else :
+            messages.error(request, 'you have a customer in this service')
+            return redirect('services')
+
 
     context = {
         "item":ser,
@@ -925,8 +942,7 @@ def deleteUserFromBL(request, uID):
     return render(request ,"delete.html" , context) 
 
 
-@login_required(login_url='login')
-@manager_only
+
 def ServiceCnterscreen(request,sID):
     
     emps = Employee.objects.filter(Service_center = sID)
@@ -950,7 +966,7 @@ def ServiceCnterscreen(request,sID):
     sdList = [] 
     for s in emps:
         desk_num = s.desk_num
-        customerAtEmp = Service_Record.objects.filter(status ='A', is_served= False, is_cancelled= False, IS_InCenter= True, Employee=s).first()
+        customerAtEmp = Service_Record.objects.filter(status ='A', is_served= False, is_cancelled= False,  Employee=s).first()
         if(customerAtEmp is not None):
                 customer=customerAtEmp.user_id
                 
