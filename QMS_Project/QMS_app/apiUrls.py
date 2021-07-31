@@ -1,10 +1,27 @@
+from django.conf.urls import include
 from django.urls import path  
 
 from . import apiViews
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+
+###
+from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
+
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+
+router.register('devices', FCMDeviceAuthorizedViewSet)
+###
+
 urlpatterns = [
+    # URLs will show up at <api_root>/devices
+    # DRF browsable API which lists all available endpoints
+    path('t', include(router.urls)),
+    path('adddevices', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}), name='create_fcm_device'),
+    # ...
     # API endpoints 
     # account
     path('account/register/', apiViews.RegisterView.as_view()),

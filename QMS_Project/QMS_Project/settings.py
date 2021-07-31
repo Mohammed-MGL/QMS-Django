@@ -44,12 +44,27 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     "django_apscheduler",
+    "fcm_django",
+
     
     'QMS_app.apps.QmsAppConfig',
     
 
 ]
+from firebase_admin import initialize_app
+FIREBASE_APP = initialize_app()
 
+FCM_DJANGO_SETTINGS = {
+     # default: _('FCM Django')
+    "APP_VERBOSE_NAME": "com.example.qms",
+     # true if you want to have only one active device per registered user at a time
+     # default: False
+    "ONE_DEVICE_PER_USER": False,
+     # devices to which notifications cannot be sent,
+     # are deleted upon receiving error response from FCM
+     # default: False
+    "DELETE_INACTIVE_DEVICES": False,
+}
 # This scheduler config will:
 # - Store jobs in the project database
 # - Execute jobs in threads inside the application process

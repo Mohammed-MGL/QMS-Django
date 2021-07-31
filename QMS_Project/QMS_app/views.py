@@ -945,13 +945,26 @@ def deleteUserFromBL(request, uID):
 
 def ServiceCnterscreen(request,sID):
     
+
+    
     emps = Employee.objects.filter(Service_center = sID)
     
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
 
 
+    ###
+    from firebase_admin.messaging import Message ,Notification
+    from fcm_django.models import FCMDevice
 
+    # You can still use .filter() or any methods that return QuerySet (from the chain)
+    device = FCMDevice.objects.all().first()
+    # send_message parameters include: message, dry_run, app
+    device.send_message(Message(
+    notification=Notification(title="Hello", body="this Notification form Django =)",
+     image="https://149351115.v2.pressablecdn.com/wp-content/uploads/2020/02/iStock-1163542789.jpg"
+     )))
+    ###
     class EmpDetails:
         desk_num = None
         eid = None
@@ -1160,28 +1173,42 @@ def home(request):
 
         if(CustomerNumber>0 and customerAtEmp is  None):
 
-            lastCustomer = Service_Record.objects.filter(status ='A' ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
-           
-            if(lastCustomer == None):
-                CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None ).first()
-                if CustomerCalling == None:
-                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
-            elif(lastCustomer.Queue_type == 'B'):
-
-                CustomerCalling = Service_Record.objects.filter(status ='A',is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  ).first()
-                if CustomerCalling == None:
-                    
-                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None ).first()
-            else:
-                CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
+            with transaction.atomic():
+                lastCustomer = Service_Record.objects.filter(status ='A' ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
             
+                if(lastCustomer == None):
+                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None ).first()
+                    if CustomerCalling == None:
+                        CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
+                elif(lastCustomer.Queue_type == 'B'):
+
+                    CustomerCalling = Service_Record.objects.filter(status ='A',is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  ).first()
+                    if CustomerCalling == None:
+                        
+                        CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None ).first()
+                else:
+                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
+                
+
+                now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+                updated = Service_Record.objects.filter(
+                    id = CustomerCalling.id,
+                    version=CustomerCalling.version,
+                ).update(
+                    P_Time= now,
+                    Employee= emp ,
+                    version=CustomerCalling.version + 1,
+                )
+
+                # send
             # now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
             # CustomerCalling.P_Time = now
             # CustomerCalling.Employee = emp
             # CustomerCalling.save()
             # print( CustomerCalling.user)
-            CustomerCalling.CallCustomer(emp)
+            # CustomerCalling.CallCustomer(emp)
             # print(emp )
             # print(CustomerCalling)
             # print("...")
