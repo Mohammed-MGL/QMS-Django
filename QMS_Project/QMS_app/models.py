@@ -238,7 +238,7 @@ class White_list(models.Model):
         """String for representing the Model object."""
         return self.user.username  
 
-class Message(models.Model):
+class EmpMessage(models.Model):
      sender = models.CharField(max_length=100 , blank=True)
      receiver = models.IntegerField(blank=True)
      message_text = models.CharField(max_length=500 , blank=True)

@@ -15,7 +15,9 @@ import math
 # from datetime import date
 import random  
 import string  
-from .models import Message
+from .models import EmpMessage
+from firebase_admin.messaging import Message ,Notification
+from fcm_django.models import FCMDevice 
 
     # messages.info(request, 'info.')
     # messages.success(request, 'success')
@@ -701,6 +703,19 @@ def scChangeState(request):
 
     sc.is_online =  not sc.is_online
     sc.save()
+
+    if sc.is_online == False:
+        q = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+        q2 = Service_Record.objects.filter(status ='P' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+        for book in q:
+            book.status ='R'
+            book.save()
+            device = FCMDevice.objects.all().first()
+    
+            device.send_message(Message(
+            notification=Notification(title=sc.name +" : book rejected", body="The service center has been closed",
+            image="https://149351115.v2.pressablecdn.com/wp-content/uploads/2020/02/iStock-1163542789.jpg"
+            )))
     return redirect('dashboard')    
 
     
@@ -953,18 +968,7 @@ def ServiceCnterscreen(request,sID):
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
 
 
-    ###
-    from firebase_admin.messaging import Message ,Notification
-    from fcm_django.models import FCMDevice
-
-    # You can still use .filter() or any methods that return QuerySet (from the chain)
-    device = FCMDevice.objects.all().first()
-    # send_message parameters include: message, dry_run, app
-    device.send_message(Message(
-    notification=Notification(title="Hello", body="this Notification form Django =)",
-     image="https://149351115.v2.pressablecdn.com/wp-content/uploads/2020/02/iStock-1163542789.jpg"
-     )))
-    ###
+    
     class EmpDetails:
         desk_num = None
         eid = None
@@ -1121,7 +1125,7 @@ def ServiceCnterProfile(request):
 def SendMessageView(request , ID , MSG ):
 
     sender = request.user.username
-    message = Message.objects.create(sender =sender , receiver= ID,message_text = MSG  )
+    message = EmpMessage.objects.create(sender =sender , receiver= ID,message_text = MSG  )
     
     messages.success(request, 'The message was sended successfully. ')
     return redirect('dashboard')   
@@ -1131,17 +1135,29 @@ def SendMessageView(request , ID , MSG ):
 @login_required(login_url='login')
 @manager_only
 def acceptUser(request , ID ):
+    sc = Manager.objects.get(user = request.user ).Service_center 
     book = Service_Record.objects.get(id=ID)
     book.status = 'A'
     book.save()
+    device = FCMDevice.objects.filter(user_id =book.user.id) 
+    device.send_message(Message(
+        notification=Notification(title= sc.name +": Booked", body=" Your book has been accepted "
+        )))
     return redirect('dashboard')    
 
 @login_required(login_url='login')
 @manager_only
 def rejectUser(request , ID ):
+    sc = Manager.objects.get(user = request.user ).Service_center
     book = Service_Record.objects.get(id=ID)
     book.status = 'R'
     book.save()
+
+    device = FCMDevice.objects.filter(user_id =book.user.id) 
+    device.send_message(Message(
+        notification=Notification(title=sc.name +" : Not booked", body=" Your book has been rejected "
+        )))
+        
 
     return redirect('dashboard')    
 
@@ -1177,29 +1193,40 @@ def home(request):
                 lastCustomer = Service_Record.objects.filter(status ='A' ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
             
                 if(lastCustomer == None):
-                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None ).first()
+                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None )
                     if CustomerCalling == None:
-                        CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
+                        CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  )
                 elif(lastCustomer.Queue_type == 'B'):
 
-                    CustomerCalling = Service_Record.objects.filter(status ='A',is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  ).first()
+                    CustomerCalling = Service_Record.objects.filter(status ='A',is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  )
                     if CustomerCalling == None:
                         
-                        CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None ).first()
+                        CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None )
                 else:
-                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  ).first()
+                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  )
                 
 
                 now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
                 updated = Service_Record.objects.filter(
-                    id = CustomerCalling.id,
-                    version=CustomerCalling.version,
+                    id = CustomerCalling[0].id,
+                    version=CustomerCalling[0].version,
                 ).update(
                     P_Time= now,
                     Employee= emp ,
-                    version=CustomerCalling.version + 1,
+                    version=CustomerCalling[0].version + 1,
                 )
+
+                device = FCMDevice.objects.filter(user_id = CustomerCalling[0].user.id)
+                device.send_message(Message(
+                notification=Notification( title=sc.name +" : It's your turn ", body="Go to deck number : "+ emp.desk_num
+                )))
+
+
+                device = FCMDevice.objects.filter(user_id = CustomerCalling[3].user.id)
+                device.send_message(Message(
+                notification=Notification(title=sc.name +" : your turn is near ", body="Be ready for your turn "
+                )))
 
                 # send
             # now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -1253,6 +1280,11 @@ def home(request):
                         is_have_book.save()
                     
                     book = Service_Record.objects.create(Service=ser , user=customer , IS_InCenter = True ,  Queue_type = 'A' )
+
+                    device = FCMDevice.objects.filter(user_id =customer.id) 
+                    device.send_message(Message(
+                        notification=Notification(title=sc.name +" : You have been transferred", body="A book has been registered for "+ ser.name 
+                        )))
  
  
     customerAtEmp = Service_Record.objects.filter(status ='A', is_served= False, is_cancelled= False, Service=service, IS_InCenter= True, Employee=emp).first()
@@ -1300,7 +1332,7 @@ def home(request):
     CustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True  ,Employee = None)
     CustomerNumber =CustomerNumber.count() 
     
-    Messsagesemp = Message.objects.filter(receiver = emp.user_id , IS_read= False )
+    Messsagesemp = EmpMessage.objects.filter(receiver = emp.user_id , IS_read= False )
     for msg in Messsagesemp:
         messages.info(request, msg.message_text)
         msg.IS_read = True

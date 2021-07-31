@@ -29,6 +29,6 @@ admin.site.register(Service)
 admin.site.register(Service_Record)
 admin.site.register(White_list)
 admin.site.register(Black_list)
-admin.site.register(Message)
+admin.site.register(EmpMessage)
 
 
