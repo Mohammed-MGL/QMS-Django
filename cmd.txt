@@ -1,6 +1,7 @@
 .\QMS_Venv\scripts\activate 
 cd QMS_Project
 python manage.py runserver
+python manage.py runserver 0.0.0.0:8000
 python manage.py runserver --noreload
 python manage.py makemigrations
 python manage.py migrate

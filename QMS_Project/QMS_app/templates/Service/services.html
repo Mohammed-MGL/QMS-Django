@@ -87,7 +87,7 @@
                 {% if ser.IS_Active %} online {%else%} offline {% endif %}
 
 
-                <br> {{ser.time}}</b></h4>
+                <br> Time : {{ser.time}}</b></h4>
           </li>
 
           <li class="list-group-item"><a href="{% url 'editService' ser.id %}" class="btn btn-sm btn-info">
@@ -118,7 +118,7 @@
     {% endfor %}
 
     <div class="col-3   ">
-      <div class="card card-nav-tabs" style="width: 13rem; height: 15rem ;">
+      <div class="card card-nav-tabs" style="width: 13rem; height: 17rem ;">
 
         <div class="card-header card-header-primary">
           <h5 class="card-title"> create service
@@ -129,20 +129,25 @@
 
           <form action="" method="POST">
             {% csrf_token %}
-            {{form.name}}
-            {{form.defaultTime}}
+            <table>
+              <tr>
+                {{form.name}}
+              </tr>
+           <tr>{{form.defaultTime}}</tr>
+            
 
-
+ 
             <div class="d-flex justify-content-between">
-              <div>{{form.IS_Active}}
-                {{form.IS_Active.label}} </div>
-
-                <div>{{form.IS_static}}
-                  {{form.IS_static.label}} </div>
-
-
-              <button type="submit " name="submit" class="btn btn-primary btn-round btn-sm"> create </button>
-
+             <tr> <div>{{form.IS_Active}}
+              {{form.IS_Active.label}} </div></tr> 
+             <tr>  <div>{{form.IS_static}}
+              {{form.IS_static.label}} </div></tr>
+              
+               
+                
+            <tr>
+              <button type="submit " name="submit" class="btn btn-primary btn-round btn-sm"> create </button></tr>
+            </table>
             </div>
           </form>
         </div>

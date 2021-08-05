@@ -26,8 +26,6 @@ from fcm_django.models import FCMDevice
 
 
 
-
-
 @unauthenticated_user
 def loginPage(request):
 
@@ -48,7 +46,7 @@ def loginPage(request):
                
 
             if user.is_superuser == True:
-                return redirect('admin')
+                return redirect('admin:index')
             else:
                 return redirect('logout')
             
@@ -349,7 +347,7 @@ def viewEmployee(request, eID):
         'customerNumberDay':customerNumberDay ,
         'customerNumberMonth':customerNumberMonth ,
         'customerNumberyear':customerNumberyear ,
-        'customerNumberall':customerNumberall
+        'customerNumberall':customerNumberall ,
 
         }
     return render(request ,"Employee/employee.html" , context)
@@ -707,6 +705,7 @@ def scChangeState(request):
     if sc.is_online == False:
         q = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
         q2 = Service_Record.objects.filter(status ='P' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+        q = q.union(q2)
         for book in q:
             book.status ='R'
             book.save()
@@ -1151,6 +1150,7 @@ def rejectUser(request , ID ):
     sc = Manager.objects.get(user = request.user ).Service_center
     book = Service_Record.objects.get(id=ID)
     book.status = 'R'
+    # book.is_cancelled=True
     book.save()
 
     device = FCMDevice.objects.filter(user_id =book.user.id) 
@@ -1191,42 +1191,43 @@ def home(request):
 
             with transaction.atomic():
                 lastCustomer = Service_Record.objects.filter(status ='A' ,is_served= True ,is_cancelled= False ,Service=service ,IS_InCenter= True,Employee=emp).order_by('O_Time').last()
-            
+                print(lastCustomer.Queue_type)
                 if(lastCustomer == None):
-                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None )
-                    if CustomerCalling == None:
-                        CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  )
+                    Customers = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A' ,Employee = None )
+                    if Customers.first() == None:
+                        Customers = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  )
                 elif(lastCustomer.Queue_type == 'B'):
 
-                    CustomerCalling = Service_Record.objects.filter(status ='A',is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  )
-                    if CustomerCalling == None:
+                    Customers = Service_Record.objects.filter(status ='A',is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'A',Employee = None  )
+                    if Customers.first() == None:
+                        Customers = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None )
                         
-                        CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B' ,Employee = None )
                 else:
-                    CustomerCalling = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  )
+                    Customers = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter= True, Queue_type= 'B',Employee = None  )
                 
-
                 now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
+                CustomerCalling = Customers.first()
+
                 updated = Service_Record.objects.filter(
-                    id = CustomerCalling[0].id,
-                    version=CustomerCalling[0].version,
+                    id = CustomerCalling.id,
+                    version=CustomerCalling.version,
                 ).update(
                     P_Time= now,
                     Employee= emp ,
-                    version=CustomerCalling[0].version + 1,
+                    version=CustomerCalling.version + 1,
                 )
 
-                device = FCMDevice.objects.filter(user_id = CustomerCalling[0].user.id)
+                device = FCMDevice.objects.filter(user_id = CustomerCalling.user.id)
                 device.send_message(Message(
                 notification=Notification( title=sc.name +" : It's your turn ", body="Go to deck number : "+ emp.desk_num
                 )))
 
-
-                device = FCMDevice.objects.filter(user_id = CustomerCalling[3].user.id)
-                device.send_message(Message(
-                notification=Notification(title=sc.name +" : your turn is near ", body="Be ready for your turn "
-                )))
+                if(Customers.count() > 3 ):
+                    device = FCMDevice.objects.filter(user_id = Customers[3].user.id)
+                    device.send_message(Message(
+                    notification=Notification(title=sc.name +" : your turn is near ", body="Be ready for your turn "
+                    )))
 
                 # send
             # now = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
@@ -1347,8 +1348,6 @@ def home(request):
         'TotalServingTime': totalServingTime ,
         'avrageServingTime':str(avrageServingTime).split('.')[0] ,
         'startTime':startTime ,
-        
-       
 
         }
     return render(request ,"EmpTemplates/home.html" , context)   

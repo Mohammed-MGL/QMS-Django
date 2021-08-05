@@ -126,7 +126,7 @@ class MoveCustomerForm(ModelForm):
 
     def __init__(self, sc, *args, **kwargs):
         super(MoveCustomerForm, self).__init__(*args, **kwargs)
-        self.fields['Service'].queryset = Service.objects.filter(Service_center = sc.id)
+        self.fields['Service'].queryset = Service.objects.filter(Service_center = sc.id,IS_Active= True)
         self.osc = sc 
 
 

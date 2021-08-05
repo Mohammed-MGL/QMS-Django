@@ -21,7 +21,7 @@ from django.conf.urls import  url
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
-    path('admin/', admin.site.urls , name='admin') ,
+    path('admin/', admin.site.urls ) ,
 
     path('', include('QMS_app.urls')),
     path('API/', include('QMS_app.apiUrls')),

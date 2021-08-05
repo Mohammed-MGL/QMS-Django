@@ -347,7 +347,7 @@ class UserHistory(ListAPIView):
         qs2 = Service_Record.objects.filter(user = user ,is_cancelled = True)
         qs3 = Service_Record.objects.filter(user = user ,status ='R')
         serviceRecords = serviceRecords.union(qs2,qs3)
-        serviceRecords = serviceRecords.order_by('IQ_Time')
+        serviceRecords = serviceRecords.order_by('-IQ_Time')
         return serviceRecords
 
     pagination_class = CustomPagination

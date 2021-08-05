@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
 
     'rest_framework',
     'django_filters',
@@ -217,3 +218,8 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 # user.is_superuser=True
 # >>> user.is_staff=True
 # >>> user.save()
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}

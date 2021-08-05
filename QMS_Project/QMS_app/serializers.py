@@ -251,20 +251,20 @@ class HistorySerializer(serializers.ModelSerializer):
      
     class Meta:
         model = Service_Record
-        fields = [ 'id' , 'Service', 'IQ_Time'  ,'status' ]  
+        fields = [ 'id' , 'Service', 'IQ_Time' ,'status' ]  
 
     def get_status(self, obj):
         # here write the logic to compute the value based on object
+        if obj.status =='R':
+            return 'rejected'  
+
         if obj.is_cancelled:
             return 'cancelled'
 
         if obj.is_served:
             return 'served'
 
-
-
-        if  obj.status =='R':
-            return 'rejected'  
+        
 
 
 

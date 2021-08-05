@@ -25,9 +25,16 @@
                
                 <div class="card-body">
                     <br>
-                    {{form}}
+                    <table>
+                 <tr> Name : {{form.name}}</tr> 
+                  <tr>Time :   {{form.defaultTime}}</tr> 
+                  <tr> <div>{{form.IS_Active}}
+                    {{form.IS_Active.label}} </div></tr> 
+                   <tr> <br> <div>{{form.IS_static}}
+                    {{form.IS_static.label}} </div></tr>
                     <br>
-                    <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change </button>
+                  <tr>  <button type="submit " name="submit" class="btn btn-primary pull-right btn-round"> change </button> </tr>
+                </table>
                 </div>
             </div>
         </div>

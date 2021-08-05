@@ -61,16 +61,18 @@ class Service_center(models.Model):
 
 
     def save(self, *args, **kwargs):
-        scName = Service_center.objects.get(id = self.id).name
-        if(scName != self.name):
-            qrcode_img = qrcode.make(self.name)
-            canvas = Image.new('RGB', (290, 290), 'white')
-            canvas.paste(qrcode_img)
-            fname = f'QR-{self.name}.png'
-            buffer = BytesIO()
-            canvas.save(buffer,'PNG')
-            self.QR.save(fname, File(buffer), save=False)
-            canvas.close()
+        sc = Service_center.objects.filter(id = self.id)
+        if(sc):
+            scName = sc.name
+            if(scName != self.name):
+                qrcode_img = qrcode.make(self.name)
+                canvas = Image.new('RGB', (290, 290), 'white')
+                canvas.paste(qrcode_img)
+                fname = f'QR-{self.name}.png'
+                buffer = BytesIO()
+                canvas.save(buffer,'PNG')
+                self.QR.save(fname, File(buffer), save=False)
+                canvas.close()
         super(Service_center,self).save(*args, **kwargs)
 
 
@@ -219,11 +221,12 @@ class Black_list(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE )
     reason = models.CharField(max_length=600 , blank=True)
     is_BySystem = models.BooleanField(default=False)
+
     
 
     def __str__(self):
         """String for representing the Model object."""
-        return self.user.username  
+        return self.user.username 
 
 
 
@@ -239,9 +242,9 @@ class White_list(models.Model):
         return self.user.username  
 
 class EmpMessage(models.Model):
-     sender = models.CharField(max_length=100 , blank=True)
-     receiver = models.IntegerField(blank=True)
-     message_text = models.CharField(max_length=500 , blank=True)
-     IS_read = models.BooleanField(default=False)
+    sender = models.CharField(max_length=100 , blank=True)
+    receiver = models.ForeignKey('Employee', on_delete=models.SET_NULL, null=True , blank=True)
+    message_text = models.CharField(max_length=500 , blank=True)
+    IS_read = models.BooleanField(default=False)
      
             
