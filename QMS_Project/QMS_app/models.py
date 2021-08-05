@@ -61,7 +61,7 @@ class Service_center(models.Model):
 
 
     def save(self, *args, **kwargs):
-        sc = Service_center.objects.filter(id = self.id)
+        sc = Service_center.objects.filter(id = self.id).first()
         if(sc):
             scName = sc.name
             if(scName != self.name):

@@ -491,6 +491,9 @@ def deleteEmployee(request, eID):
     if not emp in emps:
         return redirect('employees')
 
+    if request.method == 'POST' and 'Cancel' in request.POST:
+        return redirect('employees')     
+
     if request.method == 'POST' and 'Confirm' in request.POST:
         customerAtEmp = Service_Record.objects.filter( is_served= False, is_cancelled= False,  Employee=emp).count()
         if customerAtEmp>0:
@@ -773,7 +776,8 @@ def deleteService(request, sID):
     if not ser in sers:
         return redirect('services')
 
-    
+    if request.method == 'POST' and 'Cancel' in request.POST:
+        return redirect('services') 
 
     if request.method == 'POST' and 'Confirm' in request.POST: 
         CustomerNumber = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service = ser).count()
@@ -939,10 +943,18 @@ def serachForUser(request):
 
 
 def deleteUserFromBL(request, uID):
+    
+
+    
     sc = Manager.objects.get(user = request.user ).Service_center
 
     u = Black_list.objects.get(id = uID)
-    if request.method == 'POST':
+    
+    if request.method == 'POST' and 'Cancel' in request.POST:
+        return redirect('black_WhiteList')     
+
+    if request.method == 'POST' and 'Confirm' in request.POST:
+
         u.delete()
         messages.success(request, 'user deleted from black list')
         return redirect('black_WhiteList')
@@ -1014,9 +1026,14 @@ def deleteUserFromWL(request, uID):
 
     sc = Manager.objects.get(user = request.user ).Service_center
     u = White_list.objects.get(id = uID)
+    
+    if request.method == 'POST' and 'Cancel' in request.POST:
+        return redirect('black_WhiteList')     
 
-    if request.method == 'POST':
+    if request.method == 'POST' and 'Confirm' in request.POST:
+
         u.delete()
+       
         messages.success(request, 'user deleted from white list')
         return redirect('black_WhiteList')
 
