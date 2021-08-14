@@ -25,9 +25,9 @@
 
   <div class="row">
     <div class="col-4 ">
-      <div class="card card-nav-tabs" style="width: 15rem; height: 15rem ; ">
-        <div class="card-header card-header-info">
-          People status on Queue today
+      <div class="card " style="width: 15rem; height: 14rem; ">
+        <div class="card-header card-header-warning">
+          People status on Queue
         </div>
         <ul class="list-group">
           <li class="list-group-item d-flex justify-content-between align-items-center ">
@@ -38,9 +38,17 @@
               <font size="4">{{ServiedCustomerNumber}} </font>
             </span>
           </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center ">
+            <b>
+              <font size="4"> Serving </font>
+            </b>
+            <span class="badge badge-primary badge-pill">
+              <font size="4">0 </font>
+            </span>
+          </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <b>
-              <font size="4"> On Queue </font>
+              <font size="4"> In service center </font>
             </b>
             <span class="badge badge-primary badge-pill">
               <font size="4">{{CustomerNumber}} </font>
@@ -48,7 +56,7 @@
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <b>
-              <font size="4"> On service center </font>
+              <font size="4"> Out service center </font>
             </b>
             <span class="badge badge-primary badge-pill">
               <font size="4">{{CustomerNumberOnSC}} </font>
@@ -57,12 +65,10 @@
         </ul>
       </div>
     </div>
-    <br>
-
-
+    
 
     <div class="col-4">
-      <div class="card  " style="width: 33rem;height: 15rem ;  ">
+      <div class="card " style="width: 33rem;height: 14rem ;  ">
         <div class="card-header card-header-warning">
           Services status
         </div>
@@ -100,7 +106,7 @@
   <div class="row">
     <div class="col-6 ">
   
-      <div class="card " style="width:49rem; height: 15rem  ">
+      <div class="card " style="width:50rem; height: 15rem  ">
         <div class="card-header card-header-primary">
           <h4 class="card-title ">Employees</h4>
           <div class="d-flex justify-content-between">
@@ -178,9 +184,6 @@
   
                 </tr>
                 {% endfor %}
-  
-  
-  
   
   
   

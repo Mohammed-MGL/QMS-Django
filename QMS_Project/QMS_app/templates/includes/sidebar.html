@@ -140,21 +140,21 @@
     {% url 'employees' as url %}
     <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
       <a class="nav-link" href="{% url 'employees' %}">
-        <i class="material-icons">group</i>
+        <i class="material-icons">support_agent</i>
         <p>Employees</p>
       </a>
     </li>
     {% url 'services' as url %}
     <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
       <a class="nav-link" href="{% url 'services' %}">
-        <i class="material-icons">group</i>
+        <i class="material-icons">grid_view</i>
         <p>Services</p>
       </a>
     </li>
     {% url 'black_WhiteList' as url %}
     <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
       <a class="nav-link" href="{% url 'black_WhiteList' %}">
-        <i class="material-icons">group</i>
+        <i class="material-icons">supervised_user_circle</i>
         <p>Black & white list </p>
       </a>
     </li>
@@ -163,7 +163,7 @@
     {% url 'ServiceCnterProfile' as url %}
     <li class="nav-item {% if request.path ==  url  %} active {%endif%} ">
       <a class="nav-link" href="{% url 'ServiceCnterProfile' %}">
-        <i class="material-icons">group</i>
+        <i class="material-icons">business</i>
         <p> Service Center Profile </p>
       </a>
     </li>
