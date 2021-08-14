@@ -26,7 +26,7 @@
   <div class="row">
     <div class="col-4 ">
       <div class="card " style="width: 15rem; height: 14rem; ">
-        <div class="card-header card-header-warning">
+        <div class="card-header card-header-info">
           People status on Queue
         </div>
         <ul class="list-group">
@@ -69,7 +69,7 @@
 
     <div class="col-4">
       <div class="card " style="width: 33rem;height: 14rem ;  ">
-        <div class="card-header card-header-warning">
+        <div class="card-header card-header-info">
           Services status
         </div>
 
@@ -106,7 +106,7 @@
   <div class="row">
     <div class="col-6 ">
   
-      <div class="card " style="width:50rem; height: 15rem  ">
+      <div class="card " style="width:50rem; height: 16rem  ">
         <div class="card-header card-header-primary">
           <h4 class="card-title ">Employees</h4>
           <div class="d-flex justify-content-between">
@@ -147,7 +147,7 @@
                 <tr>
   
                   <td>
-                    <a href="{% url 'viewEmployee' emp.name.id %}" class="btn btn-sm btn-info"> {{emp.name}} </a>
+                    <a href="{% url 'viewEmployee' emp.name.id %}"> <b>{{emp.name}}</b>  </a>
   
                   </td>
                   <td>{{emp.service}}</td>
@@ -223,15 +223,15 @@
 
 
 <div class="col-4 ">
-  <div class="card">
-    <div class="card-header card-header-success">
+  <div class="card"style=" height: 34rem  ">
+    <div class="card-header {% if sc.isAutoAccept %} card-header-success {% else %} card-header-danger {% endif %} ">
 
       <div class="d-flex justify-content-between">
         <div class="p-2">
           <h4 class="card-title  ">auto accept user</h4>
         </div>
         <div class="p-2">
-          <a href="{% url 'scChangeAutoAccept' %}" class="btn btn-default my-2 my-sm-0 btn-round ">
+          <a href="{% url 'scChangeAutoAccept' %}" class="btn {% if sc.isAutoAccept %} btn-success {% else %} btn-danger {% endif %} " my-2 my-sm-0 btn-round ">
             {% if sc.isAutoAccept %} ON {% else %} OFF {% endif %}</a>
         </div>
       </div>

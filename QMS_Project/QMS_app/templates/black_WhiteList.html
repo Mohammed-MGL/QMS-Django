@@ -11,10 +11,10 @@
       <div class="card ">
         <div class="card-body">
           <div class="d-flex justify-content-between ">
-            <div class="p-2  my-auto">
-              <b>Search for user to add into black / white list </b>
+            <div class=" my-auto">
+             <font size="5">Search for user to add into black/white list</font>
             </div>
-            <div class="p-2  my-auto">
+            <div class=" my-auto">
               <form action="/serachForUser" method="GET">
 
                 {{UserFilter.form.username}}
@@ -45,7 +45,7 @@
         <h4 class="card-title ">white list </h4>
         <div class="d-flex justify-content-between">
           <div class="p-2">
-            ======
+           
           </div>
 
         </div>
@@ -96,7 +96,7 @@
         <h4 class="card-title ">Black list </h4>
         <div class="d-flex justify-content-between">
           <div class="p-2">
-            ======
+            
           </div>
           <div class="p-2"> <a href="{% url 'systemBlackList' %}" class="btn btn-sm btn-secondary ">See System BlackList
               &nbsp;<i class="material-icons">person_add_alt</i> </a></div>
