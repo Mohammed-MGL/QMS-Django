@@ -3,7 +3,7 @@ import logging
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ProcessPoolExecutor, ThreadPoolExecutor
 from django_apscheduler.jobstores import register_events, register_job
-from .kokotest import update_something
+from .scheduler_job import update_something ,delete_old_book
 
 from django.conf import settings
 
@@ -19,7 +19,8 @@ def start():
 
     # - replace_existing in combination with the unique ID prevents duplicate copies of the job
 
-    scheduler.add_job(update_something, "interval", minutes=1 ,id="job1",replace_existing=True)
+    scheduler.add_job(update_something, "interval", minutes=60 ,id="job1",replace_existing=True)
+    scheduler.add_job(delete_old_book , 'cron' , hour=0 ,id="job2",replace_existing=True)
 
     # Add the scheduled jobs to the Django admin interface
     register_events(scheduler)

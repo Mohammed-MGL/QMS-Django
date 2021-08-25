@@ -43,23 +43,23 @@
               <font size="4"> Serving </font>
             </b>
             <span class="badge badge-primary badge-pill">
-              <font size="4">0 </font>
+              <font size="4">{{customerAtEmp}} </font>
             </span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <b>
-              <font size="4"> In service center </font>
+              <font size="4"> waiting in center </font>
             </b>
             <span class="badge badge-primary badge-pill">
-              <font size="4">{{CustomerNumber}} </font>
+              <font size="4">{{CustomerNumberOnSC}} </font>
             </span></span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <b>
-              <font size="4"> Out service center </font>
+              <font size="4"> waiting out center </font>
             </b>
             <span class="badge badge-primary badge-pill">
-              <font size="4">{{CustomerNumberOnSC}} </font>
+              <font size="4">{{CustomerNumber}} </font>
             </span></span></span>
           </li>
         </ul>
@@ -81,8 +81,8 @@
                 <tr>
                   <th></th>
                   <th> service name</th>
-                  <th> on Queue </th>
-                  <th> on service center</th>
+                  <th> waiting out center </th>
+                  <th> waiting in center</th>
                   <th> servied </th>
                 </tr>
                 {% for ser in sdList %}
@@ -311,11 +311,9 @@
                 <tr>
 
                   <th> Name </th>
+                  <th> Time </th>
 
-                  <th> accept</th>
-
-                  <th>not accept</th>
-
+          
                 </tr>
               </thead>
               <tbody>
@@ -329,11 +327,7 @@
                   </td>
 
                   <td>
-                    <a href="" class="btn btn-sm btn-info"> accept </a>
-                  </td>
-
-                  <td>
-                    <a href="" class="btn btn-sm btn-danger"> rejected </a>
+                    {{customer.IQ_Time}}
                   </td>
 
                 </tr>
@@ -348,7 +342,41 @@
 
           </div>
         </div>
-        <div id="twit" class="tab-pane fade ">Twitter</div>
+        <div id="twit" class="tab-pane fade ">
+          <div class="table-responsive">
+            {% if acceptedCustomers %}
+
+            <table class="table text-center">
+              <thead class=" text-primary">
+                <tr>
+
+                  <th> Name </th>
+
+          
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for customer in  rejectedCustomers      %}
+
+                <tr>
+
+                  <td>
+                    {{customer.user.username}}
+                  </td>
+
+                </tr>
+
+                {% endfor %}
+                {% else %}
+                <h4>No customer rejected yet</h4>
+                {% endif %}
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
       </div>
 
       {% else %}
