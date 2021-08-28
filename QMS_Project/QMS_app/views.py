@@ -762,6 +762,29 @@ def editService(request, sID):
 
     return render(request ,"Service/service_form.html" , context)     
 
+    
+@login_required(login_url='login')
+@manager_only
+def editWorkTime(request, wID):
+
+    
+    sc = Manager.objects.get(user = request.user ).Service_center
+    ser = Service.objects.get(id = sID)
+    form = ServiceForm(sc,instance = ser)
+
+    if request.method == 'POST':
+        form = ServiceForm(sc ,request.POST ,instance = ser)
+        if form.is_valid():
+            form.save()
+            return redirect('services')
+
+    context ={
+        "form":form ,
+        'sc':sc
+    }
+
+    return render(request ,"Service/service_form.html" , context) 
+
 
 @login_required(login_url='login')
 @manager_only
@@ -970,7 +993,7 @@ def deleteUserFromBL(request, uID):
 def ServiceCnterscreen(request,sID):
     
 
-    
+    sc = Service_center.objects.get(id = sID)
     emps = Employee.objects.filter(Service_center = sID)
     
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
@@ -1001,6 +1024,7 @@ def ServiceCnterscreen(request,sID):
    
   
     context = {
+        "sc":sc,
         'sdList':sdList ,
 
         }
@@ -1133,6 +1157,21 @@ def SendMessageView(request , ID , MSG ):
     message = EmpMessage.objects.create(sender =sender , receiver= ID,message_text = MSG  )
     
     messages.success(request, 'The message was sended successfully. ')
+    return redirect('dashboard')   
+
+@login_required(login_url='login')
+@manager_only
+def SendMessageToCustomers(request  , MSG ):
+    
+    sc = Manager.objects.get(user = request.user ).Service_center
+    services = Service.objects.filter(Service_center=sc)
+    Customers  = Service_Record.objects.filter(Service__in=services ,is_served= False,is_cancelled= False , status__in=['A','P'] )
+    for Customer in Customers:
+
+        device = FCMDevice.objects.filter(user_id = Customer.user)
+        device.send_message(Message(
+            notification=Notification(title= sc.name + ": ", body=MSG)))
+
     return redirect('dashboard')   
 
 

@@ -16,12 +16,13 @@ urlpatterns = [
     path('account/profile/', apiViews.Profile.as_view()),
     path('account/register/FCMtoken/', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}), name='create_fcm_device'),
     # path('account/token/refresh/', TokenRefreshView.as_view() ),
-    path('account/change_password/<int:pk>/', apiViews.ChangePasswordView.as_view()),
+    path('account/change_password/', apiViews.ChangePasswordView.as_view()),
     path('account/update_profile/<int:pk>/', apiViews.UpdateProfileView.as_view()),
     # ServiceCenter
     path('allServiceCenter/',apiViews.ServiceCenter.as_view(),),
     path('search/ServiceCenter/<str:name>',apiViews.Search_ServiceCenter.as_view(),),
     path('ServiceCenterDetails/<int:id>',apiViews.ServiceCenterDetails.as_view(),),
+    path('ServiceCenterDetailsByName/<str:name>',apiViews.ServiceCenterDetailsByName.as_view(),),
     # Service
     path('ServiceDetails/<str:SID>',apiViews.ServiceDetails.as_view(), ),
     path('UserReservations/',apiViews.UserReservations.as_view(), ),

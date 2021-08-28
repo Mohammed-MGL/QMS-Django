@@ -1,4 +1,4 @@
-from django.http.response import JsonResponse
+from django.http.response import Http404, JsonResponse
 from django.shortcuts import render
 
 # Create your views here.
@@ -140,9 +140,15 @@ class Search_ServiceCenter(ListAPIView):
 class ServiceCenterDetails(APIView):
     permission_classes = (IsAuthenticated,)
     
-    
+
+    def get_object(self, pk):
+        try:
+            return Service_center.objects.get(pk=pk)
+        except Service_center.DoesNotExist:
+            raise Http404
     def get(self , request ,id, *args ,**kwargs):
-        x = Service_center.objects.get(id=id)
+        
+        x = self.get_object(id)
         SC_serializer =Service_center_detailSerializer(x ,many= False , context={'request': request}) 
         w = Work_time.objects.get(Service_center= id)
         w_serializer = Work_timeSerializer(w ,many= False)
@@ -153,6 +159,41 @@ class ServiceCenterDetails(APIView):
             'work_time' :    w_serializer.data ,
             'services' :  S_serializer.data ,  
         } 
+        return Response(content)
+
+class ServiceCenterDetailsByName(APIView):
+    permission_classes = (IsAuthenticated,)
+    
+    
+    def get(self , request ,name, *args ,**kwargs):
+        x = Service_center.objects.filter(name__exact=name).first()
+        if(x):
+            
+            SC_serializer =Service_center_detailSerializer(x ,many= False , context={'request': request}) 
+            w = Work_time.objects.get(Service_center= x.id)
+            w_serializer = Work_timeSerializer(w ,many= False)
+            y = Service.objects.filter(Service_center= x.id).order_by('-IS_Active','name')
+            S_serializer = ServiceSerializer(y ,many= True) 
+            content = {
+                'is_found':True,
+                'service_center' : SC_serializer.data ,
+                'work_time' :    w_serializer.data ,
+                'services' :  S_serializer.data ,  
+            } 
+        else:
+            x = Service_center.objects.first()
+            SC_serializer =Service_center_detailSerializer(x ,many= False , context={'request': request}) 
+            w = Work_time.objects.get(Service_center= x.id)
+            w_serializer = Work_timeSerializer(w ,many= False)
+            y = Service.objects.filter(Service_center= x.id).order_by('-IS_Active','name')
+            S_serializer = ServiceSerializer(y ,many= True) 
+            content = {
+                'is_found':False,
+                'service_center' : SC_serializer.data ,
+                'work_time' :    w_serializer.data ,
+                'services' :  S_serializer.data ,  
+            } 
+
         return Response(content)
 
 
@@ -248,8 +289,11 @@ class  ServiceDetails(APIView ):
         user =request.user
         service =Service.objects.get(id = SID) 
         serviceName = service.name
-        queue = Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled= False ,Queue_type = 'B' )
+        queue = Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled = False ,Queue_type = 'B' )
+        queueInSC = Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled = False ,Queue_type = 'B', IS_InCenter=True )
+
         userReservation= Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled= False ,user= user ).first()
+        
         
         empDesk_number =""
         empName = ""
@@ -264,23 +308,25 @@ class  ServiceDetails(APIView ):
                 empDesk_number = userReservation.Employee.desk_num
                 empName = userReservation.Employee.user.first_name
 
-
         else:
-            
             is_inQ =  False
             is_InCenter = False
 
         
-
         if (is_inQ):
-            queue = queue.filter(IQ_Time__lte=userReservation.IQ_Time)
+            queue = queue.filter(IQ_Time__lt=userReservation.IQ_Time)
+            queueInSC = queueInSC.filter(IQ_Time__lt=userReservation.IQ_Time)
 
         queueCount = queue.count()
-        waitingTime = "5"
+        queueCountInSC = queueInSC.count()
+        if (service.IS_static):
+            serviceTime = service.defaultTime
+        else:
+            serviceTime = service.time
 
-        
 
-
+        waitingTime = serviceTime * queueCount
+        waitingTimeInCS =serviceTime * queueCountInSC
 
 
         
@@ -291,6 +337,8 @@ class  ServiceDetails(APIView ):
             "name" : serviceName,
             "queueCount" : queueCount,
             "waitingTime" : waitingTime,
+            "queueCountInSC" : queueCountInSC,
+            "waitingTimeInCS" : waitingTimeInCS,
             "is_inQ" : is_inQ,
             'is_InCenter': is_InCenter ,
             'is_serving':is_serving ,
@@ -310,19 +358,15 @@ class RegisterView(generics.CreateAPIView):
 
 
 class ChangePasswordView(generics.UpdateAPIView):
-
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
         
 
 class UpdateProfileView(generics.UpdateAPIView):
-
     queryset = User.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = UpdateUserSerializer        
-
-
 
 
  

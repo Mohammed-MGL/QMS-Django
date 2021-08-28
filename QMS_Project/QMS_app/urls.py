@@ -11,10 +11,13 @@ urlpatterns = [
     path('dashboard/',views.dashboard, name = 'dashboard'),
     path('ManagerProfile/',views.ManagerProfile, name = 'ManagerProfile'),
     path('SendMessage/<str:ID>/<str:MSG>/', views.SendMessageView , name="send_message") ,
+    path('SendMessageToCustomers/<str:MSG>',views.SendMessageToCustomers, name = 'SendMessageToCustomers'),
     path('servicecenterChangeState',views.scChangeState, name = 'scChangeState'),
     path('servicecenterChangeAutoAccept',views.scChangeAutoAccept, name = 'scChangeAutoAccept'),
     path('acceptUser/<str:ID>',views.acceptUser, name = 'acceptUser'),
     path('rejectUser/<str:ID>',views.rejectUser, name = 'rejectUser'),
+    path('editWorkTime/<str:wID>',views.editWorkTime, name = 'editWorkTime'),
+
 
     
     

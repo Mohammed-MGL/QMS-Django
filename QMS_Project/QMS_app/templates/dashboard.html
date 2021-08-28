@@ -10,6 +10,7 @@
     /* height: 175px; */
     overflow-y: auto;
   }
+
   .autoacceptuser {
     position: relative;
     height: 475px;
@@ -21,418 +22,449 @@
 {% block content %}
 <div class="row">
 
-<dev class="col-8">
+  <dev class="col-8">
 
-  <div class="row">
-    <div class="col-4 ">
-      <div class="card " style="width: 15rem; height: 14rem; ">
-        <div class="card-header card-header-info">
-          People status on Queue
+    <div class="row">
+      <div class="col-4 ">
+        <div class="card " style="width: 15rem; height: 14rem; ">
+          <div class="card-header card-header-info">
+            People status on Queue
+          </div>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center ">
+              <b>
+                <font size="4"> Served </font>
+              </b>
+              <span class="badge badge-primary badge-pill">
+                <font size="4">{{ServiedCustomerNumber}} </font>
+              </span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center ">
+              <b>
+                <font size="4"> Serving </font>
+              </b>
+              <span class="badge badge-primary badge-pill">
+                <font size="4">{{customerAtEmp}} </font>
+              </span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <b>
+                <font size="4"> waiting in center </font>
+              </b>
+              <span class="badge badge-primary badge-pill">
+                <font size="4">{{CustomerNumberOnSC}} </font>
+              </span></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <b>
+                <font size="4"> waiting out center </font>
+              </b>
+              <span class="badge badge-primary badge-pill">
+                <font size="4">{{CustomerNumber}} </font>
+              </span></span></span>
+            </li>
+          </ul>
         </div>
-        <ul class="list-group">
-          <li class="list-group-item d-flex justify-content-between align-items-center ">
-            <b>
-              <font size="4"> Served </font>
-            </b>
-            <span class="badge badge-primary badge-pill">
-              <font size="4">{{ServiedCustomerNumber}} </font>
-            </span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center ">
-            <b>
-              <font size="4"> Serving </font>
-            </b>
-            <span class="badge badge-primary badge-pill">
-              <font size="4">{{customerAtEmp}} </font>
-            </span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <b>
-              <font size="4"> waiting in center </font>
-            </b>
-            <span class="badge badge-primary badge-pill">
-              <font size="4">{{CustomerNumberOnSC}} </font>
-            </span></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <b>
-              <font size="4"> waiting out center </font>
-            </b>
-            <span class="badge badge-primary badge-pill">
-              <font size="4">{{CustomerNumber}} </font>
-            </span></span></span>
-          </li>
-        </ul>
+      </div>
+
+
+      <div class="col-4">
+        <div class="card " style="width: 33rem;height: 14rem ;  ">
+          <div class="card-header card-header-info">
+            Services status
+          </div>
+
+          <ul class="list-group scroll h-100 ">
+
+            <div class="card-body text-center scroll">
+              <table class="table table-striped">
+                <div class="table-responsive">
+                  <tr>
+                    <th></th>
+                    <th> service name</th>
+                    <th> waiting out center </th>
+                    <th> waiting in center</th>
+                    <th> servied </th>
+                  </tr>
+                  {% for ser in sdList %}
+                  <tr>
+                    <td></td>
+                    <td>{{ser.name}}</td>
+                    <td>{{ser.CustomerNumber}}</td>
+                    <td> {{ser.CustomerNumberOnSC}}</td>
+                    <td> {{ser.ServiedCustomerNumber}}</td>
+                  </tr>
+                  {% endfor %}
+
+              </table>
+
+          </ul>
+
+
+        </div>
       </div>
     </div>
-    
+    <div class="row">
+      <div class="col-6 ">
 
-    <div class="col-4">
-      <div class="card " style="width: 33rem;height: 14rem ;  ">
-        <div class="card-header card-header-info">
-          Services status
-        </div>
-
-        <ul class="list-group scroll h-100 ">
-
-          <div class="card-body text-center scroll">
-            <table class="table table-striped">
-              <div class="table-responsive">
-                <tr>
-                  <th></th>
-                  <th> service name</th>
-                  <th> waiting out center </th>
-                  <th> waiting in center</th>
-                  <th> servied </th>
-                </tr>
-                {% for ser in sdList %}
-                <tr>
-                  <td></td>
-                  <td>{{ser.name}}</td>
-                  <td>{{ser.CustomerNumber}}</td>
-                  <td> {{ser.CustomerNumberOnSC}}</td>
-                  <td> {{ser.ServiedCustomerNumber}}</td>
-                </tr>
-                {% endfor %}
-
-            </table>
-
-        </ul>
-
-
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6 ">
-  
-      <div class="card " style="width:50rem; height: 16rem  ">
-        <div class="card-header card-header-primary">
-          <h4 class="card-title ">Employees</h4>
-          <div class="d-flex justify-content-between">
+        <div class="card " style="width:50rem; height: 16rem  ">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title ">Employees</h4>
+            <!-- <div class="d-flex justify-content-between">
             <div class="p-2">
             </div>
   
+          </div> -->
           </div>
-        </div>
-        <div class="card-body text-center scroll">
-          <div class="table-responsive">
-            {% if employees %}
-            <table class="table text-center">
-              <thead class=" text-primary">
-                <tr>
-  
-                  <th>
-                    Name
-                  </th>
-                  <th>
-                    Service
-                  </th>
-  
-  
-                  <th> servied</th>
-  
-  
-                  <th>Message</th>
-                  <th>
-  
-                  </th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-  
-                {% for emp in empList %}
-  
-                <tr>
-  
-                  <td>
-                    <a href="{% url 'viewEmployee' emp.name.id %}"> <b>{{emp.name}}</b>  </a>
-  
-                  </td>
-                  <td>{{emp.service}}</td>
-  
-  
-                  <td>{{emp.EmployeeServiedCustomerNumber}}</td>
-  
-  
-                  <td>
-  
-                    <input type="text" id="Msgtext{{emp.name.id}}" name="text" size="5" class="form-control" />
-  
-                    <a href="{% url 'send_message' emp.name.id 'good job ^__^' %}"
-                      class="btn btn-primary btn-fab btn-fab-mini btn-round">
-                      <i class="material-icons">favorite</i>
-                    </a>
-                    <a href="{% url 'send_message' emp.name.id 'you have to work harder -_-' %}"
-                      class="btn btn-primary btn-fab btn-fab-mini btn-round">
-                      <i class="material-icons">
-                        thumb_down
-                      </i>
-                    </a>
-  
-                    <button id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
-                      onClick="sendMsgTo('{{emp.name.id}}')">
-  
-  
-                      <span class="material-icons">
-                        send
-                      </span>
-                    </button>
-                  </td>
-  
-  
-                </tr>
-                {% endfor %}
-  
-  
-  
-              </tbody>
-            </table>
-            {% else %}
-            <br><br>
-            <h3>Sorry, there are no employees</h3>
-            <br><br>
-            {% endif %}
-  
-  
+          <div class="card-body text-center scroll">
+            <div class="table-responsive">
+              {% if employees %}
+              <table class="table text-center">
+                <thead class=" text-primary">
+                  <tr>
+
+                    <th>
+                      Name
+                    </th>
+                    <th>
+                      Service
+                    </th>
+
+
+                    <th> servied</th>
+
+
+                    <th>Message</th>
+                    <th>
+
+                    </th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {% for emp in empList %}
+
+                  <tr>
+
+                    <td>
+                      <a href="{% url 'viewEmployee' emp.name.id %}"> <b>{{emp.name}}</b> </a>
+
+                    </td>
+                    <td>{{emp.service}}</td>
+
+
+                    <td>{{emp.EmployeeServiedCustomerNumber}}</td>
+
+
+                    <td>
+
+                      <input type="text" id="Msgtext{{emp.name.id}}" name="text" size="5" class="form-control" />
+
+                      <a href="{% url 'send_message' emp.name.id 'good job ^__^' %}"
+                        class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                        <i class="material-icons">favorite</i>
+                      </a>
+                      <a href="{% url 'send_message' emp.name.id 'you have to work harder -_-' %}"
+                        class="btn btn-primary btn-fab btn-fab-mini btn-round">
+                        <i class="material-icons">
+                          thumb_down
+                        </i>
+                      </a>
+
+                      <button id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
+                        onClick="sendMsgTo('{{emp.name.id}}')">
+
+
+                        <span class="material-icons">
+                          send
+                        </span>
+                      </button>
+                    </td>
+
+
+                  </tr>
+                  {% endfor %}
+
+
+
+                </tbody>
+              </table>
+              {% else %}
+              <br><br>
+              <h3>Sorry, there are no employees</h3>
+              <br><br>
+              {% endif %}
+
+
+            </div>
           </div>
+
         </div>
-  
       </div>
+
+
+
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+
     </div>
-  
-  
-  
-  
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"></script>
-  
-  
-  </div>
-</dev>
+  </dev>
 
 
-<div class="col-4 ">
-  <div class="card"style=" height: 34rem  ">
-    <div class="card-header {% if sc.isAutoAccept %} card-header-success {% else %} card-header-danger {% endif %} ">
+  <div class="col-4 ">
+    <div class="card" style=" height: 24rem  ">
+      <div class="card-header {% if sc.isAutoAccept %} card-header-success {% else %} card-header-danger {% endif %} ">
 
-      <div class="d-flex justify-content-between">
-        <div class="p-2">
-          <h4 class="card-title  ">auto accept user</h4>
-        </div>
-        <div class="p-2">
-          <a href="{% url 'scChangeAutoAccept' %}" class="btn {% if sc.isAutoAccept %} btn-success {% else %} btn-danger {% endif %} " my-2 my-sm-0 btn-round ">
+        <div class="d-flex justify-content-between">
+          <div class="p-2">
+            <h4 class="card-title  ">auto accept user</h4>
+          </div>
+          <div class="p-2">
+            <a href="{% url 'scChangeAutoAccept' %}"
+              class="btn {% if sc.isAutoAccept %} btn-success {% else %} btn-danger {% endif %} " my-2 my-sm-0 btn-round ">
             {% if sc.isAutoAccept %} ON {% else %} OFF {% endif %}</a>
         </div>
       </div>
       {% if not sc.isAutoAccept %}
-      <ul class="nav nav-tabs nav-justified ">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#insta">Pending</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#face">Accepted</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#twit">Rejected</a>
-        </li>
-      </ul>
-      {% endif %}
-
-    </div>
-    <div class="card-body align-items-center justify-content-center text-center  scroll autoacceptuser">
-      {% if not sc.isAutoAccept %}
-
-      <div class="tab-content card-body">
-        <div id="insta" class="tab-pane fade show active">
-
-          {% if pendingCustomers %}
-          <div class="table-responsive">
-            <table class="table text-center">
-              <thead class=" text-primary">
-                <tr>
-
-                  <th> Name </th>
-
-                  <th> accept</th>
-
-                  <th>not accept</th>
-
-                </tr>
-              </thead>
-              <tbody>
-
-                {% for customer in pendingCustomers %}
-
-                <tr>
-
-                  <td>
-                    {{customer.user.username}}
-                  </td>
-
-                  <td>
-                    <a href="{% url 'acceptUser' customer.id %}" class="btn btn-sm btn-info"> accept </a>
-                  </td>
-
-                  <td>
-                    <a href="{% url 'rejectUser' customer.id %}" class="btn btn-sm btn-danger"> rejected </a>
-                  </td>
-
-                </tr>
-
-                {% endfor %}
-
-
-              </tbody>
-            </table>
+      <ul class=" nav nav-tabs nav-justified ">
+        <li class=" nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#insta">Pending</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#face">Accepted</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#twit">Rejected</a>
+              </li>
+              </ul>
+              {% endif %}
 
           </div>
-          {% else %}
-          <h4>No customer in Queue yet</h4>
-          {% endif %}
-        </div>
-        <div id="face" class="tab-pane fade ">
+          <div class="card-body align-items-center justify-content-center text-center  scroll autoacceptuser">
+            {% if not sc.isAutoAccept %}
 
-          <div class="table-responsive">
-            {% if acceptedCustomers %}
+            <div class="tab-content card-body">
+              <div id="insta" class="tab-pane fade show active">
 
-            <table class="table text-center">
-              <thead class=" text-primary">
-                <tr>
+                {% if pendingCustomers %}
+                <div class="table-responsive">
+                  <table class="table text-center">
+                    <thead class=" text-primary">
+                      <tr>
 
-                  <th> Name </th>
-                  <th> Time </th>
+                        <th> Name </th>
 
-          
-                </tr>
-              </thead>
-              <tbody>
+                        <th> accept</th>
 
-                {% for customer in acceptedCustomers %}
+                        <th>not accept</th>
 
-                <tr>
+                      </tr>
+                    </thead>
+                    <tbody>
 
-                  <td>
-                    {{customer.user.username}}
-                  </td>
+                      {% for customer in pendingCustomers %}
 
-                  <td>
-                    {{customer.IQ_Time}}
-                  </td>
+                      <tr>
 
-                </tr>
+                        <td>
+                          {{customer.user.username}}
+                        </td>
 
-                {% endfor %}
+                        <td>
+                          <a href="{% url 'acceptUser' customer.id %}" class="btn btn-sm btn-info"> accept </a>
+                        </td>
+
+                        <td>
+                          <a href="{% url 'rejectUser' customer.id %}" class="btn btn-sm btn-danger"> rejected </a>
+                        </td>
+
+                      </tr>
+
+                      {% endfor %}
+
+
+                    </tbody>
+                  </table>
+
+                </div>
                 {% else %}
-                <h4>No customer accepted yet</h4>
+                <h4>No customer in Queue yet</h4>
                 {% endif %}
+              </div>
+              <div id="face" class="tab-pane fade ">
 
-              </tbody>
-            </table>
+                <div class="table-responsive">
+                  {% if acceptedCustomers %}
 
+                  <table class="table text-center">
+                    <thead class=" text-primary">
+                      <tr>
+
+                        <th> Name </th>
+                        <th> Time </th>
+
+
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      {% for customer in acceptedCustomers %}
+
+                      <tr>
+
+                        <td>
+                          {{customer.user.username}}
+                        </td>
+
+                        <td>
+                          {{customer.IQ_Time}}
+                        </td>
+
+                      </tr>
+
+                      {% endfor %}
+                      {% else %}
+                      <h4>No customer accepted yet</h4>
+                      {% endif %}
+
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
+              <div id="twit" class="tab-pane fade ">
+                <div class="table-responsive">
+                  {% if acceptedCustomers %}
+
+                  <table class="table text-center">
+                    <thead class=" text-primary">
+                      <tr>
+
+                        <th> Name </th>
+
+
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      {% for customer in rejectedCustomers %}
+
+                      <tr>
+
+                        <td>
+                          {{customer.user.username}}
+                        </td>
+
+                      </tr>
+
+                      {% endfor %}
+                      {% else %}
+                      <h4>No customer rejected yet</h4>
+                      {% endif %}
+
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
+            </div>
+
+            {% else %}
+            <h4> All customers will be accepted and blacklisted customers will be rejected
+            </h4>
+            {% endif %}
           </div>
+
+
         </div>
-        <div id="twit" class="tab-pane fade ">
-          <div class="table-responsive">
-            {% if acceptedCustomers %}
-
-            <table class="table text-center">
-              <thead class=" text-primary">
-                <tr>
-
-                  <th> Name </th>
-
-          
-                </tr>
-              </thead>
-              <tbody>
-
-                {% for customer in  rejectedCustomers      %}
-
-                <tr>
-
-                  <td>
-                    {{customer.user.username}}
-                  </td>
-
-                </tr>
-
-                {% endfor %}
-                {% else %}
-                <h4>No customer rejected yet</h4>
-                {% endif %}
-
-              </tbody>
-            </table>
-
+        <div class="card " style="height: 8rem; ">
+          <div class="card-header card-header-info">
+            People status on Queue
           </div>
+          <input type="text" id="MsgtextCustomers" name="textCustomers" size="5" class="form-control"
+            placeholder="Broadcast message" />
+          <button id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
+            onClick="sendMsgToCustomers()">
+
+            <span class="material-icons">
+              send
+            </span>
+          </button>
+
         </div>
       </div>
 
-      {% else %}
-      <h4> All customers will be accepted and blacklisted customers will be rejected
-      </h4>
-      {% endif %}
+
+
+
     </div>
 
 
-  </div>
-</div>
 
 
 
 
-</div>
+    {% endblock content %}
+
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}
+
+    <script>
+      // $(document).ready(function () {
+      //   // Javascript method's body can be found in assets/js/demos.js
+      //   md.initDashboardPageCharts();
+
+      // });
+      function sendMsgToCustomers(msg){
+        var msgUrl = "{% url 'SendMessageToCustomers' 'error' %}";
+        var msgText = document.getElementById('MsgtextCustomers').value;
+
+        if (msgText.length == 0) {
+
+          swal({ title: "Error", text: "Please enter message to send!", type: "error", buttonsStyling: false, confirmButtonClass: "btn btn-primary" });
+
+
+        }
+        else {
+          msgUrl = msgUrl.replace('error', msgText);
+          window.location.href = msgUrl;
+
+        }
+      }
+
+      function sendMsgTo(empId) {
+        var msgUrl = "{% url 'send_message' 'empId' 'error' %}";
+
+        var msgText = document.getElementById('Msgtext' + empId).value;
+
+        if (msgText.length == 0) {
+
+          swal({ title: "Error", text: "Please enter message to send!", type: "error", buttonsStyling: false, confirmButtonClass: "btn btn-primary" });
+
+        }
+        else {
+          msgUrl = msgUrl.replace('error', msgText);
+          msgUrl = msgUrl.replace('empId', empId);
+          window.location.href = msgUrl;
+
+        }
+      }
+
+    </script>
 
 
 
 
-
-
-{% endblock content %}
-
-<!-- Specific Page JS goes HERE  -->
-{% block javascripts %}
-
-<script>
-  // $(document).ready(function () {
-  //   // Javascript method's body can be found in assets/js/demos.js
-  //   md.initDashboardPageCharts();
-
-  // });
-
-  function sendMsgTo(empId) {
-    var msgUrl = "{% url 'send_message' 'empId' 'error' %}";
-
-    var msgText = document.getElementById('Msgtext' + empId).value;
-
-    if (msgText.length == 0) {
-
-      swal({ title: "Error", text: "Please enter message to send!", type: "error", buttonsStyling: false, confirmButtonClass: "btn btn-primary" });
-
-
-    }
-    else {
-      msgUrl = msgUrl.replace('error', msgText);
-      msgUrl = msgUrl.replace('empId', empId);
-      window.location.href = msgUrl;
-
-    }
-  }
-
-</script>
-
-
-
-
-{% endblock javascripts %}
+    {% endblock javascripts %}

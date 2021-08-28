@@ -25,10 +25,14 @@ class Qdetails(serializers.Field):
     def to_representation(self, value):
 
         queue = Service_Record.objects.filter(Service=value ,status ='A',is_served= False ,is_cancelled= False ,Queue_type = 'B' ).count()
-
+        if (value.IS_static):
+            serviceTime = value.defaultTime
+        else:
+            serviceTime = value.time
+        waitingtime = serviceTime*queue
         ret = {
             "customersNum": queue,
-            "waitingtime":"5 Min test",
+            "waitingtime":str(waitingtime) + " Min",
             # "y": value.y_coordinate
         }
         return ret
@@ -43,7 +47,7 @@ class Qdetails(serializers.Field):
 
 class ServiceSerializer(serializers.ModelSerializer):
 
-    Qdetails =Qdetails(source='*')
+    Qdetails = Qdetails(source='*')
     # waitingTime = serializers.SerializerMethodField('is_named_bar')
     class Meta:
         model = Service
@@ -165,23 +169,22 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         return attrs
 
     def validate_old_password(self, value):
-
         user = self.context['request'].user
         if not user.check_password(value):
             raise serializers.ValidationError({"old_password": "Old password is not correct"})
         return value
 
-    def update(self, instance, validated_data):
+    def update(self, validated_data):
         user = self.context['request'].user
 
-        if user.pk != instance.pk:
-            raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
+        # if user.pk != instance.pk:
+        #     raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
 
 
-        instance.set_password(validated_data['password'])
-        instance.save()
+        user.set_password(validated_data['password'])
+        user.save()
 
-        return instance        
+        return user        
 
 
 
