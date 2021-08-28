@@ -16,7 +16,7 @@ urlpatterns = [
     path('servicecenterChangeAutoAccept',views.scChangeAutoAccept, name = 'scChangeAutoAccept'),
     path('acceptUser/<str:ID>',views.acceptUser, name = 'acceptUser'),
     path('rejectUser/<str:ID>',views.rejectUser, name = 'rejectUser'),
-    path('editWorkTime/<str:wID>',views.editWorkTime, name = 'editWorkTime'),
+    path('editWorkTime/',views.editWorkTime, name = 'editWorkTime'),
 
 
     

@@ -1,7 +1,6 @@
-
 {% extends "layouts/base.html" %}
 
-{% block title %} Page Blank {% endblock %} 
+{% block title %} Page Blank {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -9,7 +8,7 @@
 {% block content %}
 
 
-    
+
 <div class="row justify-content-center">
   <div class="col-md-4 mb-3 ">
 
@@ -25,35 +24,49 @@
           <tbody>
             <tr>
               <td>
-             <b>  <font size="4" color="btn-primary"> name </font></b>  
+                <b>
+                  <font size="4" color="btn-primary"> name </font>
+                </b>
               </td>
-              <td>  <font size="4" >{{service.name}}</font> </td>
+              <td>
+                <font size="4">{{service.name}}</font>
+              </td>
             </tr>
             <tr>
               <td>
-               <b> <font size="4" color="btn-primary"> Is Active </font> </b>
+                <b>
+                  <font size="4" color="btn-primary"> Is Active </font>
+                </b>
               </td>
-              <td> <font size="4" >{{service.IS_Active}}</font></td>
+              <td>
+                <font size="4">{{service.IS_Active}}</font>
+              </td>
             </tr>
             <tr>
               <td>
-               <b> <font size="4" color="btn-primary"> time </font> </b>
+                <b>
+                  <font size="4" color="btn-primary"> time </font>
+                </b>
               </td>
-              <td> <font size="4" >{{service.time}}</font></td>
+              <td>
+                <font size="4">{{service.time}}</font>
+              </td>
             </tr>
             <tr>
-                <td>
-                 <b> <font size="4" color="btn-primary"> Employee </font></b> 
-                </td>
-                <td>
-                    {% for emp in emps %}
-                    <font size="4"> {{ emp}}</font>  
-                    ,
-                    {% endfor %}
-                </td>
-              </tr>
+              <td>
+                <b>
+                  <font size="4" color="btn-primary"> Employee </font>
+                </b>
+              </td>
+              <td>
+                {% for emp in emps %}
+                <font size="4"> {{ emp}}</font>
+                ,
+                {% endfor %}
+              </td>
+            </tr>
 
-            
+
           </tbody>
         </table>
 
@@ -64,7 +77,7 @@
 
   </div>
 
- 
+
 
   <div class="col-lg-6 col-md-12">
     <div class="card " style="width: 36rem; height: 15rem ;">
@@ -74,23 +87,37 @@
       </div>
       <div class="card-body table-responsive">
         <table class="table table-hover">
-          <thead >
+          <thead>
 
-            <th> <b> <font size="5">Day</font> </b></th>
-            <th> <b> <font size="5">month</font> </b></th>
-            <th> <b> <font size="5">year</font> </b></th>
-            <th> <b> <font size="5">ALL</font> </b></th>
-        
+            <th> <b>
+                <font size="5">Day</font>
+              </b></th>
+            <th> <b>
+                <font size="5">month</font>
+              </b></th>
+            <th> <b>
+                <font size="5">year</font>
+              </b></th>
+            <th> <b>
+                <font size="5">ALL</font>
+              </b></th>
+
           </thead>
           <tbody>
             <tr>
-<br>
+              <br>
               <td>
                 <font size="5"> {{totalServingTime}} </font>
               </td>
-              <td>  <font size="5">{{totalServingTime_month}} </font></td>
-              <td> <font size="5">{{totalServingTime_year}}</font></td>
-              <td> <font size="5">{{totalServingTime_all}}</font></td>
+              <td>
+                <font size="5">{{totalServingTime_month}} </font>
+              </td>
+              <td>
+                <font size="5">{{totalServingTime_year}}</font>
+              </td>
+              <td>
+                <font size="5">{{totalServingTime_all}}</font>
+              </td>
 
 
             </tr>
@@ -114,19 +141,35 @@
         <table class="table table-hover">
           <thead class="text-info">
 
-            <th> <b> <font size="5">Day</font> </b></th>
-            <th> <b> <font size="5">month</font> </b></th>
-            <th> <b> <font size="5">year</font> </b></th>
-            <th> <b> <font size="5">ALL</font> </b></th>
+            <th> <b>
+                <font size="5">Day</font>
+              </b></th>
+            <th> <b>
+                <font size="5">month</font>
+              </b></th>
+            <th> <b>
+                <font size="5">year</font>
+              </b></th>
+            <th> <b>
+                <font size="5">ALL</font>
+              </b></th>
           </thead>
           <tbody>
             <br>
             <tr>
-            
-              <td>  <font size="5">{{customerNumberDay}} </font></td>
-              <td>  <font size="5">{{customerNumberMonth}} </font></td>
-              <td>  <font size="5">{{customerNumberyear}} </font></td>
-              <td>  <font size="5">{{customerNumberall}} </font></td>
+
+              <td>
+                <font size="5">{{customerNumberDay}} </font>
+              </td>
+              <td>
+                <font size="5">{{customerNumberMonth}} </font>
+              </td>
+              <td>
+                <font size="5">{{customerNumberyear}} </font>
+              </td>
+              <td>
+                <font size="5">{{customerNumberall}} </font>
+              </td>
 
             </tr>
 
@@ -145,22 +188,38 @@
       </div>
       <div class="card-body table-responsive">
         <table class="table table-hover">
-          <thead >
+          <thead>
 
-            <th> <b> <font size="5">Day</font> </b></th>
-            <th> <b> <font size="5">month</font> </b></th>
-            <th> <b> <font size="5">year</font> </b></th>
-            <th> <b> <font size="5">ALL</font> </b></th>
+            <th> <b>
+                <font size="5">Day</font>
+              </b></th>
+            <th> <b>
+                <font size="5">month</font>
+              </b></th>
+            <th> <b>
+                <font size="5">year</font>
+              </b></th>
+            <th> <b>
+                <font size="5">ALL</font>
+              </b></th>
           </thead>
           <tbody>
             <br>
             <tr>
 
-              <td>  <font size="5">{{avrageServingTime}} </font></td>
-              <td>  <font size="5">{{avrageServingTime_month}} </font></td>
-              <td>  <font size="5">{{avrageServingTime_year}} </font></td>
-              <td>  <font size="5">{{avrageServingTime_all}} </font></td>
-          
+              <td>
+                <font size="5">{{avrageServingTime}} </font>
+              </td>
+              <td>
+                <font size="5">{{avrageServingTime_month}} </font>
+              </td>
+              <td>
+                <font size="5">{{avrageServingTime_year}} </font>
+              </td>
+              <td>
+                <font size="5">{{avrageServingTime_all}} </font>
+              </td>
+
 
             </tr>
 
@@ -176,4 +235,3 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}{% endblock javascripts %}
-

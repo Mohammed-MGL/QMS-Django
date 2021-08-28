@@ -765,15 +765,14 @@ def editService(request, sID):
     
 @login_required(login_url='login')
 @manager_only
-def editWorkTime(request, wID):
-
+def editWorkTime(request):
     
     sc = Manager.objects.get(user = request.user ).Service_center
-    ser = Service.objects.get(id = sID)
-    form = ServiceForm(sc,instance = ser)
+    wT = Work_time.objects.get(Service_center = sc)
+    form = WorkTimeChangeForm(instance =wT )
 
     if request.method == 'POST':
-        form = ServiceForm(sc ,request.POST ,instance = ser)
+        form = ServiceForm(sc ,request.POST ,instance = wT)
         if form.is_valid():
             form.save()
             return redirect('services')
@@ -783,7 +782,7 @@ def editWorkTime(request, wID):
         'sc':sc
     }
 
-    return render(request ,"Service/service_form.html" , context) 
+    return render(request ,"workTime_form.html" , context) 
 
 
 @login_required(login_url='login')

@@ -47,6 +47,27 @@ class PasswordChangeForm(PasswordChangeForm):
         self.fields['new_password1'].widget = forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '})
         self.fields['new_password2'].widget = forms.PasswordInput(attrs={'class': 'form-control mb-4 ml-2 '})
 
+class WorkTimeChangeForm(ModelForm):
+        
+    def __init__(self, *args, **kwargs):
+        super(WorkTimeChangeForm, self).__init__(*args, **kwargs)
+
+
+    class Meta:
+
+        model = Work_time
+        fields = ['Saturday' , 'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday' ]
+
+        widgets = {
+            'Saturday' : forms.TextInput(attrs={'class': 'form-control mb-4 ', 'placeholder' : ' 8:00 AM ==> 4:00 PM '}),
+            'Sunday' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : ' 8:00 AM ==> 4:00 PM '}),
+            'Monday' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : ' 8:00 AM ==> 4:00 PM '}),
+            'Tuesday' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : ' 8:00 AM ==> 4:00 PM '}),
+            'Wednesday' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : ' 8:00 AM ==> 4:00 PM '}),
+            'Thursday' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : ' 8:00 AM ==> 4:00 PM '}),
+            'Friday' : forms.TextInput(attrs={'class': 'form-control mb-4', 'placeholder' : ' 8:00 AM ==> 4:00 PM '}),
+        }
+
 class EmployeeForm(ModelForm):
     """Form definition for Employee."""
 

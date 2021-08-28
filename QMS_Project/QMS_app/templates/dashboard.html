@@ -26,9 +26,10 @@
 
     <div class="row">
       <div class="col-4 ">
-        <div class="card " style="width: 15rem; height: 14rem; ">
+        <div class="card " style="width: 16rem; height: 14.5rem; ">
           <div class="card-header card-header-info">
-            People status on Queue
+            <h5 class="card-title "> People status on Queue </h5>
+
           </div>
           <ul class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-center ">
@@ -69,9 +70,10 @@
 
 
       <div class="col-4">
-        <div class="card " style="width: 33rem;height: 14rem ;  ">
+        <div class="card " style="width: 32.5rem;height: 14.5rem ;  ">
           <div class="card-header card-header-info">
-            Services status
+            <h4 class="card-title ">Services status</h4>
+
           </div>
 
           <ul class="list-group scroll h-100 ">
@@ -224,7 +226,7 @@
 
 
   <div class="col-4 ">
-    <div class="card" style=" height: 24rem  ">
+    <div class="card" style=" height: 24.5rem  ">
       <div class="card-header {% if sc.isAutoAccept %} card-header-success {% else %} card-header-danger {% endif %} ">
 
         <div class="d-flex justify-content-between">
@@ -300,7 +302,7 @@
 
                 </div>
                 {% else %}
-                <h4>No customer in Queue yet</h4>
+                <h4>No customer in Queue Today</h4>
                 {% endif %}
               </div>
               <div id="face" class="tab-pane fade ">
@@ -336,7 +338,7 @@
 
                       {% endfor %}
                       {% else %}
-                      <h4>No customer accepted yet</h4>
+                      <h4>No customer accepted Today</h4>
                       {% endif %}
 
                     </tbody>
@@ -371,7 +373,7 @@
 
                       {% endfor %}
                       {% else %}
-                      <h4>No customer rejected yet</h4>
+                      <h4>No customer rejected Today</h4>
                       {% endif %}
 
                     </tbody>
@@ -391,18 +393,36 @@
         </div>
         <div class="card " style="height: 8rem; ">
           <div class="card-header card-header-info">
-            People status on Queue
+            <h4 class="card-title ">Broadcast message to customers</h4>
+
           </div>
-          <input type="text" id="MsgtextCustomers" name="textCustomers" size="5" class="form-control"
-            placeholder="Broadcast message" />
-          <button id="btn" class="btn btn-primary btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
-            onClick="sendMsgToCustomers()">
+          <table class="table text-center">
+            <thead class=" text-primary">
+              <!-- <tr>
 
-            <span class="material-icons">
-              send
-            </span>
-          </button>
+                <th>
+                  send message :
+                </th>
+              </tr> -->
+            </thead>
+            <tbody>
 
+
+
+              <tr>
+
+                <td>
+                  <input type="text" id="MsgtextCustomers" name="textCustomers" size="5" class="form-control"
+                    placeholder="Broadcast message" />
+                  <button id="btn" class="btn btn-info btn-fab btn-fab-mini btn-round" value="{{emp.name.id}}"
+                    onClick="sendMsgToCustomers()">
+
+                    <span class="material-icons">
+                      send
+                    </span>
+                  </button>
+                </td>
+              </tr>
         </div>
       </div>
 
@@ -427,7 +447,7 @@
       //   md.initDashboardPageCharts();
 
       // });
-      function sendMsgToCustomers(msg){
+      function sendMsgToCustomers(msg) {
         var msgUrl = "{% url 'SendMessageToCustomers' 'error' %}";
         var msgText = document.getElementById('MsgtextCustomers').value;
 
