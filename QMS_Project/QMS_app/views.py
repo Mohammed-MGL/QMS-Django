@@ -772,10 +772,10 @@ def editWorkTime(request):
     form = WorkTimeChangeForm(instance =wT )
 
     if request.method == 'POST':
-        form = ServiceForm(sc ,request.POST ,instance = wT)
+        form = WorkTimeChangeForm(request.POST ,instance = wT)
         if form.is_valid():
             form.save()
-            return redirect('services')
+            return redirect('dashboard')
 
     context ={
         "form":form ,
