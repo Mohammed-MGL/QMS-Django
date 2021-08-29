@@ -485,6 +485,10 @@
     </script>
 
 
-
+<script>
+  setTimeout(function () {
+      window.location.href = "{% url 'dashboard'  %}";
+  }, 30000);
+</script>
 
     {% endblock javascripts %}

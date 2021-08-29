@@ -704,8 +704,8 @@ def scChangeState(request):
     sc.save()
 
     if sc.is_online == False:
-        q = Service_Record.objects.filter(Service=service,status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
-        q2 = Service_Record.objects.filter(Service=service ,status ='P' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+        q = Service_Record.objects.filter(Service__in=service ,status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+        q2 = Service_Record.objects.filter(Service__in=service , status ='P' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
         q = q.union(q2)
         for book in q:
             book.status ='R'
@@ -730,7 +730,7 @@ def scChangeAutoAccept(request):
     if(sc.isAutoAccept):
         today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
         today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
-        pendingCustomers  = Service_Record.objects.filter(Service=service ,is_served= False,is_cancelled= False , status ='P' ,IQ_Time__range=(today_min, today_max) )
+        pendingCustomers  = Service_Record.objects.filter(Service__in =service ,is_served= False,is_cancelled= False , status ='P' ,IQ_Time__range=(today_min, today_max) )
 
         for c in pendingCustomers:
             c.status = 'A'
@@ -1375,7 +1375,7 @@ def home(request):
 
 
     
-    ServiedCustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp ).count() 
+    ServiedCustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= True,is_cancelled= False ,Service=service ,Employee=emp,P_Time__range=(today_min, today_max)         ).count() 
     CustomerNumber= Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False ,Service=service ,IS_InCenter = True  ,Employee = None)
     CustomerNumber =CustomerNumber.count() 
     

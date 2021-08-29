@@ -8,18 +8,24 @@ from fcm_django.models import FCMDevice
 
 def update_something():
     print("this function runs every 1 min "+ timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f"))
-    update_service_time()
+
 
 def update_service_time():
+    print("update_service_time")
     services = Service.objects.all()
+    print(services)
     for ser in services:
+        print(ser)
 
         if ser.IS_static==True:
 
             ser.time = ser.defaultTime
             ser.save()
-            
+          
+
         else:
+            
+
             today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
             today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)
             
@@ -45,14 +51,14 @@ def update_service_time():
             else:   
                 ser.time = ser.defaultTime
                 ser.save()
-                return
+                continue
 
             minutes = math.ceil(avrageServingTime / 60)
 
             # avrageServingTime = timedelta(seconds=avrageServingTime)
 
             ser.time = minutes
-            
+   
             ser.save()
 
 
