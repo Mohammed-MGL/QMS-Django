@@ -542,13 +542,13 @@ def viewService(request, sID  ):
     service = Service.objects.get(id=sID)
 
     sc = Manager.objects.get(user = request.user ).Service_center
-    
-    emps = Employee.objects.filter(Service_center = sc.id)
-    print(emps)
-    services= Service.objects.filter(Service_center = sc )
+
+    services= Service.objects.filter(Service_center = sc  )
 
     if not service in services:
         return redirect('services')
+        
+    emps = Employee.objects.filter( Service = service  ) 
 
     today_min = datetime.combine(timezone.now().date(), datetime.today().time().min)
     today_max = datetime.combine(timezone.now().date(), datetime.today().time().max)

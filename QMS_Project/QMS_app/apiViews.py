@@ -207,33 +207,34 @@ class  BookInService(APIView):
         service =Service.objects.get(id = sID)
         sc = service.Service_center
     
-        sr =  Service_Record.objects.filter(user = user ,Service = service ,is_served = False ,is_cancelled = False)
+        sr =  Service_Record.objects.filter(user = user ,Service = service ,is_served = False ,is_cancelled = False,status__in = ['A','P'])
         if (sr):
             return Response({'Accepted':False }) 
+        
+        if (sc.is_online):
+            if (sc.isAutoAccept == True):
 
-        if (sc.isAutoAccept == True):
+                is_userBlocked = Black_list.objects.filter(user= user ,Service_center = service.Service_center )
+                if is_userBlocked:
+                    Service_Record.objects.create(Service=service , user=user , status= 'R' )
+                    return Response({'Accepted':False })
 
-            is_userBlocked = Black_list.objects.filter(user= user ,Service_center = service.Service_center )
-            if is_userBlocked:
-                Service_Record.objects.create(Service=service , user=user , status= 'R' )
-                return Response({'Accepted':False })
-
-            Service_Record.objects.create(user = user ,Service = service , status='A')
-            return Response({'Accepted':True })
-        else:
-            is_userBlocked = Black_list.objects.filter(user= user ,Service_center = service.Service_center )
-            if is_userBlocked:
-                Service_Record.objects.create(Service=service , user=user , status= 'R' )
-                return Response({'Accepted':False })
-
-            is_userWhite = White_list.objects.filter(user= user ,Service_center = service.Service_center )
-            if is_userWhite:
                 Service_Record.objects.create(user = user ,Service = service , status='A')
                 return Response({'Accepted':True })
+            else:
+                is_userBlocked = Black_list.objects.filter(user= user ,Service_center = service.Service_center )
+                if is_userBlocked:
+                    Service_Record.objects.create(Service=service , user=user , status= 'R' )
+                    return Response({'Accepted':False })
+
+                is_userWhite = White_list.objects.filter(user= user ,Service_center = service.Service_center )
+                if is_userWhite:
+                    Service_Record.objects.create(user = user ,Service = service , status='A')
+                    return Response({'Accepted':True })
 
 
-            Service_Record.objects.create(user = user ,Service = service , status='P')
-            return Response({'Accepted':True })
+                Service_Record.objects.create(user = user ,Service = service , status='P')
+                return Response({'Accepted':True })
 
 
 class  cancelReservation(APIView):
@@ -283,7 +284,6 @@ class  UserInCenter(APIView):
 class  ServiceDetails(APIView ):
     permission_classes = (IsAuthenticated,)
     
-    
     def get(self , request ,SID, *args ,**kwargs):
         
         user =request.user
@@ -292,16 +292,18 @@ class  ServiceDetails(APIView ):
         queue = Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled = False ,Queue_type = 'B' )
         queueInSC = Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled = False ,Queue_type = 'B', IS_InCenter=True )
 
-        userReservation= Service_Record.objects.filter(Service=service ,status ='A' ,is_served= False ,is_cancelled= False ,user= user ).first()
+        userReservation= Service_Record.objects.filter(Service=service ,status__in =['A','P'] ,is_served= False ,is_cancelled= False ,user= user ).first()
         
         
         empDesk_number =""
         empName = ""
+        status = ''
         is_serving = False
 
         if(userReservation):
             is_inQ =  True
             is_InCenter= userReservation.IS_InCenter
+            status = userReservation.status
 
             if(userReservation.Employee is not None):
                 is_serving = True
@@ -328,7 +330,6 @@ class  ServiceDetails(APIView ):
         waitingTime = serviceTime * queueCount
         waitingTimeInCS =serviceTime * queueCountInSC
 
-
         
         return Response({
             "id" : service.id,
@@ -342,6 +343,7 @@ class  ServiceDetails(APIView ):
             "is_inQ" : is_inQ,
             'is_InCenter': is_InCenter ,
             'is_serving':is_serving ,
+            "status":status,
             'empName':empName ,
             'empDesk_number':empDesk_number ,
         }) 

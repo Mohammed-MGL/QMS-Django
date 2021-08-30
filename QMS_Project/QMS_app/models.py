@@ -62,15 +62,15 @@ class Service_center(models.Model):
 
     def save(self, *args, **kwargs):
         sc = Service_center.objects.filter(id = self.id).first()
-        # if(not sc):
-        qrcode_img = qrcode.make(self.id)
-        canvas = Image.new('RGB', (290, 290), 'white')
-        canvas.paste(qrcode_img)
-        fname = f'QR-{self.name}.png'
-        buffer = BytesIO()
-        canvas.save(buffer,'PNG')
-        self.QR.save(fname, File(buffer), save=False)
-        canvas.close()
+        if(not sc):
+            qrcode_img = qrcode.make(self.id)
+            canvas = Image.new('RGB', (290, 290), 'white')
+            canvas.paste(qrcode_img)
+            fname = f'QR-{self.name}.png'
+            buffer = BytesIO()
+            canvas.save(buffer,'PNG')
+            self.QR.save(fname, File(buffer), save=False)
+            canvas.close()
         super(Service_center,self).save(*args, **kwargs)
 
 
