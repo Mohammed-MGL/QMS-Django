@@ -246,7 +246,7 @@ class  cancelReservation(APIView):
         user =request.user
         service =Service.objects.get(id = sID)
         
-        book =  Service_Record.objects.filter(user = user ,Service = service ,status ='A' ,is_served = False ,is_cancelled =False , Employee= None).first()
+        book =  Service_Record.objects.filter(user = user ,Service = service ,status__in =['A','P'] ,is_served = False ,is_cancelled =False , Employee= None).first()
         if(book):
 
             book.O_Time = timezone.now().strftime("%Y-%m-%d %H:%M:%S") 

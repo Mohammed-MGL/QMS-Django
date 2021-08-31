@@ -1180,14 +1180,15 @@ def SendMessageToCustomers(request  , MSG ):
 def acceptUser(request , ID ):
     sc = Manager.objects.get(user = request.user ).Service_center 
     book = Service_Record.objects.get(id=ID)
-    book.status = 'A'
-    now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-    book.IQ_Time = now
-    book.save()
-    device = FCMDevice.objects.filter(user_id =book.user.id) 
-    device.send_message(Message(
-        notification=Notification(title= sc.name +": Booked", body=" Your book has been accepted "
-        )))
+    if(not book.is_cancelled):
+        book.status = 'A'
+        now = timezone.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+        book.IQ_Time = now
+        book.save()
+        device = FCMDevice.objects.filter(user_id =book.user.id) 
+        device.send_message(Message(
+            notification=Notification(title= sc.name +": Booked", body=" Your book has been accepted "
+            )))
     return redirect('dashboard')    
 
 @login_required(login_url='login')

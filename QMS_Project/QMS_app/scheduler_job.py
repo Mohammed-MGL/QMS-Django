@@ -63,12 +63,12 @@ def update_service_time():
 
 
 def delete_old_book():
-    print("cancel")
-    q = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
+    print("delete_old_book")
     q = Service_Record.objects.filter(status ='A' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
     q2 = Service_Record.objects.filter(status ='P' ,is_served= False ,is_cancelled= False  ,IS_InCenter= False  )
     q = q.union(q2)
     for book in q:
+        print("cancel")
         book.status ='R'
         book.save()
         device = FCMDevice.objects.filter(User=book.user).first()
